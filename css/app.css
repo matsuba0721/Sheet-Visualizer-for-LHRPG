@@ -1,0 +1,18 @@
+.header-1 {
+    font-weight: bold;
+}
+
+.text-1 {
+    font-size: small;
+    color: dimgray;
+}
+
+.text-2 {
+    font-size: small;
+    color: gray;
+}
+
+.profile-image {
+    border: 2px solid #ED6E37;
+    box-shadow: 1px 1px 3px #ED6E37;
+}
