@@ -2,10 +2,10 @@ $(document).foundation();
 
 const characters = new Object();
 
-document.getElementById("link").value = "https://lhrpg.com/lhz/sheets/200446.html";
-loadCharactor();
-document.getElementById("link").value = "https://lhrpg.com/lhz/sheets/200524.html";
-loadCharactor();
+// document.getElementById("link").value = "https://lhrpg.com/lhz/sheets/200446.html";
+// loadCharactor();
+// document.getElementById("link").value = "https://lhrpg.com/lhz/sheets/200524.html";
+// loadCharactor();
 
 // getJson(`https://lhrpg.com/lhz/api/skills.json`, (data) => {
 // 	const timings = new Object();
