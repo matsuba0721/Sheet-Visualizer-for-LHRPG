@@ -12,7 +12,44 @@
     color: gray;
 }
 
+.text-3 {
+    font-size: x-small;
+    color: #444;
+}
+
 .profile-image {
     border: 2px solid #ED6E37;
     box-shadow: 1px 1px 3px #ED6E37;
+}
+
+td [type=text],
+select {
+    height: 1.1rem;
+    font-size: 0.75rem;
+    margin: 0 2px;
+}
+
+td ul,
+th ul {
+    padding-left: 0;
+    display: table;
+}
+
+td ul li,
+th ul li {
+    list-style: none;
+    display: table-cell;
+}
+
+a.alert {
+    line-height: inherit;
+    color: #ff2402;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+a.alert:hover,
+a.alert:focus {
+    color: #ff2200;
 }
