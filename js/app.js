@@ -1348,7 +1348,7 @@ function createRemarksCell(character) {
 	detailRow.style.color = "#444";
 	tableBody.appendChild(detailRow);
 	const detailRowData = document.createElement("td");
-	detailRowData.innerHTML = character.remarks.replaceAll("\n", "<br>");
+	detailRowData.innerHTML = character.remarks ? character.remarks.replaceAll("\n", "<br>") : "";
 	detailRow.appendChild(detailRowData);
 
 	return cell;
