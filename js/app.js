@@ -242,7 +242,9 @@ function init() {
 		li.draggable = true;
 		li.textContent = timing;
 		li.style.cursor = "pointer";
-		li.style.border = "1px dotted #444;";
+		li.style.fontSize = "small";
+		li.style.backgroundColor = "#EEE";
+		li.style.margin = "2px";
 		li.ondragstart = function (event) {
 			event.dataTransfer.setData("text/plain", event.target.id);
 		};
@@ -251,14 +253,14 @@ function init() {
 			this.style.borderTop = "3px solid";
 		};
 		li.ondragleave = function () {
-			this.style.borderTop = "1px dotted #444";
+			this.style.borderTop = "";
 		};
 		li.ondrop = function (event) {
 			event.preventDefault();
 			let id = event.dataTransfer.getData("text");
 			let element_drag = document.getElementById(id);
 			this.before(element_drag, this);
-			this.style.borderTop = "1px dotted #444";
+			this.style.borderTop = "";
 			_config.ccforiaOutput.skillSort.timingOrder = Array.from(element_drag.parentNode.querySelectorAll("li"), (x) => x.textContent);
 			_localStorage.Write("config", _config);
 		};
