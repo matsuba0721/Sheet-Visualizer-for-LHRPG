@@ -1,5 +1,56 @@
-$(document).foundation();
+class LocalStorage {
+	constructor() {
+		this._tempStrage = new Object();
+	}
 
+	Read(name, defaultValue = new Object()) {
+		if (name in this._tempStrage) return this._tempStrage[name];
+		else return (this._tempStrage[name] = name in localStorage ? JSON.parse(localStorage[name]) : defaultValue);
+	}
+
+	async Write(name, value) {
+		this._tempStrage[name] = value;
+		localStorage[name] = JSON.stringify(value);
+	}
+}
+class Config {
+	constructor() {
+		this.ccforiaOutput = new Object();
+		this.ccforiaOutput.isAbility = true;
+		this.ccforiaOutput.isCalcDamege = true;
+		this.ccforiaOutput.isSkill = true;
+		this.ccforiaOutput.isBasicSkill = true;
+		this.ccforiaOutput.isEquipment = true;
+		this.ccforiaOutput.isBelongings = true;
+		this.ccforiaOutput.isConsumableChart = true;
+		this.ccforiaOutput.isTreasureChart = true;
+		this.ccforiaOutput.isOtherChart = false;
+		this.ccforiaOutput.skillSort = new Object();
+		this.ccforiaOutput.skillSort.inherit = true;
+		this.ccforiaOutput.skillSort.byTiming = false;
+		this.ccforiaOutput.skillSort.timingOrder = [
+			"常時",
+			"セットアップ",
+			"イニシアチブ",
+			"判定直前",
+			"判定直後",
+			"クリンナップ",
+			"プリプレイ",
+			"ブリーフィング",
+			"レストタイム",
+			"ムーブ",
+			"マイナー",
+			"メジャー",
+			"行動",
+			"インスタント",
+			"ダメージロール",
+			"ダメージ適用直前",
+			"ダメージ適用直後",
+			"本文",
+		];
+		this.isAdvanced = false;
+	}
+}
 class Chatpalette {
 	constructor() {
 		this.type = "Roll";
@@ -8,34 +59,63 @@ class Chatpalette {
 		this.isAdvanced = false;
 	}
 }
+class Ccforia {
+	constructor() {
+		this.clipboardData = new Object();
+		this.clipboardData.kind = "character";
+		this.clipboardData.data = new Object();
+		this.clipboardData.data.name = "";
+		this.clipboardData.data.memo = "";
+		this.clipboardData.data.initiative = 0;
+		this.clipboardData.data.externalUrl = "";
+		this.clipboardData.data.status = [];
+		this.clipboardData.data.params = [];
+		this.clipboardData.data.secret = false;
+		this.clipboardData.data.invisible = false;
+		this.clipboardData.data.hideStatus = false;
+		this.clipboardData.data.commands = "";
+	}
 
-const _characters = new Object();
-const _setting = new Object();
-const _common = new Object();
-loadSetting();
+	setName(value) {
+		this.clipboardData.data.name = value;
+		return this;
+	}
+	setMemo(value) {
+		this.clipboardData.data.memo = value;
+		return this;
+	}
+	setInitiative(value) {
+		this.clipboardData.data.initiative = value;
+		return this;
+	}
+	setExternalUrl(value) {
+		this.clipboardData.data.externalUrl = value;
+		return this;
+	}
+	appendStatus(label, value, max) {
+		this.clipboardData.data.status.push({ label: label, value: value, max: max });
+	}
+	appendParams(label, value) {
+		this.clipboardData.data.params.push({ label: label, value: value });
+	}
+	setCommands(value) {
+		this.clipboardData.data.commands = value;
+		return this;
+	}
 
-function loadSetting() {
-	const loadButton = document.getElementById("load");
-	loadButton.disabled = true;
-	getJson("setting.json")
-		.then((data) => {
-			Object.keys(data).forEach((key) => {
-				_setting[key] = data[key];
-			});
-		})
-		.then(() => {
-			return getJson("common.skill.json");
-		})
-		.then((data) => {
-			Object.keys(data).forEach((key) => {
-				_common[key] = data[key];
-			});
-			loadButton.disabled = false;
-
-			document.getElementById("link").value = "https://lhrpg.com/lhz/sheets/200524.html";
-			loadCharactor();
-		});
+	getJson() {
+		return JSON.stringify(this.clipboardData);
+	}
 }
+
+$(document).foundation();
+
+const _master = new Object();
+const _config = new Config();
+const _characters = new Object();
+const _localStorage = new LocalStorage();
+
+init();
 
 function getJson(url) {
 	return new Promise((resolve) => {
@@ -45,8 +125,8 @@ function getJson(url) {
 				alert("JSONデータの取得に失敗しました。");
 			};
 			request.onload = function () {
-				var data = this.response;
-				resolve(JSON.parse(data));
+				var jsonRaw = this.response;
+				resolve(JSON.parse(jsonRaw));
 			};
 			request.open("GET", url, true);
 			request.send();
@@ -56,54 +136,254 @@ function getJson(url) {
 		}
 	});
 }
+function copy(dest, source) {
+	Object.keys(source).forEach((key) => {
+		if (Object.getPrototypeOf(source[key]).constructor.name === "Object") {
+			if (!(key in source)) dest[key] = new Object();
+			copy(dest[key], source[key]);
+		} else {
+			dest[key] = source[key];
+		}
+	});
+}
+function init() {
+	const loadButton = document.getElementById("load");
+	loadButton.disabled = true;
 
+	copy(_config, _localStorage.Read("config"));
+
+	const outputAbilityCheckBox = document.getElementById("output-ability");
+	outputAbilityCheckBox.checked = _config.ccforiaOutput.isAbility;
+	outputAbilityCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isAbility = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputCalcDamegeCheckBox = document.getElementById("output-calc-damege");
+	outputCalcDamegeCheckBox.checked = _config.ccforiaOutput.isCalcDamege;
+	outputCalcDamegeCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isCalcDamege = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputSkillCheckBox = document.getElementById("output-skill");
+	outputSkillCheckBox.checked = _config.ccforiaOutput.isSkill;
+	outputSkillCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isSkill = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputBasicSkillCheckBox = document.getElementById("output-basic-skill");
+	outputBasicSkillCheckBox.checked = _config.ccforiaOutput.isBasicSkill;
+	outputBasicSkillCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isBasicSkill = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputEquipmentCheckBox = document.getElementById("output-equipment");
+	outputEquipmentCheckBox.checked = _config.ccforiaOutput.isEquipment;
+	outputEquipmentCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isEquipment = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputBelongingsCheckBox = document.getElementById("output-belongings");
+	outputBelongingsCheckBox.checked = _config.ccforiaOutput.isBelongings;
+	outputBelongingsCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isBelongings = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputConsumablesChartCheckBox = document.getElementById("output-consumables-chart");
+	outputConsumablesChartCheckBox.checked = _config.ccforiaOutput.isConsumableChart;
+	outputConsumablesChartCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isConsumableChart = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputTreasureChartCheckBox = document.getElementById("output-treasure-chart");
+	outputTreasureChartCheckBox.checked = _config.ccforiaOutput.isTreasureChart;
+	outputTreasureChartCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isTreasureChart = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputOtherChartCheckBox = document.getElementById("output-other-chart");
+	outputOtherChartCheckBox.checked = _config.ccforiaOutput.isOtherChart;
+	outputOtherChartCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isOtherChart = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
+	const outputSkillSortInheritCheckBox = document.getElementById("output-skill-sort-inherit");
+	outputSkillSortInheritCheckBox.checked = _config.ccforiaOutput.skillSort.inherit;
+	outputSkillSortInheritCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.skillSort.inherit = true;
+		_config.ccforiaOutput.skillSort.byTiming = false;
+		_localStorage.Write("config", _config);
+		document.getElementById("output-skill-sort-timing-order").style.display = _config.ccforiaOutput.skillSort.byTiming ? "" : "none";
+	});
+
+	const outputSkillSortByTimingCheckBox = document.getElementById("output-skill-sort-timing");
+	outputSkillSortByTimingCheckBox.checked = _config.ccforiaOutput.skillSort.byTiming;
+	outputSkillSortByTimingCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.skillSort.inherit = false;
+		_config.ccforiaOutput.skillSort.byTiming = true;
+		document.getElementById("output-skill-sort-timing-order").style.display = _config.ccforiaOutput.skillSort.byTiming ? "" : "none";
+		_localStorage.Write("config", _config);
+	});
+	const outputSkillSortByTimingOrderList = document.getElementById("output-skill-sort-timing-order");
+	outputSkillSortByTimingOrderList.style.display = _config.ccforiaOutput.skillSort.byTiming ? "" : "none";
+	const timingUList = outputSkillSortByTimingOrderList.getElementsByTagName("ul")[0];
+	for (let index = 0; index < _config.ccforiaOutput.skillSort.timingOrder.length; index++) {
+		const timing = _config.ccforiaOutput.skillSort.timingOrder[index];
+		const li = document.createElement("li");
+		li.id = `output-skill-sort-timing-order-${index}`;
+		li.draggable = true;
+		li.textContent = timing;
+		li.style.cursor = "pointer";
+		li.style.border = "1px dotted #444;";
+		li.ondragstart = function (event) {
+			event.dataTransfer.setData("text/plain", event.target.id);
+		};
+		li.ondragover = function (event) {
+			event.preventDefault();
+			this.style.borderTop = "3px solid";
+		};
+		li.ondragleave = function () {
+			this.style.borderTop = "1px dotted #444";
+		};
+		li.ondrop = function (event) {
+			event.preventDefault();
+			let id = event.dataTransfer.getData("text");
+			let element_drag = document.getElementById(id);
+			this.before(element_drag, this);
+			this.style.borderTop = "1px dotted #444";
+			_config.ccforiaOutput.skillSort.timingOrder = Array.from(element_drag.parentNode.querySelectorAll("li"), (x) => x.textContent);
+			_localStorage.Write("config", _config);
+		};
+		timingUList.appendChild(li);
+	}
+
+	const advancedCheckBox = document.getElementById("advanced-mode");
+	advancedCheckBox.checked = _config.isAdvanced;
+	advancedCheckBox.addEventListener("change", (event) => {
+		_config.isAdvanced = event.target.checked;
+		_localStorage.Write("config", _config);
+		const display = _config.isAdvanced ? "" : "none";
+		const elements = document.getElementsByClassName("chatpalette");
+		for (let index = 0; index < elements.length; index++) {
+			const element = elements[index];
+			if (element.getAttribute("data-is-advanced") == "true") element.style.display = display;
+		}
+	});
+
+	getJson("json/master.json").then((master) => {
+		Object.keys(master).forEach((key) => (_master[key] = master[key]));
+		loadButton.disabled = false;
+	});
+
+	refreshHistoryTable();
+}
 function loadCharactor() {
-	const url = document.getElementById("link").value;
+	loadCharactorFrom(document.getElementById("link").value);
+}
+function loadCharactorFrom(url) {
 	const id = getCharactorId(url);
 	if (id < 0 || id in _characters) return;
 
-	getJson(`https://lhrpg.com/lhz/api/${id}.json`).then((data) => {
-		data.id = id;
-		init(data);
+	getJson(`https://lhrpg.com/lhz/api/${id}.json`).then((character) => {
+		character.id = id;
+		initCharacter(character);
 
-		const character = new Object();
-		character.data = data;
-		character.skillCells = new Object();
 		_characters[id] = character;
 		const panelId = "panel" + id;
 
 		const characterTabs = document.getElementById("character-tabs");
-		character.TabTitle = document.createElement("li");
+
+		const tabTitle = document.createElement("li");
+		tabTitle.className = "tabs-title";
+		characterTabs.appendChild(tabTitle);
+
 		const characterTablink = document.createElement("a");
-
-		character.TabTitle.className = "tabs-title";
-		characterTabs.appendChild(character.TabTitle);
-
 		characterTablink.href = "#" + panelId;
 		characterTablink.setAttribute("data-tabs-target", panelId);
-		characterTablink.textContent = data.name;
-		character.TabTitle.appendChild(characterTablink);
+		characterTablink.setAttribute("data-characte-id", id);
+		characterTablink.textContent = character.name;
+		characterTablink.addEventListener("click", (event) => {
+			const id = parseInt(event.target.getAttribute("data-characte-id"));
+			Object.values(_characters).forEach((character) => {
+				character.isDisplay = character.id == id;
+			});
+		});
+		tabTitle.appendChild(characterTablink);
 
 		const characterContents = document.getElementById("character-contents");
-		character.TabPanel = document.createElement("div");
-		character.TabPanel.className = "callout tabs-panel";
-		character.TabPanel.id = panelId;
-		characterContents.appendChild(character.TabPanel);
+		const tabPanel = document.createElement("div");
+		tabPanel.className = "callout tabs-panel";
+		tabPanel.id = panelId;
+		characterContents.appendChild(tabPanel);
 
-		displayCharacter(character.TabPanel, data);
+		displayCharacter(tabPanel, character);
+
 		Foundation.reInit("tabs");
 		characterTablink.click();
+
+		appendHistory(character);
+		refreshHistoryTable();
 	});
 }
-function init(data) {
-	data.skills = data.skills.concat(_common.skills);
-	data.skills.forEach((skill) => {
-		skill.isCommon = skill.id >= 10000;
-	});
+function releaseCharacter(id) {
+	if (!(id in _characters)) return;
 
-	const targetItems = [data.hand1, data.hand2, data.armor, data.support_item1, data.support_item2, data.support_item3, data.bag].concat(data.items);
-	data.totalMagicGrade = 0;
-	data.totalPrice = 0;
+	const tab = document.getElementById("character-tabs").getElementsByClassName("is-active")[0];
+	const content = document.getElementById("character-contents").getElementsByClassName("is-active")[0];
+	tab.remove();
+	content.remove();
+	delete _characters[id];
+
+	const tabCollection = document.getElementById("character-tabs").children;
+	if (tabCollection.length > 1) {
+		tabCollection[1].click();
+		const id = parseInt(tabCollection[1].children[0].getAttribute("data-characte-id"));
+		Object.values(_characters).forEach((character) => {
+			character.isDisplay = character.id == id;
+		});
+	} else {
+		tabCollection[0].click();
+	}
+}
+function getCurrentCharacter() {
+	const keys = Object.keys(_characters);
+	for (let index = 0; index < keys.length; index++) {
+		const key = keys[index];
+		if (_characters[key].isDisplay) {
+			return _characters[key];
+		}
+	}
+	return null;
+}
+function initCharacter(character) {
+	const toStruct = (roll) => {
+		const result = roll.match(/([0-9]+)[+-]([0-9]+)D/);
+		return { dice: result[2], mod: result[1] };
+	};
+	character.ability = new Object();
+	character.ability.motion = toStruct(character.abl_motion);
+	character.ability.durability = toStruct(character.abl_durability);
+	character.ability.dismantle = toStruct(character.abl_dismantle);
+	character.ability.operate = toStruct(character.abl_operate);
+	character.ability.sense = toStruct(character.abl_sense);
+	character.ability.negotiate = toStruct(character.abl_negotiate);
+	character.ability.knowledge = toStruct(character.abl_knowledge);
+	character.ability.analyze = toStruct(character.abl_analyze);
+	character.ability.avoid = toStruct(character.abl_avoid);
+	character.ability.resist = toStruct(character.abl_resist);
+	character.ability.hit = toStruct(character.abl_hit);
+
+	const targetItems = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].concat(character.items);
+	character.totalMagicGrade = 0;
+	character.totalPrice = 0;
 	const getMagicGrade = function (tags) {
 		for (let index = 0; index < tags.length; index++) {
 			const tag = tags[index];
@@ -115,25 +395,24 @@ function init(data) {
 	};
 	targetItems.forEach((targetItem) => {
 		if (targetItem) {
-			data.totalMagicGrade += getMagicGrade(targetItem.tags);
-			data.totalPrice += targetItem.price;
+			character.totalMagicGrade += getMagicGrade(targetItem.tags);
+			character.totalPrice += targetItem.price;
 		}
 	});
-	return data;
-}
-function releaseCharacter(id) {
-	if (!(id in _characters)) return;
-	const character = _characters[id];
-	character.TabTitle.remove();
-	character.TabPanel.remove();
-	delete _characters[id];
 
-	const idList = Object.keys(_characters);
-	if (idList.length > 0) {
-		_characters[idList[0]].TabTitle.children[0].click();
-	} else {
-		$("#howto-label").click();
+	character.skills = character.skills.concat(_master.commonSkills);
+	character._skillIndexes = new Object();
+	for (let index = 0; index < character.skills.length; index++) {
+		const skill = character.skills[index];
+		character._skillIndexes[skill.id] = index;
+		skill.isCommon = skill.id >= 10000;
+		skill.characterId = character.id;
 	}
+	character.getSkillById = (id) => {
+		return _skillIndexes[id];
+	};
+
+	return character;
 }
 function getCharactorId(url) {
 	let result = url.match(/lhrpg.com\/lhz\/pc.*\?id=([0-9]+)/);
@@ -142,24 +421,42 @@ function getCharactorId(url) {
 	if (result) return parseInt(result[1]);
 	return -1;
 }
-function displayCharacter(panel, data) {
-	const menuCell = createMenuCell(data);
+function getSkillChatpalettes(skill) {
+	const name = `character-${skill.characterId}`;
+	const data = _localStorage.Read(name);
+	if ("skillChatpalettes" in data && skill.id in data.skillChatpalettes) {
+		return data.skillChatpalettes[skill.id];
+	} else {
+		return _master.skillChatpalettes[skill.id];
+	}
+}
+function setSkillChatpalettes(skill, chatpalettes) {
+	const name = `character-${skill.characterId}`;
+	const data = _localStorage.Read(name);
+	if (!("skillChatpalettes" in data)) data.skillChatpalettes = new Object();
+	data.skillChatpalettes[skill.id] = chatpalettes;
+	_localStorage.Write(name, data);
+}
+function getSkillById(character, id) {
+	return character.skills[character._skillIndexes[id]];
+}
+function displayCharacter(panel, character) {
+	const menuCell = createMenuCell(character);
 	panel.appendChild(menuCell);
-	const profileCell = createProfileCell(data);
+	const profileCell = createProfileCell(character);
 	panel.appendChild(profileCell);
 	panel.appendChild(document.createElement("hr"));
-	const statusGrid = createStatusGrid(data);
+	const statusGrid = createStatusGrid(character);
 	panel.appendChild(statusGrid);
-	panel.appendChild(document.createElement("hr"));
 
 	const tabButtonGroup = document.createElement("div");
 	tabButtonGroup.classList.add("small", "expanded", "button-group");
 	tabButtonGroup.style.marginBottom = "0.5rem";
 	panel.appendChild(tabButtonGroup);
 
-	const skillPanelGrid = createSkillPanelGrid(data);
-	const itemPanelGrid = createItemPanelGrid(data);
-	const otherPanelGrid = createOtherPanelGrid(data);
+	const skillPanelGrid = createSkillPanelGrid(character);
+	const itemPanelGrid = createItemPanelGrid(character);
+	const otherPanelGrid = createOtherPanelGrid(character);
 	itemPanelGrid.style.display = "none";
 	otherPanelGrid.style.display = "none";
 	const changePanel = (event) => {
@@ -197,33 +494,59 @@ function displayCharacter(panel, data) {
 	panel.appendChild(skillPanelGrid);
 	panel.appendChild(itemPanelGrid);
 	panel.appendChild(otherPanelGrid);
-}
-function createMenuCell(data) {
-	const menuCell = createCellElement();
-	const ccfoliaLink = createCcfoliaButton(data);
-	const configLink = createSecondaryButton();
-	const closebButton = createCloseButton();
 
-	configLink.classList.add("small");
-	configLink.href = "javascript:void(0);";
-	configLink.innerText = "⚙";
-	configLink.style.float = "right";
-	configLink.style.color = "whitesmoke";
-	configLink.style.fontWeight = "bold";
-	configLink.style.margin = "5.5em 1.5em 0 0";
+	// const GridContainer = document.createElement("div");
+	// GridContainer.className = "grid-container";
+	// GridContainer.id = `character-${character.id}-tool`;
+	// GridContainer.style.position = "fixed";
+	// GridContainer.style.bottom = "0";
+	// GridContainer.style.left = "calc(50% - 50rem/2)";
+	// GridContainer.style.display = "none";
+	// document.getElementsByTagName("body")[0].children[0].after(GridContainer);
+
+	// const Content = document.createElement("div");
+	// Content.className = "tabs-content";
+	// GridContainer.appendChild(Content);
+
+	// const Panel = document.createElement("div");
+	// Panel.className = "tabs-panel is-active";
+	// Panel.classList.add("callout");
+	// Content.appendChild(Panel);
+
+	// const Grid = createStatusGrid(character);
+	// Panel.appendChild(Grid);
+
+	// const Grid = createGridElement();
+	// Panel.appendChild(Grid);
+
+	// const Cell = createCellElement(12);
+	// Cell.classList.add("tabs-content");
+	// Grid.appendChild(Cell);
+
+	// const Label = document.createElement("label");
+	// Cell.appendChild(Label);
+	// const NumberInput = document.createElement("input");
+	// NumberInput.type = "number";
+	// Label.appendChild(NumberInput);
+}
+function createMenuCell(character) {
+	const menuCell = createCellElement();
+	const ccfoliaButton = createCcfoliaButton(character);
+	const lhrpgButton = createLHRPGButton(character);
+	const closebButton = createCloseButton(character);
 
 	closebButton.href = "javascript:void(0);";
-	closebButton.setAttribute("onclick", `releaseCharacter(${data.id});`);
+	closebButton.setAttribute("onclick", `releaseCharacter(${character.id});`);
 
 	menuCell.appendChild(closebButton);
-	menuCell.appendChild(configLink);
-	menuCell.appendChild(ccfoliaLink);
+	menuCell.appendChild(ccfoliaButton);
+	menuCell.appendChild(lhrpgButton);
 	return menuCell;
 }
-function createProfileCell(data) {
+function createProfileCell(character) {
 	const profileCell = createCellElement();
 	const profileImage = document.createElement("img");
-	profileImage.src = data.image_url;
+	profileImage.src = character.image_url;
 	profileImage.className = "profile-image";
 	profileImage.style.width = "100px";
 	profileImage.style.margin = "0em 1em 1em 0em";
@@ -237,20 +560,20 @@ function createProfileCell(data) {
 	const profileTotalMagicGrade = document.createElement("div");
 	const profileTotalPrice = document.createElement("div");
 	profileName.className = "header-1";
-	profileName.innerText = data.name;
+	profileName.innerText = character.name;
 	profileCrLv.className = "text-1";
-	profileCrLv.innerText = `CR.${data.character_rank} Lv.${data.level}`;
+	profileCrLv.innerText = `CR.${character.character_rank} Lv.${character.level}`;
 	profileAttr.className = "text-2";
-	profileAttr.innerText = `${data.gender} ${data.race} ${data.archetype}/${data.main_job} ${data.sub_job}`;
+	profileAttr.innerText = `${character.gender} ${character.race} ${character.archetype}/${character.main_job} ${character.sub_job}`;
 	profileTags.className = "text-2";
-	data.tags.forEach((tag) => {
+	character.tags.forEach((tag) => {
 		profileTags.innerText += `[${tag}]`;
 	});
 	profileTotalMagicGrade.className = "text-3";
-	profileTotalMagicGrade.innerText = `マジックアイテムのグレード数合計:${data.totalMagicGrade}`;
+	profileTotalMagicGrade.innerText = `マジックアイテムのグレード数合計:${character.totalMagicGrade}`;
 	profileTotalMagicGrade.style.marginTop = "5px";
 	profileTotalPrice.className = "text-3";
-	profileTotalPrice.innerText = `所持品の価格合計:${data.totalPrice}G`;
+	profileTotalPrice.innerText = `所持品の価格合計:${character.totalPrice}G`;
 	profileCell.appendChild(profileName);
 	profileCell.appendChild(profileCrLv);
 	profileCell.appendChild(profileAttr);
@@ -260,7 +583,7 @@ function createProfileCell(data) {
 
 	return profileCell;
 }
-function createStatusGrid(data) {
+function createStatusGrid(character) {
 	const appendRow = function (array) {
 		const row = document.createElement("tr");
 		row.style.color = "#333";
@@ -298,11 +621,11 @@ function createStatusGrid(data) {
 
 	foundationTableBody.appendRow = appendRow;
 
-	foundationTableBody.appendRow(["STR", `${data.str_basic_value}(+${data.str_value})`, "運動値", data.abl_motion, "耐久値", data.abl_durability]);
-	foundationTableBody.appendRow(["DEX", `${data.dex_basic_value}(+${data.dex_value})`, "解除値", data.abl_dismantle, "操作値", data.abl_operate]);
-	foundationTableBody.appendRow(["POW", `${data.pow_basic_value}(+${data.pow_value})`, "知覚値", data.abl_sense, "交渉値", data.abl_negotiate]);
-	foundationTableBody.appendRow(["INT", `${data.int_basic_value}(+${data.int_value})`, "知識値", data.abl_knowledge, "解析値", data.abl_analyze]);
-	foundationTableBody.appendRow(["命中値", data.abl_hit, "回避値", data.abl_avoid, "抵抗値", data.abl_resist]);
+	foundationTableBody.appendRow(["STR", `${character.str_basic_value}(+${character.str_value})`, "運動値", character.abl_motion, "耐久値", character.abl_durability]);
+	foundationTableBody.appendRow(["DEX", `${character.dex_basic_value}(+${character.dex_value})`, "解除値", character.abl_dismantle, "操作値", character.abl_operate]);
+	foundationTableBody.appendRow(["POW", `${character.pow_basic_value}(+${character.pow_value})`, "知覚値", character.abl_sense, "交渉値", character.abl_negotiate]);
+	foundationTableBody.appendRow(["INT", `${character.int_basic_value}(+${character.int_value})`, "知識値", character.abl_knowledge, "解析値", character.abl_analyze]);
+	foundationTableBody.appendRow(["命中値", character.abl_hit, "回避値", character.abl_avoid, "抵抗値", character.abl_resist]);
 
 	const battleCell = createCellElement(6);
 	grid.appendChild(battleCell);
@@ -327,92 +650,17 @@ function createStatusGrid(data) {
 
 	battleTableBody.appendRow = appendRow;
 
-	battleTableBody.appendRow(["最大HP", data.max_hitpoint, "初期因果力", data.effect]);
-	battleTableBody.appendRow(["行動力", data.action, "移動力", data.move]);
-	battleTableBody.appendRow(["武器の射程", data.range, "回復力", data.heal_power]);
-	battleTableBody.appendRow(["攻撃力", data.physical_attack, "物理防御力", data.physical_defense]);
-	battleTableBody.appendRow(["魔力", data.magic_attack, "魔法防御力", data.magic_defense]);
+	battleTableBody.appendRow(["最大HP", character.max_hitpoint, "初期因果力", character.effect]);
+	battleTableBody.appendRow(["行動力", character.action, "移動力", character.move]);
+	battleTableBody.appendRow(["武器の射程", character.range, "回復力", character.heal_power]);
+	battleTableBody.appendRow(["攻撃力", character.physical_attack, "物理防御力", character.physical_defense]);
+	battleTableBody.appendRow(["魔力", character.magic_attack, "魔法防御力", character.magic_defense]);
 
 	return grid;
 }
-function createEquipmentCell(panel, data) {
-	const appendRow = function (array) {
-		const row = document.createElement("tr");
-		row.style.color = "#333";
-		array.forEach((element) => {
-			const data = document.createElement("td");
-			data.textContent = element;
-			row.appendChild(data);
-		});
-
-		this.appendChild(row);
-	};
-
+function createSkillPanelGrid(character) {
 	const grid = createGridElement();
-
-	const foundationCell = createCellElement(6);
-	grid.appendChild(foundationCell);
-
-	const foundationTable = document.createElement("table");
-	foundationTable.className = "unstriped hover";
-	foundationCell.appendChild(foundationTable);
-
-	const foundationTableHead = document.createElement("thead");
-	const foundationTableHeadRow = document.createElement("tr");
-	const foundationTableHeadRowData = document.createElement("th");
-	foundationTableHeadRowData.colSpan = 6;
-	foundationTableHeadRowData.textContent = "FOUNDATION";
-	foundationTableHeadRow.style.background = "#ED6E37";
-	foundationTableHeadRow.style.color = "whitesmoke";
-	foundationTable.appendChild(foundationTableHead);
-	foundationTableHead.appendChild(foundationTableHeadRow);
-	foundationTableHeadRow.appendChild(foundationTableHeadRowData);
-
-	const foundationTableBody = document.createElement("tbody");
-	foundationTable.appendChild(foundationTableBody);
-
-	foundationTableBody.appendRow = appendRow;
-
-	foundationTableBody.appendRow(["STR", `${data.str_basic_value}(+${data.str_value})`, "運動値", data.abl_motion, "耐久値", data.abl_durability]);
-	foundationTableBody.appendRow(["DEX", `${data.dex_basic_value}(+${data.dex_value})`, "解除値", data.abl_dismantle, "操作値", data.abl_operate]);
-	foundationTableBody.appendRow(["POW", `${data.pow_basic_value}(+${data.pow_value})`, "知覚値", data.abl_sense, "交渉値", data.abl_negotiate]);
-	foundationTableBody.appendRow(["INT", `${data.int_basic_value}(+${data.int_value})`, "知識値", data.abl_knowledge, "解析値", data.abl_analyze]);
-	foundationTableBody.appendRow(["命中値", data.abl_hit, "回避値", data.abl_avoid, "抵抗値", data.abl_resist]);
-
-	const battleCell = createCellElement(6);
-	grid.appendChild(battleCell);
-
-	const battleTable = document.createElement("table");
-	battleTable.className = "unstriped hover";
-	battleCell.appendChild(battleTable);
-
-	const battleTableHead = document.createElement("thead");
-	const battleTableHeadRow = document.createElement("tr");
-	const battleTableHeadRowData = document.createElement("th");
-	battleTableHeadRowData.colSpan = 6;
-	battleTableHeadRowData.textContent = "BATTLE";
-	battleTableHeadRow.style.background = "#ED6E37";
-	battleTableHeadRow.style.color = "whitesmoke";
-	battleTable.appendChild(battleTableHead);
-	battleTableHead.appendChild(battleTableHeadRow);
-	battleTableHeadRow.appendChild(battleTableHeadRowData);
-
-	const battleTableBody = document.createElement("tbody");
-	battleTable.appendChild(battleTableBody);
-
-	battleTableBody.appendRow = appendRow;
-
-	battleTableBody.appendRow(["最大HP", data.max_hitpoint, "初期因果力", data.effect]);
-	battleTableBody.appendRow(["行動力", data.action, "移動力", data.move]);
-	battleTableBody.appendRow(["武器の射程", data.range, "回復力", data.heal_power]);
-	battleTableBody.appendRow(["攻撃力", data.physical_attack, "物理防御力", data.physical_defense]);
-	battleTableBody.appendRow(["魔力", data.magic_attack, "魔法防御力", data.magic_defense]);
-
-	panel.appendChild(grid);
-}
-function createSkillPanelGrid(data) {
-	const grid = createGridElement();
-	grid.id = `skill-${data.id}`;
+	grid.id = `skill-${character.id}`;
 
 	const filterCell = createCellElement(12);
 	filterCell.style.position = "relative";
@@ -431,16 +679,16 @@ function createSkillPanelGrid(data) {
 	filterResetButton.style.padding = "0.2rem";
 	filterResetButton.style.top = "3.4rem";
 	filterResetButton.style.right = "1.1rem";
-	filterResetButton.setAttribute("data-id", data.id);
+	filterResetButton.setAttribute("data-id", character.id);
 	filterResetButton.onclick = (event) => {
 		const id = event.target.getAttribute("data-id");
 		const filterButtons = Object.values(document.getElementsByClassName("filter-skill-" + id));
 		filterButtons.forEach((filterButton) => {
 			filterButton.classList.add("hollow");
 		});
-		const character = _characters[id];
-		character.data.skills.forEach((skill) => {
-			character.skillCells[skill.id].style.display = "";
+		const character = getCurrentCharacter();
+		character.skills.forEach((skill) => {
+			skill.cell.style.display = "";
 		});
 	};
 	filterCell.appendChild(filterResetButton);
@@ -453,21 +701,21 @@ function createSkillPanelGrid(data) {
 	selectModeButton.style.padding = "0.2rem";
 	selectModeButton.style.top = "3.4rem";
 	selectModeButton.style.right = "4.8rem";
-	selectModeButton.setAttribute("data-id", data.id);
+	selectModeButton.setAttribute("data-id", character.id);
 	selectModeButton.onclick = (event) => {
 		event.target.parentNode.setAttribute("data-is-multi-select", !event.target.classList.toggle("hollow"));
 	};
 	filterCell.appendChild(selectModeButton);
 
 	const activeSkillTimings = [];
-	data.skills.forEach((skill) => {
+	character.skills.forEach((skill) => {
 		if (!activeSkillTimings.includes(skill.timing)) {
 			activeSkillTimings.push(skill.timing);
 		}
 	});
 
 	const activeTags = [];
-	data.skills.forEach((skill) => {
+	character.skills.forEach((skill) => {
 		skill.tags.forEach((tag) => {
 			if (!activeTags.includes(tag)) {
 				activeTags.push(tag);
@@ -477,7 +725,7 @@ function createSkillPanelGrid(data) {
 
 	const createFilterButton = (group, category, value, style = "primary") => {
 		const button = createButton();
-		button.classList.add(`filter-skill-${data.id}`, style, "hollow");
+		button.classList.add(`filter-skill-${character.id}`, style, "hollow");
 		button.value = category;
 		button.innerText = value;
 		button.disabled = !activeSkillTimings.includes(value) && !activeTags.includes(value);
@@ -494,7 +742,7 @@ function createSkillPanelGrid(data) {
 				const buttons = Object.values(event.target.parentNode.parentNode.getElementsByClassName(filterButtonClassName));
 				buttons.forEach((button) => {
 					if (button == event.target) {
-						button.classList.remove("hollow");
+						button.classList.toggle("hollow");
 					} else {
 						button.classList.add("hollow");
 					}
@@ -519,18 +767,17 @@ function createSkillPanelGrid(data) {
 				}
 			});
 
-			const character = _characters[id];
-			character.data.skills.forEach((skill) => {
-				const cell = character.skillCells[skill.id];
+			const character = getCurrentCharacter();
+			character.skills.forEach((skill) => {
 				const isDisplayByTiming = selectedTimings.length == 0 || selectedTimings.includes(skill.timing);
 				let isDisplayByTag = selectedTags.length == 0;
 				selectedTags.forEach((selectedTag) => {
 					isDisplayByTag = isDisplayByTag || skill.tags.includes(selectedTag);
 				});
 				if (selectedTimings.length > 0 && selectedTags.length > 0) {
-					cell.style.display = isDisplayByTiming || isDisplayByTag ? "" : "none";
+					skill.cell.style.display = isDisplayByTiming || isDisplayByTag ? "" : "none";
 				} else {
-					cell.style.display = isDisplayByTiming && isDisplayByTag ? "" : "none";
+					skill.cell.style.display = isDisplayByTiming && isDisplayByTag ? "" : "none";
 				}
 			});
 		};
@@ -561,12 +808,9 @@ function createSkillPanelGrid(data) {
 	const tags = ["準備", "速攻", "移動", "構え", "援護歌", "支援"];
 	tags.forEach((timing) => createFilterButton(filterTagButtonGroup, "tag", timing, "secondary"));
 
-	data.skills.forEach((skill) => {
-		if (!skill.isCommon) {
-			const cell = createSkillCell(skill);
-			grid.appendChild(cell);
-			_characters[data.id].skillCells[skill.id] = cell;
-		}
+	character.skills.forEach((skill) => {
+		const cell = createSkillCell(skill);
+		grid.appendChild(cell);
 	});
 
 	return grid;
@@ -593,6 +837,7 @@ function createSkillCell(skill) {
 
 	displaySkillChatpalette(skillTableBody, skill);
 
+	skill.cell = cell;
 	return cell;
 }
 function createSkillTitleRow(skill) {
@@ -603,6 +848,10 @@ function createSkillTitleRow(skill) {
 	skillTableHeadRowData.colSpan = 7;
 	skillTableHeadRowData.style.padding = "0.2em";
 	skillTableHeadRow.appendChild(skillTableHeadRowData);
+	if (skill.isCommon) {
+		skillTableHeadRowData.style.color = "#333";
+		skillTableHeadRowData.style.background = "#BBB";
+	}
 
 	const skillTableHeadRowTitle = document.createElement("ul");
 	skillTableHeadRowTitle.style.margin = 0;
@@ -693,7 +942,7 @@ function displaySkillChatpalette(tableBody, skill) {
 		chatpaletteRow.className = "chatpalette";
 		chatpaletteRow.setAttribute("data-is-advanced", chatpalette.isAdvanced);
 		chatpaletteRow.style.color = "#444";
-		chatpaletteRow.style.display = chatpalette.isAdvanced ? "none" : "";
+		chatpaletteRow.style.display = chatpalette.isAdvanced && !_config.isAdvanced ? "none" : "";
 		tableBodyElement.appendChild(chatpaletteRow);
 
 		const chatpaletteData = document.createElement("td");
@@ -701,6 +950,13 @@ function displaySkillChatpalette(tableBody, skill) {
 		chatpaletteRow.appendChild(chatpaletteData);
 
 		const typeSelect = document.createElement("select");
+		_master.chatpaletteTypes.forEach((typeCandidate) => {
+			const option = document.createElement("option");
+			option.value = typeCandidate.value;
+			option.innerText = typeCandidate.text;
+			option.selected = chatpalette.type == typeCandidate.type;
+			typeSelect.appendChild(option);
+		});
 		typeSelect.style.float = "left";
 		typeSelect.style.width = "18%";
 		typeSelect.className = "chatpalette-type";
@@ -710,13 +966,7 @@ function displaySkillChatpalette(tableBody, skill) {
 			saveChatpalettes(event.target.closest("tBody"), event.target.getAttribute("data-skill-id"));
 		};
 		chatpaletteData.appendChild(typeSelect);
-		_setting.typeCandidates.forEach((typeCandidate) => {
-			const option = document.createElement("option");
-			option.value = typeCandidate.value;
-			option.innerText = typeCandidate.text;
-			option.selected = chatpalette.type == typeCandidate.type;
-			typeSelect.appendChild(option);
-		});
+
 		const textInput = document.createElement("input");
 		textInput.type = "text";
 		textInput.className = "chatpalette-text";
@@ -735,16 +985,18 @@ function displaySkillChatpalette(tableBody, skill) {
 		removeChatpaletteButton.innerText = "削除";
 		removeChatpaletteButton.setAttribute("data-skill-id", skillId);
 		removeChatpaletteButton.onclick = (event) => {
-			const tBody = event.target.closest("tBody");
-			event.target.closest("tr").remove();
-			saveChatpalettes(tBody, event.target.getAttribute("data-skill-id"));
+			if (window.confirm("本当に削除しまか？")) {
+				const tBody = event.target.closest("tBody");
+				event.target.closest("tr").remove();
+				saveChatpalettes(tBody, event.target.getAttribute("data-skill-id"));
+			}
 		};
 		chatpaletteData.appendChild(removeChatpaletteButton);
 	};
 	const saveChatpalettes = (tableBodyElement, skillId) => {
 		const chatpalettes = [];
 		const comandelements = Object.values(tableBodyElement.getElementsByClassName("chatpalette"));
-		comandelements.slice(1, comandelements.length).forEach((comandelement) => {
+		comandelements.forEach((comandelement) => {
 			const typeSelect = comandelement.getElementsByClassName("chatpalette-type");
 			const textInput = comandelement.getElementsByClassName("chatpalette-text")[0];
 			if (textInput.value) {
@@ -755,7 +1007,8 @@ function displaySkillChatpalette(tableBody, skill) {
 				chatpalettes.push(chatpalette);
 			}
 		});
-		_setting.skills[skillId].chatpalettes = chatpalettes;
+		const character = getCurrentCharacter();
+		setSkillChatpalettes(getSkillById(character, skillId), chatpalettes);
 	};
 
 	const chatpalettesRow = document.createElement("tr");
@@ -777,22 +1030,22 @@ function displaySkillChatpalette(tableBody, skill) {
 	chatpalettesTitleData.innerText = "チャットパレット";
 	chatpalettesData.appendChild(chatpalettesTitleData);
 
-	_setting.skills[skill.id].chatpalettes.forEach((chatpalette) => {
+	getSkillChatpalettes(skill).forEach((chatpalette) => {
 		appendChatpaletteRow(tableBody, skill.id, chatpalette);
 	});
 }
 
-function createItemPanelGrid(data) {
+function createItemPanelGrid(character) {
 	const grid = createGridElement();
-	grid.id = `item-${data.id}`;
+	grid.id = `item-${character.id}`;
 
-	const equipmentCell = createEquipmentCell(data);
+	const equipmentCell = createEquipmentCell(character);
 	grid.appendChild(equipmentCell);
-	const belongingsCell = createBelongingsCell(data);
+	const belongingsCell = createBelongingsCell(character);
 	grid.appendChild(belongingsCell);
 	return grid;
 }
-function createEquipmentCell(data) {
+function createEquipmentCell(character) {
 	const cell = createCellElement(12);
 
 	const equipmentTable = document.createElement("table");
@@ -851,10 +1104,10 @@ function createEquipmentCell(data) {
 		}
 	};
 
-	createEquipmentTitleRows("手", [data.hand1, data.hand2]);
-	createEquipmentTitleRows("防具", [data.armor]);
-	createEquipmentTitleRows("補助装備", [data.support_item1, data.support_item2, data.support_item3]);
-	createEquipmentTitleRows("鞄", [data.bag]);
+	createEquipmentTitleRows("手", [character.hand1, character.hand2]);
+	createEquipmentTitleRows("防具", [character.armor]);
+	createEquipmentTitleRows("補助装備", [character.support_item1, character.support_item2, character.support_item3]);
+	createEquipmentTitleRows("鞄", [character.bag]);
 
 	return cell;
 }
@@ -920,7 +1173,7 @@ function createEquipmentPrefixData(item) {
 	rowData.style.padding = "0.2em";
 	return rowData;
 }
-function createBelongingsCell(data) {
+function createBelongingsCell(character) {
 	const cell = createCellElement(12);
 
 	const table = document.createElement("table");
@@ -978,16 +1231,15 @@ function createBelongingsCell(data) {
 			itemPrefixRow.appendChild(createBelongingsFunctionData(item));
 		}
 	};
-	const bags = [{ name: "", alias: "", slot_size: 2 }, data.hand1, data.hand2, data.armor, data.support_item1, data.support_item2, data.support_item3, data.bag].filter((item) => {
+	const bags = [{ name: "", alias: "", slot_size: 2 }, character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((item) => {
 		if (item) return item.slot_size > 0;
 		return false;
 	});
 	for (let index = 0, start = 0; index < bags.length; index++) {
 		const bag = bags[index];
-		createBelongingsRows(bag.name, data.items.slice(start, start + bag.slot_size));
+		createBelongingsRows(bag.name, character.items.slice(start, start + bag.slot_size));
 		start += bag.slot_size;
 	}
-	bags.forEach((bag) => {});
 
 	return cell;
 }
@@ -1059,20 +1311,20 @@ function createBelongingsFunctionData(belongings) {
 	return rowData;
 }
 
-function createOtherPanelGrid(data) {
+function createOtherPanelGrid(character) {
 	const grid = createGridElement();
-	grid.id = `other-${data.id}`;
+	grid.id = `other-${character.id}`;
 
-	const remarksCell = createRemarksCell(data);
+	const remarksCell = createRemarksCell(character);
 	grid.appendChild(remarksCell);
-	const guidingCreedCell = createGuidingCreedCell(data);
+	const guidingCreedCell = createGuidingCreedCell(character);
 	grid.appendChild(guidingCreedCell);
-	const connectionAndUnionCreedCell = createConnectionAndUnionCell(data);
+	const connectionAndUnionCreedCell = createConnectionAndUnionCell(character);
 	grid.appendChild(connectionAndUnionCreedCell);
 
 	return grid;
 }
-function createRemarksCell(data) {
+function createRemarksCell(character) {
 	const cell = createCellElement(12);
 
 	const table = document.createElement("table");
@@ -1094,12 +1346,12 @@ function createRemarksCell(data) {
 	detailRow.style.color = "#444";
 	tableBody.appendChild(detailRow);
 	const detailRowData = document.createElement("td");
-	detailRowData.innerHTML = data.remarks.replaceAll("\n", "<br>");
+	detailRowData.innerHTML = character.remarks.replaceAll("\n", "<br>");
 	detailRow.appendChild(detailRowData);
 
 	return cell;
 }
-function createGuidingCreedCell(data) {
+function createGuidingCreedCell(character) {
 	const cell = createCellElement(12);
 
 	const table = document.createElement("table");
@@ -1107,19 +1359,19 @@ function createGuidingCreedCell(data) {
 
 	const tableHead = document.createElement("thead");
 	table.appendChild(tableHead);
-	const tableHeadRow = createGuidingCreedTitleRow(data);
+	const tableHeadRow = createGuidingCreedTitleRow(character);
 	tableHead.appendChild(tableHeadRow);
 
 	const tableBody = document.createElement("tbody");
 	table.appendChild(tableBody);
-	const propertyRow = createGuidingCreedPropertyRow(data);
+	const propertyRow = createGuidingCreedPropertyRow(character);
 	tableBody.appendChild(propertyRow);
-	const detailRow = createGuidingCreedDetailRow(data);
+	const detailRow = createGuidingCreedDetailRow(character);
 	tableBody.appendChild(detailRow);
 
 	return cell;
 }
-function createGuidingCreedTitleRow(data) {
+function createGuidingCreedTitleRow(character) {
 	const row = document.createElement("tr");
 	row.style.color = "whitesmoke";
 
@@ -1131,34 +1383,34 @@ function createGuidingCreedTitleRow(data) {
 
 	return row;
 }
-function createGuidingCreedPropertyRow(data) {
+function createGuidingCreedPropertyRow(character) {
 	const row = document.createElement("tr");
 	row.style.color = "#444";
 
 	const nameData = document.createElement("td");
-	nameData.textContent = `クリード名：${data.creed_name}`;
+	nameData.textContent = `クリード名：${character.creed_name}`;
 	row.appendChild(nameData);
 	const creedData = document.createElement("td");
-	creedData.textContent = `信念：${data.creed}`;
+	creedData.textContent = `信念：${character.creed}`;
 	row.appendChild(creedData);
 	const tagData = document.createElement("td");
-	tagData.textContent = `人物タグ：${data.creed_tag}`;
+	tagData.textContent = `人物タグ：${character.creed_tag}`;
 	row.appendChild(tagData);
 
 	return row;
 }
-function createGuidingCreedDetailRow(data) {
+function createGuidingCreedDetailRow(character) {
 	const row = document.createElement("tr");
 	row.style.color = "#444";
 
 	const nameData = document.createElement("td");
-	nameData.textContent = `説明：${data.creed_detail}`;
+	nameData.textContent = `説明：${character.creed_detail}`;
 	nameData.colSpan = 3;
 	row.appendChild(nameData);
 
 	return row;
 }
-function createConnectionAndUnionCell(data) {
+function createConnectionAndUnionCell(character) {
 	const cell = createCellElement(12);
 
 	const table = document.createElement("table");
@@ -1166,22 +1418,22 @@ function createConnectionAndUnionCell(data) {
 
 	const tableHead = document.createElement("thead");
 	table.appendChild(tableHead);
-	const tableHeadRow = createConnectionAndUnionTitleRow(data);
+	const tableHeadRow = createConnectionAndUnionTitleRow(character);
 	tableHead.appendChild(tableHeadRow);
 
 	const tableBody = document.createElement("tbody");
 	table.appendChild(tableBody);
-	data.connections.forEach((connection) => {
+	character.connections.forEach((connection) => {
 		const row = createConnectionRow(connection);
 		tableBody.appendChild(row);
 	});
-	data.unions.forEach((union) => {
+	character.unions.forEach((union) => {
 		const row = createUnionRow(union);
 		tableBody.appendChild(row);
 	});
 	return cell;
 }
-function createConnectionAndUnionTitleRow(data) {
+function createConnectionAndUnionTitleRow(character) {
 	const row = document.createElement("tr");
 	row.style.color = "whitesmoke";
 
@@ -1249,17 +1501,30 @@ function createButton() {
 	button.className = "button";
 	return button;
 }
-function createCcfoliaButton(data) {
+function createCcfoliaButton(character) {
 	const button = document.createElement("a");
-	button.className = "ccforia success button";
-	button.classList.add("small");
+	button.className = "success button";
+	button.classList.add("tiny");
 	button.href = "javascript:void(0);";
-	button.setAttribute("onclick", `ExportCcforia(${data.id});`);
+	button.setAttribute("onclick", `ExportCcforia(${character.id});`);
 	button.innerHTML = `CCFOLIA`;
 	button.style.float = "right";
 	button.style.color = "whitesmoke";
 	button.style.fontWeight = "bold";
-	button.style.margin = "5.5em 0.25em 0 0";
+	button.style.margin = "8.5em 0.25em 0 0";
+	return button;
+}
+function createLHRPGButton(character) {
+	const button = document.createElement("a");
+	button.className = "button";
+	button.classList.add("tiny");
+	button.href = "https://lhrpg.com/lhz/pc?id=" + character.id;
+	button.target = "_blank";
+	button.innerHTML = `冒険者窓口`;
+	button.style.float = "right";
+	button.style.color = "whitesmoke";
+	button.style.fontWeight = "bold";
+	button.style.margin = "8.5em 0.25em 0 0";
 	return button;
 }
 function createSecondaryButton() {
@@ -1281,48 +1546,29 @@ function createCloseButton() {
 }
 
 function ExportCcforia(id) {
-	createCcforiaJson(_characters[id].data);
+	createCcforiaJson(getCurrentCharacter(id));
 }
-function createCcforiaJson(data) {
+function createCcforiaJson(character) {
 	const ccforia = new Ccforia();
-	ccforia.setName(data.name);
+	ccforia.setName(character.name);
 	let tags = "";
-	data.tags.forEach((tag) => {
+	character.tags.forEach((tag) => {
 		tags += `[${tag}]`;
 	});
-	ccforia.setMemo(`PL:${data.player_name}\n防御:物理${data.physical_defense}/魔法${data.magic_defense}\nSTR${data.str_value}/DEX${data.dex_value}/POW${data.pow_value}/INT${data.int_value}\nLv:${data.level} タグ:${tags}`);
-	ccforia.setInitiative(data.action);
-	ccforia.setExternalUrl(data.sheet_url);
-	ccforia.appendStatus("HP", data.max_hitpoint, data.max_hitpoint);
-	ccforia.appendStatus("因果力", data.effect, data.effect);
+	ccforia.setMemo(
+		`PL:${character.player_name}\n防御:物理${character.physical_defense}/魔法${character.magic_defense}\nSTR${character.str_value}/DEX${character.dex_value}/POW${character.pow_value}/INT${character.int_value}\nLv:${character.level} タグ:${tags}\nマジックアイテムのグレード数合計:${character.totalMagicGrade}\n所持品の価格合計:${character.totalPrice}`
+	);
+	ccforia.setInitiative(character.action);
+	ccforia.setExternalUrl(character.sheet_url);
+
+	ccforia.appendStatus("HP", character.max_hitpoint, character.max_hitpoint);
+	ccforia.appendStatus("因果力", character.effect, character.effect);
 	ccforia.appendStatus("障壁", 0, 0);
 	ccforia.appendStatus("再生", 0, 0);
 	ccforia.appendStatus("ヘイト", 0, 0);
 	ccforia.appendStatus("疲労", 0, 0);
-	ccforia.appendParams("CR", data.character_rank.toString());
-	ccforia.appendParams("STR", data.str_value.toString());
-	ccforia.appendParams("STR基本値", data.str_value.toString());
-	ccforia.appendParams("DEX", data.dex_value.toString());
-	ccforia.appendParams("DEX基本値", data.dex_value.toString());
-	ccforia.appendParams("POW", data.pow_value.toString());
-	ccforia.appendParams("POW基本値", data.pow_value.toString());
-	ccforia.appendParams("INT", data.int_value.toString());
-	ccforia.appendParams("INT基本値", data.int_value.toString());
-	ccforia.appendParams("攻撃力", data.physical_attack.toString());
-	ccforia.appendParams("魔力", data.magic_attack.toString());
-	ccforia.appendParams("回復力", data.heal_power.toString());
-	ccforia.appendParams("武器の射程Sq", data.range);
-	ccforia.appendParams("物理防御力", data.physical_defense.toString());
-	ccforia.appendParams("魔法防御力", data.magic_defense.toString());
-	ccforia.appendParams("行動力", data.action.toString());
-	ccforia.appendParams("移動力", data.move.toString());
-	ccforia.appendParams("最大HP", data.max_hitpoint.toString());
-	ccforia.appendParams("初期因果力", data.effect.toString());
-	ccforia.appendParams("空きスロット数", data.items.filter((item) => item == null).length.toString());
-	ccforia.setCommands(createChatpalette(data));
 
-	ccforia.appendParams("マジックアイテムのグレード数合計", data.totalMagicGrade.toString());
-	ccforia.appendParams("所持品の価格合計", data.totalPrice.toString());
+	ccforia.setCommands(createChatpalette(character));
 
 	if (navigator.clipboard) {
 		try {
@@ -1334,47 +1580,32 @@ function createCcforiaJson(data) {
 		}
 	}
 }
-function createChatpalette(data) {
+function createChatpalette(character) {
 	const replaceParameter = (text, skill, tags) => {
-		const toStruct = (roll) => {
-			const result = roll.match(/([0-9]+)[+-]([0-9]+)D/);
-			return { dice: result[2], mod: result[1] };
-		};
-		const abl_motion = toStruct(data.abl_motion);
-		const abl_durability = toStruct(data.abl_durability);
-		const abl_dismantle = toStruct(data.abl_dismantle);
-		const abl_operate = toStruct(data.abl_operate);
-		const abl_sense = toStruct(data.abl_sense);
-		const abl_negotiate = toStruct(data.abl_negotiate);
-		const abl_knowledge = toStruct(data.abl_knowledge);
-		const abl_analyze = toStruct(data.abl_analyze);
-		const abl_avoid = toStruct(data.abl_avoid);
-		const abl_resist = toStruct(data.abl_resist);
-		const abl_hit = toStruct(data.abl_hit);
 		return text
-			.replace("${CR}", data.character_rank)
-			.replace("${MOTION-DICE}", abl_motion.dice)
-			.replace("${MOTION-MOD}", abl_motion.mod)
-			.replace("${DURABILITY-DICE}", abl_durability.dice)
-			.replace("${DURABILITY-MOD}", abl_durability.mod)
-			.replace("${DISMANTLE-DICE}", abl_dismantle.dice)
-			.replace("${DISMANTLE-MOD}", abl_dismantle.mod)
-			.replace("${OPERATE-DICE}", abl_operate.dice)
-			.replace("${OPERATE-MOD}", abl_operate.mod)
-			.replace("${SENSE-DICE}", abl_sense.dice)
-			.replace("${SENSE-MOD}", abl_sense.mod)
-			.replace("${NEGOTIATE-DICE}", abl_negotiate.dice)
-			.replace("${NEGOTIATE-MOD}", abl_negotiate.mod)
-			.replace("${KNOWLEDGE-DICE}", abl_knowledge.dice)
-			.replace("${KNOWLEDGE-MOD}", abl_knowledge.mod)
-			.replace("${ANALYZE-DICE}", abl_analyze.dice)
-			.replace("${ANALYZE-MOD}", abl_analyze.mod)
-			.replace("${AVOID-DICE}", abl_avoid.dice)
-			.replace("${AVOID-MOD}", abl_avoid.mod)
-			.replace("${RESIST-DICE}", abl_resist.dice)
-			.replace("${RESIST-MOD}", abl_resist.mod)
-			.replace("${HIT-DICE}", abl_hit.dice)
-			.replace("${HIT-MOD}", abl_hit.mod)
+			.replace("${CR}", character.character_rank)
+			.replace("${MOTION-DICE}", character.ability.motion.dice)
+			.replace("${MOTION-MOD}", character.ability.motion.mod)
+			.replace("${DURABILITY-DICE}", character.ability.durability.dice)
+			.replace("${DURABILITY-MOD}", character.ability.durability.mod)
+			.replace("${DISMANTLE-DICE}", character.ability.dismantle.dice)
+			.replace("${DISMANTLE-MOD}", character.ability.dismantle.mod)
+			.replace("${OPERATE-DICE}", character.ability.operate.dice)
+			.replace("${OPERATE-MOD}", character.ability.operate.mod)
+			.replace("${SENSE-DICE}", character.ability.sense.dice)
+			.replace("${SENSE-MOD}", character.ability.sense.mod)
+			.replace("${NEGOTIATE-DICE}", character.ability.negotiate.dice)
+			.replace("${NEGOTIATE-MOD}", character.ability.negotiate.mod)
+			.replace("${KNOWLEDGE-DICE}", character.ability.knowledge.dice)
+			.replace("${KNOWLEDGE-MOD}", character.ability.knowledge.mod)
+			.replace("${ANALYZE-DICE}", character.ability.analyze.dice)
+			.replace("${ANALYZE-MOD}", character.ability.analyze.mod)
+			.replace("${HIT-DICE}", character.ability.hit.dice)
+			.replace("${HIT-MOD}", character.ability.hit.mod)
+			.replace("${AVOID-DICE}", character.ability.avoid.dice)
+			.replace("${AVOID-MOD}", character.ability.avoid.mod)
+			.replace("${RESIST-DICE}", character.ability.resist.dice)
+			.replace("${RESIST-MOD}", character.ability.resist.mod)
 			.replace("${NAME}", skill.name)
 			.replace("${TAGS}", tags)
 			.replace("${SR}", skill.skill_rank)
@@ -1388,84 +1619,278 @@ function createChatpalette(data) {
 			.replace("${FUNCTION}", skill.function);
 	};
 	const chatpalettes = [];
-	data.skills.forEach((skill) => {
-		let tags = "";
-		skill.tags.forEach((tag) => {
-			tags += `[${tag}]`;
-		});
-		if (skill.id in _setting.skills) {
-			_setting.typeCandidates.forEach((typeCandidate) => {
-				_setting.skills[skill.id].chatpalettes
+	if (_config.ccforiaOutput.isAbility) {
+		chatpalettes.push("### ■能力値判定");
+		chatpalettes.push(`${character.ability.hit.dice}LH+${character.ability.hit.mod}>=0 命中`);
+		chatpalettes.push(`${character.ability.avoid.dice}LH+${character.ability.avoid.mod}>=0 回避`);
+		chatpalettes.push(`${character.ability.resist.dice}LH+${character.ability.resist.mod}>=0 抵抗`);
+		chatpalettes.push(`${character.ability.motion.dice}LH+${character.ability.motion.mod}>=0 運動`);
+		chatpalettes.push(`${character.ability.durability.dice}LH+${character.ability.durability.mod}>=0 耐久`);
+		chatpalettes.push(`${character.ability.dismantle.dice}LH+${character.ability.dismantle.mod}>=0 解除`);
+		chatpalettes.push(`${character.ability.operate.dice}LH+${character.ability.operate.mod}>=0 操作`);
+		chatpalettes.push(`${character.ability.sense.dice}LH+${character.ability.sense.mod}>=0 知覚`);
+		chatpalettes.push(`${character.ability.negotiate.dice}LH+${character.ability.negotiate.mod}>=0 交渉`);
+		chatpalettes.push(`${character.ability.knowledge.dice}LH+${character.ability.knowledge.mod}>=0 知識`);
+		chatpalettes.push(`${character.ability.analyze.dice}LH+${character.ability.analyze.mod}>=0 解析`);
+	}
+
+	if (_config.ccforiaOutput.isCalcDamege) {
+		chatpalettes.push("### ■被ダメ計算");
+		chatpalettes.push("C(0-{物防}-0) 被ダメージ=物理ダメージ-物防-軽減");
+		chatpalettes.push("C(0-{魔防}-0) 被ダメージ=魔法ダメージ-魔防-軽減");
+		chatpalettes.push("C(({HP}+{障壁})-0-{ヘイト}*0-0) 残HP＝(HP+障壁)-ダメージ-ヘイトダメージ-その他");
+		chatpalettes.push("C(0-{HP}) 残障壁=残HP-HP");
+	}
+	if (_config.ccforiaOutput.isSkill) {
+		chatpalettes.push("### ■特技");
+		const createSkillChatpalette = (skill) => {
+			let tags = "";
+			skill.tags.forEach((tag) => {
+				tags += `[${tag}]`;
+			});
+			_master.chatpaletteTypes.forEach((typeCandidate) => {
+				getSkillChatpalettes(skill)
 					.filter((chatpalette) => chatpalette.type == typeCandidate.value)
 					.forEach((chatpalette) => {
-						if (isFulfillConditions(data, skill, chatpalette.condition)) {
+						if (isFulfillConditions(character, skill, chatpalette.condition)) {
 							chatpalettes.push(replaceParameter(chatpalette.text, skill, tags));
 						}
 					});
 			});
+		};
+		if (_config.ccforiaOutput.skillSort.byTiming) {
+			_config.ccforiaOutput.skillSort.timingOrder.forEach((timing) => {
+				chatpalettes.push(`○${timing}`);
+				character.skills.filter((x) => x.timing == timing).forEach(createSkillChatpalette);
+			});
+		} else {
+			character.skills.forEach(createSkillChatpalette);
 		}
-	});
+	}
+	if (_config.ccforiaOutput.isEquipment) {
+		chatpalettes.push("### ■装備アイテム");
+		const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((x) => x);
+		equipments.forEach((equipment) => {
+			let chatpalette = "";
+			chatpalette += `《${equipment.alias != equipment.name ? `${equipment.alias}(${equipment.name})` : equipment.name}》`;
+			if (equipment.tags.toString().includes("非売品")) chatpalette += `効果：${equipment.function}》`;
+			if (equipment.prefix_function) chatpalette += `プレフィックスド効果：${equipment.prefix_function}》`;
+			chatpalettes.push(chatpalette);
+		});
+	}
+	if (_config.ccforiaOutput.isBelongings) {
+		chatpalettes.push("### ■所持アイテム");
+		character.items
+			.filter((x) => x)
+			.forEach((item) => {
+				let chatpalette = "";
+				chatpalette += `《${item.alias != item.name ? `${item.alias}(${item.name})` : item.name}》`;
+				chatpalette += `効果・解説：${item.function}`;
+				if (item.prefix_function) chatpalette += `プレフィックスド効果：${item.prefix_function}》`;
+				chatpalettes.push(chatpalette);
+			});
+	}
+	if (_config.ccforiaOutput.isConsumableChart) {
+		chatpalettes.push("### ■消耗表");
+		chatpalettes.push("PCT{CR}+0 体力消耗表");
+		chatpalettes.push("ECT{CR}+0 気力消耗表");
+		chatpalettes.push("GCT{CR}+0 物品消耗表");
+		chatpalettes.push("CCT{CR}+0 金銭消耗表");
+	}
+	if (_config.ccforiaOutput.isTreasureChart) {
+		chatpalettes.push("### ■財宝表");
+		chatpalettes.push("CTRS{CR}+0 金銭財宝表");
+		chatpalettes.push("MTRS{CR}+0 魔法素材財宝表");
+		chatpalettes.push("ITRS{CR}+0 換金アイテム財宝表");
+	}
+	if (_config.ccforiaOutput.isOtherChart) {
+		chatpalettes.push("### ■その他");
+		chatpalettes.push("HTRS{CR}+0 ヒロイン財宝表");
+		chatpalettes.push("GTRS{CR}+0 ゴブリン財宝表");
+		chatpalettes.push("ESTL{CR}+0 イースタル探索表");
+		chatpalettes.push("ESCT{CR}+0 ロデ研は爆発だ！");
+		chatpalettes.push("CSCT{CR}+0 アルヴの呪いじゃ！");
+		chatpalettes.push("IAT{CR}+0 ロデ研の新発明ランダム決定表");
+		chatpalettes.push("PTAG パーソナリティタグ表");
+		chatpalettes.push("KOYU 交友表");
+		chatpalettes.push("HLOC 攻撃命中箇所ランダム決定表");
+		chatpalettes.push("PCNM PC名ランダム決定表");
+		chatpalettes.push("TIAS アキバの街で遭遇するトラブルランダム決定表");
+		chatpalettes.push("ABDC 廃棄児ランダム決定表");
+	}
+
+	chatpalettes.push("### ■ステータス");
+	chatpalettes.push(`//CR=${character.character_rank}`);
+	chatpalettes.push(`//STR=${character.str_value}`);
+	chatpalettes.push(`//STR基本値=${character.str_value}`);
+	chatpalettes.push(`//DEX=${character.dex_value}`);
+	chatpalettes.push(`//DEX基本値=${character.dex_value}`);
+	chatpalettes.push(`//POW=${character.pow_value}`);
+	chatpalettes.push(`//POW基本値=${character.pow_value}`);
+	chatpalettes.push(`//INT=${character.int_value}`);
+	chatpalettes.push(`//INT基本値=${character.int_value}`);
+	chatpalettes.push(`//攻撃力=${character.physical_attack}`);
+	chatpalettes.push(`//魔力=${character.magic_attack}`);
+	chatpalettes.push(`//回復力=${character.heal_power}`);
+	chatpalettes.push(`//武器の射程Sq=${character.range}`);
+	chatpalettes.push(`//物理防御力=${character.physical_defense}`);
+	chatpalettes.push(`//魔法防御力=${character.magic_defense}`);
+	chatpalettes.push(`//行動力=${character.action}`);
+	chatpalettes.push(`//移動力=${character.move}`);
+	chatpalettes.push(`//最大HP=${character.max_hitpoint}`);
+	chatpalettes.push(`//初期因果力=${character.effect}`);
+	chatpalettes.push(`//空きスロット数=${character.items.filter((item) => item == null).length}`);
 	return chatpalettes.join("\n");
 }
-function isFulfillConditions(data, skill, condition) {
+function isFulfillConditions(character, skill, condition) {
 	return true;
 }
-function FilterSkills(id) {
-	const character = _characters[id];
-	const timing = document.getElementById("filter-timing-200524").value;
-	character.data.skills.forEach((skill) => {
-		const cell = character.skillCells[skill.id];
-		let isDisplay = true;
-		isDisplay &= "-" == timing || skill.timing == timing;
-		cell.style.display = isDisplay ? "" : "none";
+
+function appendHistory(character) {
+	const histories = _localStorage.Read("character-loadHistory");
+	const getDate = () => {
+		const date = new Date();
+		const year = date.getFullYear();
+		const month = (date.getMonth() + 1).toString().padStart(2, "0");
+		const day = date.getDate().toString().padStart(2, "0");
+		const hour = date.getHours().toString().padStart(2, "0");
+		const minute = date.getMinutes().toString().padStart(2, "0");
+		const second = date.getSeconds().toString().padStart(2, "0");
+		return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+	};
+	const historyData = new Object();
+	historyData.id = character.id;
+	historyData.characterName = character.name;
+	historyData.playerName = character.player_name;
+	historyData.tags = Array.from(character.tags, (tag) => `[${tag}]`).join();
+	historyData.url = character.sheet_url;
+	historyData.date = getDate();
+	histories[character.id] = historyData;
+
+	_localStorage.Write("character-loadHistory", histories);
+}
+async function refreshHistoryTable() {
+	const historyTable = document.getElementById("history-table");
+	if (historyTable) historyTable.remove();
+
+	const panel = document.getElementById("history");
+	const cell = createCellElement(12);
+
+	const table = document.createElement("table");
+	table.id = "history-table";
+	cell.appendChild(table);
+
+	const tableHead = document.createElement("thead");
+	table.appendChild(tableHead);
+	const tableHeadRow = createHistoryTitleRow();
+	tableHead.appendChild(tableHeadRow);
+
+	const tableBody = document.createElement("tbody");
+	table.appendChild(tableBody);
+
+	const histories = _localStorage.Read("character-loadHistory");
+	Object.values(histories)
+		.sort((x, y) => (x.date > y.date ? -1 : 1))
+		.forEach((historyData) => {
+			const row = createHistoryRow(historyData);
+			tableBody.appendChild(row);
+		});
+
+	panel.appendChild(cell);
+}
+function createHistoryTitleRow() {
+	const row = document.createElement("tr");
+	row.style.color = "whitesmoke";
+
+	const characterNameRowData = document.createElement("th");
+	characterNameRowData.textContent = "PC名";
+	characterNameRowData.style.padding = "0.2em";
+	row.appendChild(characterNameRowData);
+
+	const characterNamerowData = document.createElement("th");
+	characterNamerowData.textContent = "PL名";
+	characterNamerowData.style.padding = "0.2em";
+	row.appendChild(characterNamerowData);
+
+	const tagsRowData = document.createElement("th");
+	tagsRowData.textContent = "人物タグ";
+	tagsRowData.style.padding = "0.2em";
+	row.appendChild(tagsRowData);
+
+	const dateRowData = document.createElement("th");
+	dateRowData.textContent = "日付";
+	dateRowData.style.padding = "0.2em";
+	row.appendChild(dateRowData);
+
+	return row;
+}
+function createHistoryRow(historyData) {
+	const row = document.createElement("tr");
+	row.style.color = "#444";
+
+	const characterNameRowData = document.createElement("td");
+	characterNameRowData.style.padding = "0.2em";
+	row.appendChild(characterNameRowData);
+	const characterNameLink = document.createElement("a");
+	characterNameLink.textContent = historyData.characterName;
+	characterNameLink.setAttribute("data-href", historyData.url);
+	characterNameLink.addEventListener("click", (event) => {
+		const url = event.target.getAttribute("data-href");
+		loadCharactorFrom(url);
+		document.getElementById("history").getElementsByClassName("close-button")[0].click();
 	});
+	characterNameRowData.appendChild(characterNameLink);
+
+	const characterNamerowData = document.createElement("td");
+	characterNamerowData.textContent = historyData.playerName;
+	characterNamerowData.style.padding = "0.2em";
+	row.appendChild(characterNamerowData);
+
+	const tagsRowData = document.createElement("td");
+	tagsRowData.textContent = historyData.tags;
+	tagsRowData.style.padding = "0.2em";
+	row.appendChild(tagsRowData);
+
+	const dateRowData = document.createElement("td");
+	dateRowData.textContent = historyData.date;
+	dateRowData.style.padding = "0.2em";
+	row.appendChild(dateRowData);
+
+	return row;
 }
 
-class Ccforia {
-	constructor() {
-		this.clipboardData = new Object();
-		this.clipboardData.kind = "character";
-		this.clipboardData.data = new Object();
-		this.clipboardData.data.name = "";
-		this.clipboardData.data.memo = "";
-		this.clipboardData.data.initiative = 0;
-		this.clipboardData.data.externalUrl = "";
-		this.clipboardData.data.status = [];
-		this.clipboardData.data.params = [];
-		this.clipboardData.data.secret = false;
-		this.clipboardData.data.invisible = false;
-		this.clipboardData.data.hideStatus = false;
-		this.clipboardData.data.commands = "";
-	}
+function createBackup() {
+	const data = localStorage;
 
-	setName(value) {
-		this.clipboardData.data.name = value;
-		return this;
-	}
-	setMemo(value) {
-		this.clipboardData.data.memo = value;
-		return this;
-	}
-	setInitiative(value) {
-		this.clipboardData.data.initiative = value;
-		return this;
-	}
-	setExternalUrl(value) {
-		this.clipboardData.data.externalUrl = value;
-		return this;
-	}
-	appendStatus(label, value, max) {
-		this.clipboardData.data.status.push({ label: label, value: value, max: max });
-	}
-	appendParams(label, value) {
-		this.clipboardData.data.params.push({ label: label, value: value });
-	}
-	setCommands(value) {
-		this.clipboardData.data.commands = value;
-		return this;
-	}
+	const blob = new Blob([JSON.stringify(data)], { type: "text/plain" });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement("a");
+	document.body.appendChild(a);
+	a.download = "SheetVisualizer-for-LHRPG.json";
+	a.href = url;
+	a.click();
+	a.remove();
+	URL.revokeObjectURL(url);
+}
 
-	getJson() {
-		return JSON.stringify(this.clipboardData);
-	}
+function restreBackup() {
+	const input = document.createElement("input");
+	input.type = "file";
+	input.accept = ".json";
+	input.addEventListener("change", (event) => {
+		const file = event.target.files[0];
+		const reader = new FileReader();
+
+		reader.onload = function (event) {
+			const ls = JSON.parse(event.target.result);
+			console.log(ls);
+			Object.keys(ls).forEach((key) => {
+				localStorage[key] = ls[key];
+			});
+			window.location.reload();
+		};
+		reader.readAsText(file);
+	});
+	input.click();
+	input.remove();
 }
