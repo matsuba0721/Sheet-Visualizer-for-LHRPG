@@ -1237,7 +1237,7 @@ function createBelongingsCell(character) {
 	const skillPayload = character.skills.find((skill) => skill.id == 1906);
 	if (skillPayload) initBags.push({ name: skillPayload.name, alias: "", slot_size: skillPayload.skill_rank * 4 });
 	const skillCardMastery = character.skills.find((skill) => skill.id == 124);
-	if (skillCardMastery) initBags.push({ name: skillCardMastery.name, alias: "", slot_size: skillPayload.skill_rank * 3 });
+	if (skillCardMastery) initBags.push({ name: skillCardMastery.name, alias: "", slot_size: skillCardMastery.skill_rank * 3 });
 
 	const bags = initBags.concat(
 		[character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((item) => {
