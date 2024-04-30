@@ -48,6 +48,7 @@ class Config {
 			"ダメージ適用直後",
 			"本文",
 		];
+		this.ccforiaOutput.isAliasOnly = false;
 		this.isAdvanced = false;
 	}
 }
@@ -266,6 +267,13 @@ function init() {
 		};
 		timingUList.appendChild(li);
 	}
+
+	const aliasOnlyCheckBox = document.getElementById("output-alias-only");
+	aliasOnlyCheckBox.checked = _config.isAdvanced;
+	aliasOnlyCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.isAliasOnly = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
 
 	const advancedCheckBox = document.getElementById("advanced-mode");
 	advancedCheckBox.checked = _config.isAdvanced;
@@ -1128,6 +1136,7 @@ function createEquipmentTitleDataList(item) {
 
 		const itemNameItem = document.createElement("li");
 		itemNameItem.textContent = (item.alias != item.name ? `${item.alias}(${item.name})` : item.name) + "　";
+		if (item.alias.includes(item.name)) itemNameItem.textContent = item.alias + "　";
 		itemNameItem.style.fontWeight = "bold";
 		itemNameList.appendChild(itemNameItem);
 
@@ -1272,6 +1281,7 @@ function createBelongingsTitleDataList(item) {
 
 		const itemNameItem = document.createElement("li");
 		itemNameItem.textContent = (item.alias != item.name ? `${item.alias}(${item.name})` : item.name) + "　";
+		if (item.alias.includes(item.name)) itemNameItem.textContent = item.alias + "　";
 		itemNameItem.style.fontWeight = "bold";
 		itemNameList.appendChild(itemNameItem);
 
@@ -1682,7 +1692,11 @@ function createChatpalette(character) {
 		const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((x) => x);
 		equipments.forEach((equipment) => {
 			let chatpalette = "";
-			chatpalette += `《${equipment.alias != equipment.name ? `${equipment.alias}(${equipment.name})` : equipment.name}》`;
+			if (!_config.ccforiaOutput.isAliasOnly && equipment.alias) {
+				chatpalette += `《${equipment.alias != equipment.name ? `${equipment.alias}(${equipment.name})` : equipment.name}》`;
+			} else {
+				chatpalette += `《${equipment.alias}》`;
+			}
 			if (equipment.tags.toString().includes("非売品")) chatpalette += `効果：${equipment.function}》`;
 			if (equipment.prefix_function) chatpalette += `プレフィックスド効果：${equipment.prefix_function}》`;
 			chatpalettes.push(chatpalette);
