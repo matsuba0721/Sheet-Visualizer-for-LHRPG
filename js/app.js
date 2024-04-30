@@ -1233,10 +1233,18 @@ function createBelongingsCell(character) {
 			itemPrefixRow.appendChild(createBelongingsFunctionData(item));
 		}
 	};
-	const bags = [{ name: "", alias: "", slot_size: 2 }, character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((item) => {
-		if (item) return item.slot_size > 0;
-		return false;
-	});
+	const initBags = [{ name: "", alias: "", slot_size: 2 }];
+	const skillPayload = character.skills.find((skill) => skill.id == 1906);
+	if (skillPayload) initBags.push({ name: skillPayload.name, alias: "", slot_size: skillPayload.skill_rank * 4 });
+	const skillCardMastery = character.skills.find((skill) => skill.id == 124);
+	if (skillCardMastery) initBags.push({ name: skillCardMastery.name, alias: "", slot_size: skillPayload.skill_rank * 3 });
+
+	const bags = initBags.concat(
+		[character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((item) => {
+			if (item) return item.slot_size > 0;
+			return false;
+		})
+	);
 	for (let index = 0, start = 0; index < bags.length; index++) {
 		const bag = bags[index];
 		createBelongingsRows(bag.name, character.items.slice(start, start + bag.slot_size));
