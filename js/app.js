@@ -304,6 +304,14 @@ function loadCharactorFrom(url) {
 
 	getJson(`https://lhrpg.com/lhz/api/${id}.json`).then((character) => {
 		character.id = id;
+		const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag];
+		equipments
+			.filter((equipment) => equipment)
+			.forEach((equipment) => {
+				if (equipment.id == 719) equipment.slot_size = 6;
+				else if (equipment.id == 721) equipment.slot_size = 8;
+			});
+
 		initCharacter(character);
 
 		_characters[id] = character;
