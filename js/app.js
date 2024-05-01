@@ -1799,6 +1799,12 @@ function appendHistory(character) {
 	historyData.date = getDate();
 	histories[character.id] = historyData;
 
+	const historyValues = Object.values(histories).sort((x, y) => (x.date > y.date ? -1 : 1));
+	const deleteTargets = historyValues.slice(50, historyValues.length);
+	deleteTargets.forEach((deleteTarget) => {
+		delete histories[deleteTarget.id];
+	});
+
 	_localStorage.Write("character-loadHistory", histories);
 }
 async function refreshHistoryTable() {
