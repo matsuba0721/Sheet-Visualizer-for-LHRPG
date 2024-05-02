@@ -1664,8 +1664,8 @@ function createChatpalette(character) {
 
 	if (_config.ccforiaOutput.isCalcDamege) {
 		chatpalettes.push("### ■被ダメ計算");
-		chatpalettes.push("C(0-{物防}-0) 被ダメージ=物理ダメージ-物防-軽減");
-		chatpalettes.push("C(0-{魔防}-0) 被ダメージ=魔法ダメージ-魔防-軽減");
+		chatpalettes.push("C(0-{物理防御力}-0) 被ダメージ=物理ダメージ-物防-軽減");
+		chatpalettes.push("C(0-{魔法防御力}-0) 被ダメージ=魔法ダメージ-魔防-軽減");
 		chatpalettes.push("C(({HP}+{障壁})-0-{ヘイト}*0-0) 残HP＝(HP+障壁)-ダメージ-ヘイトダメージ-その他");
 		chatpalettes.push("C(0-{HP}) 残障壁=残HP-HP");
 	}
