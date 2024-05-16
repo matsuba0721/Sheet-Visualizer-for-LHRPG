@@ -1669,6 +1669,8 @@ function createChatpalette(character) {
 			.replace("${RANGE}", skill.range)
 			.replace("${COST}", skill.cost)
 			.replace("${LIMIT}", skill.limit)
+			.replace("${W1PD}", character.hand1 ? character.hand1.physical_defense : 0)
+			.replace("${W2PD}", character.hand2 ? character.hand2.physical_defense : 0)
 			.replace("${FUNCTION}", skill.function);
 	};
 	const chatpalettes = [];
@@ -1800,6 +1802,11 @@ function createChatpalette(character) {
 	return chatpalettes.join("\n");
 }
 function isFulfillConditions(character, skill, condition) {
+	if (condition == "hand1 is shield") {
+		return character.hand1 ? character.hand1.type == "盾" : false;
+	} else if (condition == "hand2 is shield") {
+		return character.hand2 ? character.hand2.type == "盾" : false;
+	}
 	return true;
 }
 

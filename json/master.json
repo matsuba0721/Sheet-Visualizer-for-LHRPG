@@ -3131,8 +3131,14 @@
 			},
 			{
 				"type": "Effect",
-				"condition": "",
-				"text": "{物理防御力}+(${SR})D6 《${NAME}》物理ダメージ",
+				"condition": "hand1 is shield",
+				"text": "${W1PD}+(${SR})D6 《${NAME}》貫通ダメージ(右手)",
+				"isAdvanced": true
+			},
+			{
+				"type": "Effect",
+				"condition": "hand2 is shield",
+				"text": "${W2PD}+(${SR})D6 《${NAME}》貫通ダメージ(左手)",
 				"isAdvanced": true
 			}
 		],
