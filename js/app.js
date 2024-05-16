@@ -455,6 +455,13 @@ function setSkillChatpalettes(skill, chatpalettes) {
 	data.skillChatpalettes[skill.id] = chatpalettes;
 	_localStorage.Write(name, data);
 }
+function deleteSkillChatpalettes(skill) {
+	const name = `character-${skill.characterId}`;
+	const data = _localStorage.Read(name);
+	if (!("skillChatpalettes" in data)) data.skillChatpalettes = new Object();
+	delete data.skillChatpalettes[skill.id];
+	_localStorage.Write(name, data);
+}
 function getSkillById(character, id) {
 	return character.skills[character._skillIndexes[id]];
 }
@@ -874,6 +881,7 @@ function createSkillTitleRow(skill) {
 	const skillTableHeadRowTitle = document.createElement("ul");
 	skillTableHeadRowTitle.style.margin = 0;
 	skillTableHeadRowTitle.style.padding = 0;
+	skillTableHeadRowTitle.style.float = "left";
 	skillTableHeadRowData.appendChild(skillTableHeadRowTitle);
 
 	const skillTableHeadRowName = document.createElement("li");
@@ -899,6 +907,23 @@ function createSkillTitleRow(skill) {
 		skillTableHeadRowtag.style.verticalAlign = "middle";
 		skillTableHeadRowTitle.appendChild(skillTableHeadRowtag);
 	});
+
+	const resetChatpaletteButton = document.createElement("a");
+	resetChatpaletteButton.textContent = "初期化";
+	resetChatpaletteButton.setAttribute("data-skill-id", skill.id);
+	resetChatpaletteButton.style.float = "right";
+	resetChatpaletteButton.style.marginTop = "4px";
+	resetChatpaletteButton.style.color = "#999";
+	resetChatpaletteButton.style.fontSize = "80%";
+	resetChatpaletteButton.onclick = (event) => {
+		const character = getCurrentCharacter();
+		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
+		if (window.confirm(`特技${skill.name}のチャットパレットの設定を初期化します。\n初期化後、画面の更新が行われます。\nよろしいですか？`)) {
+			deleteSkillChatpalettes(skill);
+			window.location.reload();
+		}
+	};
+	skillTableHeadRowData.appendChild(resetChatpaletteButton);
 	return skillTableHeadRow;
 }
 function createSkillPropertyRow(skill) {
