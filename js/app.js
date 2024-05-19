@@ -1678,6 +1678,7 @@ function createChatpalette(character) {
 		chatpalettes.push("### ■能力値判定");
 		chatpalettes.push(`${character.ability.hit.dice}LH+${character.ability.hit.mod}>=0 命中`);
 		chatpalettes.push(`${character.ability.avoid.dice}LH+${character.ability.avoid.mod}>=0 回避`);
+		chatpalettes.push(`${character.ability.avoid.dice}LH+${character.ability.avoid.mod}+2>=0 回避(ヘイトアンダー)`);
 		chatpalettes.push(`${character.ability.resist.dice}LH+${character.ability.resist.mod}>=0 抵抗`);
 		chatpalettes.push(`${character.ability.motion.dice}LH+${character.ability.motion.mod}>=0 運動`);
 		chatpalettes.push(`${character.ability.durability.dice}LH+${character.ability.durability.mod}>=0 耐久`);
