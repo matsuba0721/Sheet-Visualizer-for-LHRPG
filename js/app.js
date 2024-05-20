@@ -1785,13 +1785,13 @@ function createChatpalette(character) {
 	chatpalettes.push("### ■ステータス");
 	chatpalettes.push(`//CR=${character.character_rank}`);
 	chatpalettes.push(`//STR=${character.str_value}`);
-	chatpalettes.push(`//STR基本値=${character.str_value}`);
+	chatpalettes.push(`//STR基本値=${character.str_basic_value}`);
 	chatpalettes.push(`//DEX=${character.dex_value}`);
-	chatpalettes.push(`//DEX基本値=${character.dex_value}`);
+	chatpalettes.push(`//DEX基本値=${character.dex_basic_value}`);
 	chatpalettes.push(`//POW=${character.pow_value}`);
-	chatpalettes.push(`//POW基本値=${character.pow_value}`);
+	chatpalettes.push(`//POW基本値=${character.pow_basic_value}`);
 	chatpalettes.push(`//INT=${character.int_value}`);
-	chatpalettes.push(`//INT基本値=${character.int_value}`);
+	chatpalettes.push(`//INT基本値=${character.int_basic_value}`);
 	chatpalettes.push(`//攻撃力=${character.physical_attack}`);
 	chatpalettes.push(`//魔力=${character.magic_attack}`);
 	chatpalettes.push(`//回復力=${character.heal_power}`);
