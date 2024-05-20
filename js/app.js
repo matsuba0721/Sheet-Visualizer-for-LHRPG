@@ -355,7 +355,7 @@ function releaseCharacter(id) {
 	if (!(id in _characters)) return;
 
 	const tab = document.getElementById("character-tabs").getElementsByClassName("is-active")[0];
-	const content = document.getElementById("character-contents").getElementsByClassName("is-active")[0];
+	const content = document.getElementById("panel" + id);
 	tab.remove();
 	content.remove();
 	delete _characters[id];
