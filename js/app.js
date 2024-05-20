@@ -1803,10 +1803,12 @@ function createChatpalette(character) {
 	return chatpalettes.join("\n");
 }
 function isFulfillConditions(character, skill, condition) {
-	if (condition == "hand1 is shield") {
-		return character.hand1 ? character.hand1.type == "盾" : false;
-	} else if (condition == "hand2 is shield") {
-		return character.hand2 ? character.hand2.type == "盾" : false;
+	console.log(condition);
+	try {
+		if (condition) return eval(condition);
+	} catch (error) {
+		console.log(error);
+		return true;
 	}
 	return true;
 }

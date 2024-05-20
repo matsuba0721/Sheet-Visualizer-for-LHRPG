@@ -3131,13 +3131,13 @@
 			},
 			{
 				"type": "Effect",
-				"condition": "hand1 is shield",
+				"condition": "character.hand1 ? character.hand1.type == \"盾\" : false",
 				"text": "${W1PD}+(${SR})D6 《${NAME}》貫通ダメージ(右手)",
 				"isAdvanced": true
 			},
 			{
 				"type": "Effect",
-				"condition": "hand2 is shield",
+				"condition": "character.hand2 ? character.hand2.type == \"盾\" : false",
 				"text": "${W2PD}+(${SR})D6 《${NAME}》貫通ダメージ(左手)",
 				"isAdvanced": true
 			}

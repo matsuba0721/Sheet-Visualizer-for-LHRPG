@@ -17,8 +17,8 @@
         <img src="img//head_logo.png">
       </div>
       <div class="large-2 medium-2 small-2 cell">
-        <a class="button" href="javascript:void(0);"
-          style="float: right;color: whitesmoke;font-weight: bold;margin: 1em;" data-toggle="config-canvas">⚙</a>
+        <a class="button" href="javascript:void(0);" style="float: right;color: whitesmoke;font-weight: bold;margin: 1em 0;"
+          data-toggle="config-canvas">⚙</a>
       </div>
     </div>
 
@@ -249,34 +249,49 @@
     </ul>
     <div id="character-contents" class="tabs-content" data-tabs-content="character-tabs">
       <div class="callout tabs-panel is-active" id="howto">
-        <h5>使い方</h5>
-        <ol>
-          <li><a href="https://lhrpg.com/lhz/top" target="_blank">ログ・ホライズン冒険窓口</a>から「マイページ」→「あなたの作成した〈冒険者〉」から冒険者を選択する。
+        <ul class="accordion" data-accordion>
+          <li class="accordion-item is-active" data-accordion-item>
+            <a href="#" class="accordion-title" style="font-size: x-large;">使い方</a>
+            <div class="accordion-content" data-tab-content>
+              <ol>
+                <li><a href="https://lhrpg.com/lhz/top" target="_blank">ログ・ホライズン冒険窓口</a>から「マイページ」→「あなたの作成した〈冒険者〉」から冒険者を選択する。
+                </li>
+                <li>「基本情報を変更する」から、「外部ツールからの〈冒険者〉データ参照を許可する」にチェックを入れ、「変更を確定する」を選択する。</li>
+                <li>以下の形式のURLを上段のテキストボックスに入力し、「読み込む」を選択する。
+                  <ul>
+                    <li>https://lhrpg.com/lhz/pc?id=XXXXXX</li>
+                    <li>https://lhrpg.com/lhz/pc_status?id=XXXXXX</li>
+                    <li>https://lhrpg.com/lhz/pc_skill?id=XXXXXX</li>
+                    <li>https://lhrpg.com/lhz/pc_item?id=XXXXXX</li>
+                    <li>https://lhrpg.com/lhz/sheets/XXXXXX.html</li>
+                  </ul>
+                  ※いずれのURLでのこのサイトで動作は変わりません。<br>
+                  ※反応しない場合、再度「外部ツールからの〈冒険者〉データ参照を許可する」にチェックを入れ、「変更を確定する」を行ってください。
+                </li>
+                <li>不具合や要望等は<a href="https://twitter.com/fraulein_trpg" target="_blank">こちら</a>に</li>
+              </ol>
+            </div>
           </li>
-          <li>「基本情報を変更する」から、「外部ツールからの〈冒険者〉データ参照を許可する」にチェックを入れ、「変更を確定する」を選択する。</li>
-          <li>以下の形式のURLを上段のテキストボックスに入力し、「読み込む」を選択する。
-            <ul>
-              <li>https://lhrpg.com/lhz/pc?id=XXXXXX</li>
-              <li>https://lhrpg.com/lhz/pc_status?id=XXXXXX</li>
-              <li>https://lhrpg.com/lhz/pc_skill?id=XXXXXX</li>
-              <li>https://lhrpg.com/lhz/pc_item?id=XXXXXX</li>
-              <li>https://lhrpg.com/lhz/sheets/XXXXXX.html</li>
-            </ul>
-            ※いずれのURLでのこのサイトで動作は変わりません。<br>
-            ※反応しない場合、再度「外部ツールからの〈冒険者〉データ参照を許可する」にチェックを入れ、「変更を確定する」を行ってください。
+          <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title" style="font-size: x-large;">このサイトでできること</a>
+            <div class="accordion-content" data-tab-content>
+              <ul>
+                <li>ココフォリア用のキャラ駒を出力する。<br>右上の ⚙ や各キャラの特技ごとに、出力方法をカスタマイズできる。
+                </li>
+                ※設定はブラウザごとに保存されるため、別のパソコン、スマホ等では共有されません。
+                ※設定のバックアップは ⚙ で開かれるメニューの最下部にある「バックアップの作成」から、復元は「バックアップから復元」から行えます。
+                (バックアップから復元した場合、ページの再読み込みが行われます。) 
+                ※特技ごとのチャパレ設定はキャラクターごとに個別です。
+                <li>エネミーデータの駒作成（実装予定）</li>
+                <li>ダメージ計算機（実装予定）</li>
+              </ul>
+            </div>
           </li>
-          <li>不具合や要望等は<a href="https://twitter.com/fraulein_trpg" target="_blank">こちら</a>に</li>
-        </ol>
-        <h5>このサイトでできること</h5>
-        <ul>
-          <li>ココフォリア用のキャラ駒を出力する。<br>右上の ⚙ や各キャラの特技ごとに、出力方法をカスタマイズできる。
+          <li class="accordion-item" data-accordion-item>
+            <a href="#" class="accordion-title" style="font-size: x-large;">更新履歴</a>
+            <div class="accordion-content" data-tab-content>
+            </div>
           </li>
-          ※設定はブラウザごとに保存されるため、別のパソコン、スマホ等では共有されません。
-          ※設定のバックアップは ⚙ で開かれるメニューの最下部にある「バックアップの作成」から、復元は「バックアップから復元」から行えます。
-          (バックアップから復元した場合、ページの再読み込みが行われます。) 
-          ※特技ごとのチャパレ設定はキャラクターごとに個別です。
-          <li>エネミーデータの駒作成（実装予定）</li>
-          <li>ダメージ計算機（実装予定）</li>
         </ul>
       </div>
     </div>
