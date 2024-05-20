@@ -1716,8 +1716,11 @@ function createChatpalette(character) {
 		};
 		if (_config.ccforiaOutput.skillSort.byTiming) {
 			_config.ccforiaOutput.skillSort.timingOrder.forEach((timing) => {
-				chatpalettes.push(`○${timing}`);
-				character.skills.filter((x) => x.timing == timing).forEach(createSkillChatpalette);
+				const targetSkills = character.skills.filter((x) => x.timing == timing);
+				if (targetSkills.length > 0) {
+					chatpalettes.push(`○${timing}`);
+					targetSkills.forEach(createSkillChatpalette);
+				}
 			});
 		} else {
 			character.skills.forEach(createSkillChatpalette);
@@ -1803,10 +1806,10 @@ function createChatpalette(character) {
 	return chatpalettes.join("\n");
 }
 function isFulfillConditions(character, skill, condition) {
-	console.log(condition);
 	try {
 		if (condition) return eval(condition);
 	} catch (error) {
+		console.log(condition);
 		console.log(error);
 		return true;
 	}
@@ -1945,7 +1948,6 @@ function createBackup() {
 	a.remove();
 	URL.revokeObjectURL(url);
 }
-
 function restreBackup() {
 	const input = document.createElement("input");
 	input.type = "file";
