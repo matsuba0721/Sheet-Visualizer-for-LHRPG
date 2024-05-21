@@ -123,7 +123,7 @@ function getJson(url) {
 		try {
 			var request = new XMLHttpRequest();
 			request.ontimeout = function () {
-				alert("JSONデータの取得に失敗しました。");
+				showAlert("JSONデータの取得に失敗しました。", "red");
 			};
 			request.onload = function () {
 				var jsonRaw = this.response;
@@ -133,7 +133,7 @@ function getJson(url) {
 			request.send();
 		} catch (err) {
 			console.log(err);
-			alert("JSONデータの取得に失敗しました。");
+			showAlert("JSONデータの取得に失敗しました。", "red");
 		}
 	});
 }
@@ -885,7 +885,23 @@ function createSkillTitleRow(skill) {
 	skillTableHeadRowData.appendChild(skillTableHeadRowTitle);
 
 	const skillTableHeadRowName = document.createElement("li");
-	skillTableHeadRowName.textContent = skill.name + "　";
+	skillTableHeadRowName.textContent = skill.name;
+	skillTableHeadRowName.setAttribute("data-skill-id", skill.id);
+	skillTableHeadRowName.style.paddingRight = "1rem";
+	skillTableHeadRowName.style.cursor = "pointer";
+	skillTableHeadRowName.onclick = (event) => {
+		const character = getCurrentCharacter();
+		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
+		if (navigator.clipboard) {
+			try {
+				navigator.clipboard.writeText(`${skill.timing}:${skill.name}`);
+				showAlert("特技名をコピーしました。", "green");
+			} catch (err) {
+				console.log(err);
+				showAlert("特技名をコピーに失敗しました。", "red");
+			}
+		}
+	};
 	skillTableHeadRowTitle.appendChild(skillTableHeadRowName);
 
 	const skillTableHeadRowType = document.createElement("li");
@@ -1599,6 +1615,48 @@ function createCloseButton() {
 	button.innerHTML = "<span>&times;</span>";
 	return button;
 }
+async function wait(timeout) {
+	return new Promise((resolve) => setTimeout(resolve, timeout));
+}
+async function showAlert(content, color = "green") {
+	const alertArea = document.getElementById("alert");
+	const card = document.createElement("div");
+	card.className = "card alert";
+	card.style.backgroundColor = "whitesmoke";
+	card.style.margin = "5px";
+	card.style.borderRadius = "5px";
+	card.style.opacity = 0;
+	card.style.transform = `translate(300px, 0)`;
+	card.style.width = "300px";
+	const cardSection = document.createElement("div");
+	cardSection.name = "card-section";
+	const contentParagraph = document.createElement("p");
+	contentParagraph.style.fontSize = "small";
+	contentParagraph.innerHTML = content;
+	const bar = document.createElement("div");
+	bar.style.backgroundColor = color;
+	bar.style.width = "100%";
+	bar.style.height = "5px";
+	alertArea.appendChild(card);
+	card.appendChild(cardSection);
+	cardSection.appendChild(contentParagraph);
+	card.appendChild(bar);
+	for (let frame = 0; frame < 90; frame++) {
+		await wait(30);
+		if (frame <= 5) {
+			const rate = Math.sin((Math.PI * frame) / 10);
+			card.style.transform = `translate(${(1 - rate) * 300}px, 0)`;
+			card.style.opacity = rate;
+		} else if (frame > 85) {
+			const rate = Math.sin((Math.PI * (frame - 85)) / 10);
+			card.style.opacity = 1 - rate;
+		} else {
+			const rate = 100 * (1 - (frame - 5) / 80);
+			bar.style.width = `${Math.round(rate)}%`;
+		}
+	}
+	card.remove();
+}
 
 function ExportCcforia(id) {
 	createCcforiaJson(getCurrentCharacter(id));
@@ -1628,10 +1686,10 @@ function createCcforiaJson(character) {
 	if (navigator.clipboard) {
 		try {
 			navigator.clipboard.writeText(ccforia.getJson());
-			alert("クリップボードにコピーしました。ココフォリアにペーストすることでデータを取り込めます。");
+			showAlert("クリップボードにコピーしました。<br>ココフォリアにペーストすることでデータを取り込めます。", "green");
 		} catch (err) {
 			console.log(err);
-			alert("クリップボードのコピーに失敗しました。");
+			showAlert("クリップボードのコピーに失敗しました。", "red");
 		}
 	}
 }
