@@ -983,6 +983,7 @@ function displaySkillChatpalette(tableBody, skill) {
 	const appendChatpaletteRow = (tableBodyElement, skillId, chatpalette = new Chatpalette()) => {
 		const chatpaletteRow = document.createElement("tr");
 		chatpaletteRow.className = "chatpalette";
+		chatpaletteRow.setAttribute("data-condition", chatpalette.condition);
 		chatpaletteRow.setAttribute("data-is-advanced", chatpalette.isAdvanced);
 		chatpaletteRow.style.color = "#444";
 		chatpaletteRow.style.display = chatpalette.isAdvanced && !_config.isAdvanced ? "none" : "";
@@ -1045,6 +1046,7 @@ function displaySkillChatpalette(tableBody, skill) {
 			if (textInput.value) {
 				const chatpalette = new Chatpalette();
 				chatpalette.type = typeSelect[0].value;
+				chatpalette.condition = comandelement.getAttribute("data-condition");
 				chatpalette.text = textInput.value;
 				chatpalette.isAdvanced = comandelement.getAttribute("data-is-advanced") == "true";
 				chatpalettes.push(chatpalette);
