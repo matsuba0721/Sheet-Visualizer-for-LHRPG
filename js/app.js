@@ -1740,6 +1740,7 @@ function createChatpalette(character) {
 		chatpalettes.push(`${character.ability.avoid.dice}LH+${character.ability.avoid.mod}>=0 回避`);
 		chatpalettes.push(`${character.ability.avoid.dice}LH+${character.ability.avoid.mod}+2>=0 回避(ヘイトアンダー)`);
 		chatpalettes.push(`${character.ability.resist.dice}LH+${character.ability.resist.mod}>=0 抵抗`);
+		chatpalettes.push(`${character.ability.resist.dice}LH+${character.ability.resist.mod}+2>=0 抵抗(ヘイトアンダー)`);
 		chatpalettes.push(`${character.ability.motion.dice}LH+${character.ability.motion.mod}>=0 運動`);
 		chatpalettes.push(`${character.ability.durability.dice}LH+${character.ability.durability.mod}>=0 耐久`);
 		chatpalettes.push(`${character.ability.dismantle.dice}LH+${character.ability.dismantle.mod}>=0 解除`);
