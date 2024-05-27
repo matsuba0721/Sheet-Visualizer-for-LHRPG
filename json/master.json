@@ -4474,6 +4474,12 @@
 				"condition": "",
 				"text": "{攻撃力}+(${SR}+2)D6+{POW} 《${NAME}》物理ダメージ(因果力)",
 				"isAdvanced": true
+			},
+			{
+				"type": "Effect",
+				"condition": "",
+				"text": "{攻撃力}+(${SR}+2)D6+{POW基本値} 《${NAME}》物理ダメージ(因果力2)",
+				"isAdvanced": true
 			}
 		],
 		"3223": [
