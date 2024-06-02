@@ -418,7 +418,7 @@ function initCharacter(character) {
 		}
 	});
 
-	character.skills = character.skills.concat(_master.commonSkills);
+	character.skills = character.skills.concat(JSON.parse(JSON.stringify(_master.commonSkills)));
 	character._skillIndexes = new Object();
 	for (let index = 0; index < character.skills.length; index++) {
 		const skill = character.skills[index];
