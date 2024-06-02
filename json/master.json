@@ -2350,6 +2350,12 @@
 				"condition": "",
 				"text": "《${NAME}》 ${TAGS} SR：${SR}/${MSR} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
 				"isAdvanced": true
+			},
+			{
+				"type": "Effect",
+				"condition": "",
+				"text": "C(${CR}*2+10) 《${NAME}》追加ダメージ",
+				"isAdvanced": true
 			}
 		],
 		"2211": [
@@ -6538,6 +6544,12 @@
 				"type": "Explain",
 				"condition": "",
 				"text": "《${NAME}》 ${TAGS} SR：${SR}/${MSR} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			},
+			{
+				"type": "Effect",
+				"condition": "",
+				"text": "C(0+${SR}*5) 《${NAME}》追加ダメージ",
 				"isAdvanced": true
 			}
 		],
