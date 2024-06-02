@@ -2354,7 +2354,7 @@
 			{
 				"type": "Effect",
 				"condition": "",
-				"text": "C(${CR}*2+10) 《${NAME}》追加ダメージ",
+				"text": "C({CR}*2+10) 《${NAME}》追加ダメージ",
 				"isAdvanced": true
 			}
 		],
