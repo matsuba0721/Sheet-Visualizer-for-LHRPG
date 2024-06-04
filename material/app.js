@@ -6,11 +6,12 @@ drawBackground(document.getElementById("zone-background-layer"), imagePath).then
 	foregroundLayer.width = canvas.width;
 	foregroundLayer.height = canvas.height;
 });
+const areaNameInput = document.getElementById("area-name");
 const serverNameInput = document.getElementById("server-name");
 const zoneNameInput = document.getElementById("zone-name");
-const areaNameInput = document.getElementById("area-name");
+const propNameInput = document.getElementById("prop-name");
 const otherNameInputs = [document.getElementById("other-name-0"), document.getElementById("other-name-1"), document.getElementById("other-name-2"), document.getElementById("other-name-3")];
-[serverNameInput, zoneNameInput, areaNameInput].concat(otherNameInputs).forEach((input) => {
+[areaNameInput, serverNameInput, zoneNameInput, propNameInput].concat(otherNameInputs).forEach((input) => {
 	input.addEventListener("change", (event) => {
 		const info = getZoneInfo();
 		const foregroundLayer = document.getElementById("zone-foreground-layer");
@@ -21,9 +22,10 @@ const otherNameInputs = [document.getElementById("other-name-0"), document.getEl
 });
 function getZoneInfo() {
 	return {
+		area: areaNameInput.value,
 		server: serverNameInput.value,
 		zone: zoneNameInput.value,
-		area: areaNameInput.value,
+		prop: propNameInput.value,
 		others: [otherNameInputs[0].value, otherNameInputs[1].value, otherNameInputs[2].value, otherNameInputs[3].value],
 	};
 }
@@ -42,13 +44,16 @@ async function drawBackground(canvas, imagePath) {
 }
 function drawForeground(canvas, info) {
 	const context = canvas.getContext("2d");
-	context.font = 'bold 18px "游明朝体", "Yu Mincho", YuMincho, "ヒラギノ明朝 Pro", "Hiragino Mincho Pro", "MS P明朝", "MS PMincho", serif';
+	context.font = 'bold 36px "游明朝体", "Yu Mincho", YuMincho, "ヒラギノ明朝 Pro", "Hiragino Mincho Pro", "MS P明朝", "MS PMincho", serif';
 	context.fillStyle = "#EEEEEE";
 	context.textBaseline = "top";
+	context.textAlign = "center";
+	context.fillText(info.area, 225, 54, 226);
+	context.font = 'bold 18px "游明朝体", "Yu Mincho", YuMincho, "ヒラギノ明朝 Pro", "Hiragino Mincho Pro", "MS P明朝", "MS PMincho", serif';
 	context.textAlign = "left";
 	context.fillText(info.server, 100, 153, 268);
 	context.fillText(info.zone, 100, 207, 268);
-	context.fillText(info.area, 100, 259, 268);
+	context.fillText(info.prop, 100, 259, 268);
 	for (let index = 0; index < info.others.length; index++) {
 		const other = info.others[index];
 		context.fillText(other, 100, 312 + index * 25, 268);
