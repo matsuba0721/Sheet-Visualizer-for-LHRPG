@@ -1,0 +1,47 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheetVisualizer for LHRPG</title>
+    <link rel="stylesheet" href="../css/foundation.css">
+    <link rel="stylesheet" href="../css/app.css">
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+            <div class="large-7 medium-7 small-7 cell">
+                <div style="position: relative;">
+                    <canvas id="zone-background-layer" style="position: absolute;top: 0;left: 0;"></canvas>
+                    <canvas id="zone-foreground-layer" style="position: absolute;top: 0;left: 0;"></canvas>
+                </div>
+                <canvas id="zone-background" style="position: absolute;top: 0;left: 0;"></canvas>
+            </div>
+            <div class="large-5 medium-5 small-5 cell">
+                <h5>サーバー</h5>
+                <input id="server-name" type="text" placeholder="日本サーバー">
+                <h5>ゾーン</h5>
+                <input id="zone-name" type="text" placeholder="シブヤの街">
+                <h5>区分</h5>
+                <input id="area-name" type="text" placeholder="ダンジョン / モンスター出現あり">
+                <h5>その他</h5>
+                <input id="other-name-0" type="text" placeholder="戦闘行為可能区域">
+                <input id="other-name-1" type="text" placeholder="全特技使用可能">
+                <input id="other-name-2" type="text" placeholder="侵入許可 / 無制限">
+                <input id="other-name-3" type="text" placeholder="退出許可 / 無制限">
+                <button class="button" id="download">ダウンロード</button>
+            </div>
+        </div>
+    </div>
+    <script src="../js/vendor/jquery.js"></script>
+    <script src="../js/vendor/what-input.js"></script>
+    <script src="../js/vendor/foundation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/6-1-6/js/6-1-6.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
