@@ -14,26 +14,49 @@
     <div class="grid-container">
         <div class="grid-x grid-padding-x">
             <div class="large-7 medium-7 small-7 cell">
-                <div style="position: relative;">
-                    <canvas id="zone-background-layer" style="position: absolute;top: 0;left: 0;"></canvas>
-                    <canvas id="zone-foreground-layer" style="position: absolute;top: 0;left: 0;"></canvas>
+                <div style="position: fixed;">
+                    <canvas id="area-frame-background" width="410" height="800" style="position: absolute;top: 10px;left: 0;border-style: groove;"></canvas>
+                    <canvas id="area-frame" width="410" height="472" style="position: absolute;top: 10px;left: 0;"></canvas>
                 </div>
-                <canvas id="zone-background" style="position: absolute;top: 0;left: 0;"></canvas>
+                
             </div>
             <div class="large-5 medium-5 small-5 cell">
-                <h5>エリア</h5>
-                <input id="area-name" type="text" placeholder="呼び声の砦">
-                <h5>サーバー</h5>
-                <input id="server-name" type="text" placeholder="日本サーバー">
-                <h5>ゾーン</h5>
-                <input id="zone-name" type="text" placeholder="シブヤの街">
-                <h5>区分</h5>
-                <input id="prop-name" type="text" placeholder="ダンジョン / モンスター出現あり">
-                <h5>その他</h5>
-                <input id="other-name-0" type="text" placeholder="戦闘行為可能区域">
-                <input id="other-name-1" type="text" placeholder="全特技使用可能">
-                <input id="other-name-2" type="text" placeholder="侵入許可 / 無制限">
-                <input id="other-name-3" type="text" placeholder="退出許可 / 無制限">
+                <h6>エリア</h6>
+                <input id="area-name" type="text" onfocus="this.select();">
+                <h6>サーバー</h6>
+                <textarea id="server-name" style="resize: vertical;" onfocus="this.select();"></textarea>
+                <h6>ゾーン</h6>
+                <textarea id="zone-name" style="resize: vertical;" onfocus="this.select();"></textarea>
+                <h6>区分</h6>
+                <textarea id="prop-info" style="resize: vertical;" onfocus="this.select();"></textarea>
+                <h6>その他</h6>
+                <textarea id="other-info"  style="resize: vertical;height: 114px;" onfocus="this.select();"></textarea>
+                <h6>イベント</h6>
+                <textarea id="event-info"  style="resize: vertical;" onfocus="this.select();"></textarea>
+                <h6>カラーテーマ</h6>
+                <select style="height: 2.4375rem;font-size: 1rem;margin: 0 0 1rem;" id="color-theme">
+                    <option value="default">デフォルト</option>
+                    <option value="guardianSilver">ガーディアンシルバー</option>
+                    <option value="samuraiBlood">サムライブラッド</option>
+                    <option value="monkFire">モンクファイア</option>
+                    <option value="clericGold">クレリックゴールド</option>
+                    <option value="druidMoss">ドルイドモス</option>
+                    <option value="priestObsidian">カンナギオブシディアン</option>
+                    <option value="assassinAsh">アサシンアッシュ</option>
+                    <option value="swashbucklerSky">スワッシュバックラースカイ</option>
+                    <option value="bardCobalt">バードコバルト</option>
+                    <option value="sorcererRouge">ソーサラールージュ</option>
+                    <option value="samonerEmerald">サモナーエメラルド</option>
+                    <option value="enchanterIris">エンチャンターアイリス</option>
+                </select>
+                <h6>透過率</h6>
+                <div class="expanded button-group"  id="transparent-rates">
+                    <button class="button hollow" value="00">0%</button>
+                    <button class="button hollow" value="40">25%</button>
+                    <button class="button hollow" value="80">50%</button>
+                    <button class="button" value="C0">75%</button>
+                    <button class="button hollow" value="FF">100%</button>
+                </div>
                 <button class="button" id="download">ダウンロード</button>
             </div>
         </div>
