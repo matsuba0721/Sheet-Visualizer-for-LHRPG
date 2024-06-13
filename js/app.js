@@ -1792,13 +1792,13 @@ function createChatpalette(character) {
 		const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((x) => x);
 		equipments.forEach((equipment) => {
 			let chatpalette = "";
-			if (!_config.ccforiaOutput.isAliasOnly && equipment.alias) {
-				chatpalette += `《${equipment.alias != equipment.name ? `${equipment.alias}(${equipment.name})` : equipment.name}》`;
-			} else {
+			if (equipment.alias.includes(equipment.name)) {
 				chatpalette += `《${equipment.alias}》`;
+			} else {
+				chatpalette += `《${equipment.alias != equipment.name ? `${equipment.alias}(${equipment.name})` : equipment.name}》`;
 			}
-			if (equipment.tags.toString().includes("非売品")) chatpalette += `効果：${equipment.function}》`;
-			if (equipment.prefix_function) chatpalette += `プレフィックスド効果：${equipment.prefix_function}》`;
+			chatpalette += `効果・解説：${equipment.function}`;
+			if (equipment.prefix_function) chatpalette += `プレフィックスド効果：${equipment.prefix_function}`;
 			chatpalettes.push(chatpalette);
 		});
 	}
