@@ -6549,7 +6549,7 @@
 			{
 				"type": "Effect",
 				"condition": "",
-				"text": "C(0+${SR}*5) 《${NAME}》追加ダメージ",
+				"text": "C(0+${SR})*5 《${NAME}》追加ダメージ",
 				"isAdvanced": true
 			}
 		],
