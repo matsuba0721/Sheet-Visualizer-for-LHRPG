@@ -115,6 +115,7 @@ const _master = new Object();
 const _config = new Config();
 const _characters = new Object();
 const _localStorage = new LocalStorage();
+var __currentScrollTop = 0;
 
 init();
 
@@ -288,12 +289,39 @@ function init() {
 		}
 	});
 
-	getJson("json/master.json").then((master) => {
+	getJson("../json/master.json").then((master) => {
 		Object.keys(master).forEach((key) => (_master[key] = master[key]));
 		loadButton.disabled = false;
+		document.getElementById("link").addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				loadCharactor();
+			}
+		});
+		document.getElementById("elissa-qa-keyword").addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				searchElissaQA();
+			}
+		});
 	});
 
+	$("#elissa-qa").on("closed.zf.reveal", (e) => {
+		loadScrollTop();
+	});
+	document.documentElement.addEventListener("scroll", (event) => {});
+
 	refreshHistoryTable();
+}
+function saveScrollTop() {
+	__currentScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+}
+async function loadScrollTop() {
+	await new Promise((resolve, reject) => {
+		setTimeout(() => {
+			document.documentElement.scrollTop = __currentScrollTop;
+			document.body.scrollTop = __currentScrollTop;
+			console.log(document.documentElement.scrollTop || document.body.scrollTop);
+		}, 0);
+	});
 }
 function loadCharactor() {
 	loadCharactorFrom(document.getElementById("link").value);
@@ -441,26 +469,7 @@ function getCharactorId(url) {
 }
 function getSkillChatpalettes(skill) {
 	const name = `character-${skill.characterId}`;
-	const data = _localStorage.Read(name);
-	if ("skillChatpalettes" in data && skill.id in data.skillChatpalettes) {
-		return data.skillChatpalettes[skill.id];
-	} else {
-		return _master.skillChatpalettes[skill.id];
-	}
-}
-function setSkillChatpalettes(skill, chatpalettes) {
-	const name = `character-${skill.characterId}`;
-	const data = _localStorage.Read(name);
-	if (!("skillChatpalettes" in data)) data.skillChatpalettes = new Object();
-	data.skillChatpalettes[skill.id] = chatpalettes;
-	_localStorage.Write(name, data);
-}
-function deleteSkillChatpalettes(skill) {
-	const name = `character-${skill.characterId}`;
-	const data = _localStorage.Read(name);
-	if (!("skillChatpalettes" in data)) data.skillChatpalettes = new Object();
-	delete data.skillChatpalettes[skill.id];
-	_localStorage.Write(name, data);
+	return _master.skillChatpalettes[skill.id];
 }
 function getSkillById(character, id) {
 	return character.skills[character._skillIndexes[id]];
@@ -826,8 +835,6 @@ function createSkillCell(skill) {
 	const explainRow = createSkillExplainRow(skill);
 	skillTableBody.appendChild(explainRow);
 
-	displaySkillChatpalette(skillTableBody, skill);
-
 	skill.cell = cell;
 	return cell;
 }
@@ -860,7 +867,7 @@ function createSkillTitleRow(skill) {
 		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
 		if (navigator.clipboard) {
 			try {
-				navigator.clipboard.writeText(`${skill.timing}:${skill.name}`);
+				navigator.clipboard.writeText(skill.name);
 				showAlert("特技名をコピーしました。", "green");
 			} catch (err) {
 				console.log(err);
@@ -890,22 +897,75 @@ function createSkillTitleRow(skill) {
 		skillTableHeadRowTitle.appendChild(skillTableHeadRowtag);
 	});
 
-	const resetChatpaletteButton = document.createElement("a");
-	resetChatpaletteButton.textContent = "初期化";
-	resetChatpaletteButton.setAttribute("data-skill-id", skill.id);
-	resetChatpaletteButton.style.float = "right";
-	resetChatpaletteButton.style.marginTop = "4px";
-	resetChatpaletteButton.style.color = "#999";
-	resetChatpaletteButton.style.fontSize = "80%";
-	resetChatpaletteButton.onclick = (event) => {
+	const skillTableHeadRowCommands = document.createElement("ul");
+	skillTableHeadRowCommands.style.margin = 0;
+	skillTableHeadRowCommands.style.padding = 0;
+	skillTableHeadRowCommands.style.float = "right";
+	skillTableHeadRowData.appendChild(skillTableHeadRowCommands);
+
+	const skillTableHeadRowDeclareCommand = document.createElement("li");
+	skillTableHeadRowDeclareCommand.textContent = "宣言";
+	skillTableHeadRowDeclareCommand.setAttribute("data-skill-id", skill.id);
+	skillTableHeadRowDeclareCommand.classList.add(!skill.isCommon ? "secondaryItem" : "commonItem");
+	skillTableHeadRowDeclareCommand.style.cursor = "pointer";
+	skillTableHeadRowDeclareCommand.onclick = (event) => {
 		const character = getCurrentCharacter();
 		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
-		if (window.confirm(`特技${skill.name}のチャットパレットの設定を初期化します。\n初期化後、画面の更新が行われます。\nよろしいですか？`)) {
-			deleteSkillChatpalettes(skill);
-			window.location.reload();
+		if (navigator.clipboard) {
+			try {
+				navigator.clipboard.writeText(`${skill.timing}:${skill.name}`);
+				showAlert("特技宣言をコピーしました。", "green");
+			} catch (err) {
+				console.log(err);
+				showAlert("特技宣言をコピーに失敗しました。", "red");
+			}
 		}
 	};
-	skillTableHeadRowData.appendChild(resetChatpaletteButton);
+	skillTableHeadRowCommands.appendChild(skillTableHeadRowDeclareCommand);
+
+	const skillTableHeadRowDetailCommand = document.createElement("li");
+	skillTableHeadRowDetailCommand.textContent = "説明";
+	skillTableHeadRowDetailCommand.setAttribute("data-skill-id", skill.id);
+	skillTableHeadRowDetailCommand.classList.add(!skill.isCommon ? "secondaryItem" : "commonItem");
+	skillTableHeadRowDetailCommand.style.cursor = "pointer";
+	skillTableHeadRowDetailCommand.onclick = (event) => {
+		const character = getCurrentCharacter();
+		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
+		let tags = "";
+		skill.tags.forEach((tag) => {
+			tags += `[${tag}]`;
+		});
+		if (navigator.clipboard) {
+			try {
+				navigator.clipboard.writeText(`《${skill.name}》 ${tags} SR：${skill.skill_rank}/${skill.skill_max_rank} タイミング：${skill.timing} 判定：${skill.roll} 対象：${skill.target} 射程：${skill.range} コスト：${skill.cost} 制限：${skill.limit} 効果：${skill.function}"`);
+				showAlert("特技の説明をコピーしました。", "green");
+			} catch (err) {
+				console.log(err);
+				showAlert("特技の説明をコピーに失敗しました。", "red");
+			}
+		}
+	};
+	skillTableHeadRowCommands.appendChild(skillTableHeadRowDetailCommand);
+
+	const hasQA = hasElissaQA(skill.name);
+	const isDisable = !hasQA ? "Disable" : "";
+
+	const skillTableHeadRowQACommand = document.createElement("li");
+	skillTableHeadRowQACommand.textContent = "QA";
+	skillTableHeadRowQACommand.setAttribute("data-skill-id", skill.id);
+	skillTableHeadRowQACommand.classList.add(!skill.isCommon ? "secondaryItem" + isDisable : "commonItem" + isDisable);
+	skillTableHeadRowQACommand.style.cursor = hasQA ? "pointer" : "default";
+	if (hasQA) {
+		skillTableHeadRowQACommand.onclick = (event) => {
+			const character = getCurrentCharacter();
+			const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
+			saveScrollTop();
+			$("#elissa-qa").foundation("open");
+			document.getElementById("elissa-qa-keyword").value = skill.name;
+			searchElissaQABy(skill.name);
+		};
+	}
+	skillTableHeadRowCommands.appendChild(skillTableHeadRowQACommand);
 	return skillTableHeadRow;
 }
 function createPropertyRow(skill) {
@@ -960,106 +1020,6 @@ function createSkillExplainRow(skill) {
 	explainRow.appendChild(explainData);
 
 	return explainRow;
-}
-function displaySkillChatpalette(tableBody, skill) {
-	const appendChatpaletteRow = (tableBodyElement, skillId, chatpalette = new Chatpalette()) => {
-		const chatpaletteRow = document.createElement("tr");
-		chatpaletteRow.className = "chatpalette";
-		chatpaletteRow.setAttribute("data-condition", chatpalette.condition);
-		chatpaletteRow.setAttribute("data-is-advanced", chatpalette.isAdvanced);
-		chatpaletteRow.style.color = "#444";
-		chatpaletteRow.style.display = chatpalette.isAdvanced && !_config.isAdvanced ? "none" : "";
-		tableBodyElement.appendChild(chatpaletteRow);
-
-		const chatpaletteData = document.createElement("td");
-		chatpaletteData.colSpan = 7;
-		chatpaletteRow.appendChild(chatpaletteData);
-
-		const typeSelect = document.createElement("select");
-		_master.chatpaletteTypes.forEach((typeCandidate) => {
-			const option = document.createElement("option");
-			option.value = typeCandidate.value;
-			option.innerText = typeCandidate.text;
-			option.selected = chatpalette.type == typeCandidate.type;
-			typeSelect.appendChild(option);
-		});
-		typeSelect.style.float = "left";
-		typeSelect.style.width = "18%";
-		typeSelect.className = "chatpalette-type";
-		typeSelect.value = chatpalette.type;
-		typeSelect.setAttribute("data-skill-id", skillId);
-		typeSelect.onchange = (event) => {
-			saveChatpalettes(event.target.closest("tBody"), event.target.getAttribute("data-skill-id"));
-		};
-		chatpaletteData.appendChild(typeSelect);
-
-		const textInput = document.createElement("input");
-		textInput.type = "text";
-		textInput.className = "chatpalette-text";
-		textInput.value = chatpalette.text;
-		textInput.style.float = "left";
-		textInput.style.width = "75%";
-		textInput.setAttribute("data-skill-id", skill.id);
-		textInput.onchange = (event) => {
-			saveChatpalettes(event.target.closest("tBody"), event.target.getAttribute("data-skill-id"));
-		};
-		chatpaletteData.appendChild(textInput);
-
-		const removeChatpaletteButton = document.createElement("a");
-		removeChatpaletteButton.className = "alert";
-		removeChatpaletteButton.style.float = "right";
-		removeChatpaletteButton.innerText = "削除";
-		removeChatpaletteButton.setAttribute("data-skill-id", skillId);
-		removeChatpaletteButton.onclick = (event) => {
-			if (window.confirm("本当に削除しまか？")) {
-				const tBody = event.target.closest("tBody");
-				event.target.closest("tr").remove();
-				saveChatpalettes(tBody, event.target.getAttribute("data-skill-id"));
-			}
-		};
-		chatpaletteData.appendChild(removeChatpaletteButton);
-	};
-	const saveChatpalettes = (tableBodyElement, skillId) => {
-		const chatpalettes = [];
-		const comandelements = Object.values(tableBodyElement.getElementsByClassName("chatpalette"));
-		comandelements.forEach((comandelement) => {
-			const typeSelect = comandelement.getElementsByClassName("chatpalette-type");
-			const textInput = comandelement.getElementsByClassName("chatpalette-text")[0];
-			if (textInput.value) {
-				const chatpalette = new Chatpalette();
-				chatpalette.type = typeSelect[0].value;
-				chatpalette.condition = comandelement.getAttribute("data-condition");
-				chatpalette.text = textInput.value;
-				chatpalette.isAdvanced = comandelement.getAttribute("data-is-advanced") == "true";
-				chatpalettes.push(chatpalette);
-			}
-		});
-		const character = getCurrentCharacter();
-		setSkillChatpalettes(getSkillById(character, skillId), chatpalettes);
-	};
-
-	const chatpalettesRow = document.createElement("tr");
-	chatpalettesRow.style.color = "#444";
-	chatpalettesRow.style.fontWeight = "bold";
-	tableBody.appendChild(chatpalettesRow);
-	const chatpalettesData = document.createElement("td");
-	chatpalettesData.colSpan = 7;
-	chatpalettesRow.appendChild(chatpalettesData);
-	const addChatpaletteButton = document.createElement("a");
-	addChatpaletteButton.textContent = "追加";
-	addChatpaletteButton.setAttribute("data-skill-id", skill.id);
-	addChatpaletteButton.style.float = "right";
-	addChatpaletteButton.onclick = (event) => {
-		appendChatpaletteRow(event.target.closest("tBody"), event.target.getAttribute("data-skill-id"));
-	};
-	chatpalettesData.appendChild(addChatpaletteButton);
-	const chatpalettesTitleData = document.createElement("div");
-	chatpalettesTitleData.innerText = "チャットパレット";
-	chatpalettesData.appendChild(chatpalettesTitleData);
-
-	getSkillChatpalettes(skill).forEach((chatpalette) => {
-		appendChatpaletteRow(tableBody, skill.id, chatpalette);
-	});
 }
 
 function createItemPanelGrid(character) {
@@ -1841,6 +1801,57 @@ function isFulfillConditions(character, skill, condition) {
 		return true;
 	}
 	return true;
+}
+
+function searchElissaQA() {
+	const keywordInput = document.getElementById("elissa-qa-keyword");
+	searchElissaQABy(keywordInput.value.trim());
+}
+function searchElissaQABy(keyword) {
+	const resultArea = document.getElementById("elissa-qa-search-result");
+
+	while (resultArea.firstChild) {
+		resultArea.removeChild(resultArea.firstChild);
+	}
+	if (keyword.length == 0) return;
+	const keywords = keyword.replace("　", " ").split(" ");
+	let results = _master.elissaQA;
+	keywords.forEach((word) => {
+		const filterd = [];
+		results.forEach((qa) => {
+			if (qa.question.includes(word) | qa.answer.join("　").includes(word)) {
+				filterd.push(qa);
+			}
+		});
+		results = filterd;
+	});
+
+	results.slice(0, 20).forEach((result) => {
+		const callout = document.createElement("div");
+		callout.classList.add("callout");
+		resultArea.appendChild(callout);
+
+		const questionParagraph = document.createElement("p");
+		questionParagraph.classList.add("question");
+		questionParagraph.textContent = result.question;
+		callout.appendChild(questionParagraph);
+
+		result.answer.forEach((a) => {
+			const answerParagraph = document.createElement("p");
+			answerParagraph.innerHTML = a;
+			answerParagraph.classList.add("answer");
+			callout.appendChild(answerParagraph);
+		});
+	});
+}
+function hasElissaQA(singleKeyword) {
+	for (let index = 0; index < _master.elissaQA.length; index++) {
+		const qa = _master.elissaQA[index];
+		if (qa.question.includes(singleKeyword) | qa.answer.join("　").includes(singleKeyword)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function appendHistory(character) {
