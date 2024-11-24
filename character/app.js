@@ -1734,10 +1734,14 @@ function createChatpalette(character) {
 			.filter((x) => x)
 			.forEach((item) => {
 				let chatpalette = "";
+				let tags = "";
+				item.tags.forEach((tag) => {
+					tags += `[${tag}]`;
+				});
 				chatpalette += `《${item.alias != item.name ? `${item.alias}(${item.name})` : item.name}》`;
-				chatpalette += `効果・解説：${item.function}`;
+				chatpalette += `${tags} タイミング：${item.timing} 対象：${item.target} 射程：${item.range} 効果・解説：${item.function}`;
 				if (item.prefix_function) chatpalette += `プレフィックスド効果：${item.prefix_function}》`;
-				chatpalettes.push(chatpalette);
+				chatpalettes.push(chatpalette.replace("\n", ""));
 			});
 	}
 	if (_config.ccforiaOutput.isConsumableChart) {
