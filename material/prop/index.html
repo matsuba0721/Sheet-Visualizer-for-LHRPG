@@ -5,8 +5,8 @@
 		<meta http-equiv="x-ua-compatible" content="ie=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>SheetVisualizer for LHRPG</title>
-		<link rel="stylesheet" href="../css/foundation.css" />
-		<link rel="stylesheet" href="../css/app.css" />
+		<link rel="stylesheet" href="../../css/foundation.css" />
+		<link rel="stylesheet" href="../../css/app.css" />
 	</head>
 
 	<body>
@@ -14,23 +14,40 @@
 			<div class="grid-x grid-padding-x">
 				<div class="large-7 medium-7 small-7 cell">
 					<div style="position: fixed">
-						<canvas id="area-frame-background" width="410" height="800" style="position: absolute; top: 10px; left: 0; border-style: groove"></canvas>
-						<canvas id="area-frame" width="410" height="472" style="position: absolute; top: 10px; left: 0"></canvas>
+						<canvas id="prop-frame" width="400" height="472" style="position: absolute; top: 10px; left: 0"></canvas>
 					</div>
 				</div>
 				<div class="large-5 medium-5 small-5 cell">
-					<h6>エリア</h6>
-					<input id="area-name" type="text" onfocus="this.select();" />
-					<h6>サーバー</h6>
-					<textarea id="server-name" style="resize: vertical" onfocus="this.select();"></textarea>
-					<h6>ゾーン</h6>
-					<textarea id="zone-name" style="resize: vertical" onfocus="this.select();"></textarea>
-					<h6>区分</h6>
-					<textarea id="prop-info" style="resize: vertical" onfocus="this.select();"></textarea>
-					<h6>その他</h6>
-					<textarea id="other-info" style="resize: vertical; height: 114px" onfocus="this.select();"></textarea>
-					<h6>イベント</h6>
-					<textarea id="event-info" style="resize: vertical" onfocus="this.select();"></textarea>
+					<h6>プロップ名</h6>
+					<input id="prop-name" type="text" onfocus="this.select();" />
+					<h6>プロップ画像</h6>
+					<input type="file" id="prop-image" accept=".png,.jpeg" />
+					<h6>タグ</h6>
+					<div class="grid-x">
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="prop-tags-0" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="prop-tags-1" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="prop-tags-2" type="text" onfocus="this.select();" />
+						</div>
+					</div>
+					<h6>難易度(探知/解析/解除)</h6>
+					<div class="grid-x">
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="prop-roll-detection" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="prop-roll-analyze" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="prop-roll-release" type="text" onfocus="this.select();" />
+						</div>
+					</div>
+					<h6>効果文</h6>
+					<textarea id="prop-effect" style="resize: vertical; height: 10rem"></textarea>
 					<h6>カラーテーマ</h6>
 					<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="color-theme">
 						<option value="default">デフォルト</option>
@@ -52,16 +69,18 @@
 						<button class="button hollow" value="00">0%</button>
 						<button class="button hollow" value="40">25%</button>
 						<button class="button hollow" value="80">50%</button>
-						<button class="button" value="C0">75%</button>
-						<button class="button hollow" value="FF">100%</button>
+						<button class="button hollow" value="C0">75%</button>
+						<button class="button" value="FF">100%</button>
 					</div>
 					<button class="button" id="download">ダウンロード</button>
+					<button class="secondary button" id="download-txt">テキスト変換</button>
 				</div>
 			</div>
+			<div id="alert" style="position: fixed; top: 0; right: 0"></div>
 		</div>
-		<script src="../js/vendor/jquery.js"></script>
-		<script src="../js/vendor/what-input.js"></script>
-		<script src="../js/vendor/foundation.js"></script>
+		<script src="../../js/vendor/jquery.js"></script>
+		<script src="../../js/vendor/what-input.js"></script>
+		<script src="../../js/vendor/foundation.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 		<script src="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/6-1-6/js/6-1-6.js"></script>
 		<script src="app.js"></script>
