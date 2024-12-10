@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>SheetVisualizer for LHRPG</title>
+		<link rel="stylesheet" href="../../css/foundation.css" />
+		<link rel="stylesheet" href="../../css/app.css" />
+	</head>
+
+	<body>
+		<div class="grid-container">
+			<div class="grid-x grid-padding-x">
+				<div class="large-7 medium-7 small-7 cell">
+					<div style="position: fixed">
+						<canvas id="action-frame" width="400" height="472" style="position: absolute; top: 10px; left: 0"></canvas>
+					</div>
+				</div>
+				<div class="large-5 medium-5 small-5 cell">
+					<h6>アクション名</h6>
+					<input id="action-name" type="text" onfocus="this.select();" />
+					<h6>種類</h6>
+					<input id="action-type" type="text" onfocus="this.select();" />
+					<h6>タグ</h6>
+					<div class="grid-x">
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="action-tags-0" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="action-tags-1" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell">
+							<input id="action-tags-2" type="text" onfocus="this.select();" />
+						</div>
+					</div>
+					<h6>条件</h6>
+					<div class="grid-x">
+						<div class="large-4 medium-4 small-4 cell"><p style="margin: 5px 0; text-align: end">タイミング：</p></div>
+						<div class="large-8 medium-8 small-8 cell">
+							<input id="action-rule-timing" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell"><p style="margin: 5px 0; text-align: end">判定：</p></div>
+						<div class="large-8 medium-8 small-8 cell">
+							<input id="action-rule-roll" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell"><p style="margin: 5px 0; text-align: end">対象：</p></div>
+						<div class="large-8 medium-8 small-8 cell">
+							<input id="action-rule-target" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell"><p style="margin: 5px 0; text-align: end">射程：</p></div>
+						<div class="large-8 medium-8 small-8 cell">
+							<input id="action-rule-range" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell"><p style="margin: 5px 0; text-align: end">コスト：</p></div>
+						<div class="large-8 medium-8 small-8 cell">
+							<input id="action-rule-cost" type="text" onfocus="this.select();" />
+						</div>
+						<div class="large-4 medium-4 small-4 cell"><p style="margin: 5px 0; text-align: end">制限：</p></div>
+						<div class="large-8 medium-8 small-8 cell">
+							<input id="action-rule-limit" type="text" onfocus="this.select();" />
+						</div>
+					</div>
+					<h6>効果文</h6>
+					<textarea id="action-effect" style="resize: vertical; height: 10rem"></textarea>
+					<h6>カラーテーマ</h6>
+					<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="color-theme">
+						<option value="default">デフォルト</option>
+						<option value="guardianSilver">ガーディアンシルバー</option>
+						<option value="samuraiBlood">サムライブラッド</option>
+						<option value="monkFire">モンクファイア</option>
+						<option value="clericGold">クレリックゴールド</option>
+						<option value="druidMoss">ドルイドモス</option>
+						<option value="priestObsidian">カンナギオブシディアン</option>
+						<option value="assassinAsh">アサシンアッシュ</option>
+						<option value="swashbucklerSky">スワッシュバックラースカイ</option>
+						<option value="bardCobalt">バードコバルト</option>
+						<option value="sorcererRouge">ソーサラールージュ</option>
+						<option value="samonerEmerald">サモナーエメラルド</option>
+						<option value="enchanterIris">エンチャンターアイリス</option>
+					</select>
+					<h6>透過率</h6>
+					<div class="expanded button-group" id="transparent-rates">
+						<button class="button hollow" value="00">0%</button>
+						<button class="button hollow" value="40">25%</button>
+						<button class="button hollow" value="80">50%</button>
+						<button class="button hollow" value="C0">75%</button>
+						<button class="button" value="FF">100%</button>
+					</div>
+					<button class="button" id="download">ダウンロード</button>
+					<button class="secondary button" id="download-txt">テキスト変換</button>
+				</div>
+			</div>
+			<div id="alert" style="position: fixed; top: 0; right: 0"></div>
+		</div>
+		<script src="../../js/vendor/jquery.js"></script>
+		<script src="../../js/vendor/what-input.js"></script>
+		<script src="../../js/vendor/foundation.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+		<script src="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/6-1-6/js/6-1-6.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>

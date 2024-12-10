@@ -1,50 +1,31 @@
 $(document).foundation();
 
 const ui = new Object();
-ui.name = document.getElementById("prop-name");
-ui.image = document.getElementById("prop-image");
-ui.imageFile = null;
-ui.tags = [document.getElementById("prop-tags-0"), document.getElementById("prop-tags-1"), document.getElementById("prop-tags-2")];
-ui.roll = new Object();
-ui.roll.detection = document.getElementById("prop-roll-detection");
-ui.roll.detection.value = "自動";
-ui.roll.analyze = document.getElementById("prop-roll-analyze");
-ui.roll.analyze.value = "自動";
-ui.roll.release = document.getElementById("prop-roll-release");
-ui.roll.release.value = "不可";
-ui.effect = document.getElementById("prop-effect");
+ui.name = document.getElementById("action-name");
+ui.type = document.getElementById("action-type");
+ui.tags = [document.getElementById("action-tags-0"), document.getElementById("action-tags-1"), document.getElementById("action-tags-2")];
+ui.tags[0].value = "";
+ui.tags[1].value = "";
+ui.tags[2].value = "";
+ui.rule = new Object();
+ui.rule.timing = document.getElementById("action-rule-timing");
+ui.rule.roll = document.getElementById("action-rule-roll");
+ui.rule.target = document.getElementById("action-rule-target");
+ui.rule.range = document.getElementById("action-rule-range");
+ui.rule.cost = document.getElementById("action-rule-cost");
+ui.rule.limit = document.getElementById("action-rule-limit");
+ui.effect = document.getElementById("action-effect");
+ui.effect.value = "";
 
 const transparentRateButtons = document.getElementById("transparent-rates");
 transparentRateButtons.setAttribute("data-transparent-value", "FF");
 const colorThemeSelect = document.getElementById("color-theme");
-[ui.name, ui.tags[0], ui.tags[1], ui.tags[2], ui.roll.detection, ui.roll.analyze, ui.roll.release, ui.effect, colorThemeSelect].forEach((element) => {
+[ui.name, ui.type, ui.tags[0], ui.tags[1], ui.tags[2], ui.rule.timing, ui.rule.roll, ui.rule.target, ui.rule.range, ui.rule.cost, ui.rule.limit, ui.effect, colorThemeSelect].forEach((element) => {
 	element.addEventListener("change", (event) => {
 		draw();
 	});
 });
-ui.image.addEventListener(
-	"change",
-	function (e) {
-		ui.imageFile = null;
-		const file = e.target.files[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = function () {
-				const dataUrl = reader.result;
-				const img = new Image();
-				img.src = dataUrl;
-				img.onload = function () {
-					ui.imageFile = img;
-					draw();
-				};
-			};
-		} else {
-			draw();
-		}
-	},
-	false
-);
+
 Array.from(document.getElementById("transparent-rates").children).forEach((button) => {
 	button.addEventListener("click", (event) => {
 		transparentRateButtons.setAttribute("data-transparent-value", event.target.value);
@@ -175,17 +156,34 @@ colorThemes.enchanterIris = {
 draw();
 
 function draw() {
-	const canvas = document.getElementById("prop-frame");
+	const canvas = document.getElementById("action-frame");
 	const context = canvas.getContext("2d");
 	const colorTheme = colorThemes[colorThemeSelect.value];
 	const contents = new Object();
+
 	contents.name = ui.name.value;
+	contents.type = ui.type.value;
 	contents.tags = [ui.tags[0].value, ui.tags[1].value, ui.tags[2].value];
-	contents.detection = ui.roll.detection.value;
-	contents.analyze = ui.roll.analyze.value;
-	contents.release = ui.roll.release.value;
+	contents.rules = [];
+	if (ui.rule.timing.value) {
+		contents.rules.push({ name: "タイミング", value: ui.rule.timing.value });
+	}
+	if (ui.rule.roll.value) {
+		contents.rules.push({ name: "判定", value: ui.rule.roll.value });
+	}
+	if (ui.rule.target.value) {
+		contents.rules.push({ name: "対象", value: ui.rule.target.value });
+	}
+	if (ui.rule.range.value) {
+		contents.rules.push({ name: "射程", value: ui.rule.range.value });
+	}
+	if (ui.rule.cost.value) {
+		contents.rules.push({ name: "コスト", value: ui.rule.cost.value });
+	}
+	if (ui.rule.limit.value) {
+		contents.rules.push({ name: "制限", value: ui.rule.limit.value });
+	}
 	contents.effect = ui.effect.value;
-	contents.image = ui.imageFile;
 
 	colorTheme.transparent = transparentRateButtons.getAttribute("data-transparent-value");
 
@@ -204,68 +202,55 @@ function drawFrame(context, colorTheme, contents) {
 	context.fillStyle = colorTheme.accentPrimary + colorTheme.transparent;
 	context.fillRect(0, 0, 400, height);
 
-	//icon
-	if (contents.image) {
-		context.drawImage(contents.image, 8, 8, 80 - 16, 80 - 16);
-		context.clearRect(7, 7, 4, 4);
-		context.clearRect(7, 69, 4, 4);
-		context.clearRect(69, 69, 4, 4);
-		context.clearRect(69, 7, 4, 4);
-		context.fillStyle = colorTheme.accentPrimary + colorTheme.transparent;
-		context.fillRect(7, 7, 4, 4);
-		context.fillRect(7, 69, 4, 4);
-		context.fillRect(69, 69, 4, 4);
-		context.fillRect(69, 7, 4, 4);
-	} else {
-		context.clearRect(8, 8, 80 - 16, 80 - 16);
-		context.fill();
-		context.fillStyle = colorTheme.accentPrimary + colorTheme.transparent;
-		drawRoundRectCorner(context, 8, 8, 80 - 16, 80 - 16, 8);
-	}
-
-	//icon
-	context.strokeStyle = "#FFFFFF";
-	context.lineWidth = 2;
-	createRoundRectPath(context, 8, 8, 80 - 16, 80 - 16, 8);
-	context.stroke();
-
 	//name
 	context.font = font(24, true);
 	context.fillStyle = "#FFFFFF";
 	context.textBaseline = "top";
 	context.textAlign = "left";
-	context.fillText(contents.name, 80, 8, 400 - 80 - 8);
+	context.fillText(contents.name, 8, 8, 250);
+
+	//type
+	if (contents.type) {
+		context.font = font(24, true);
+		context.fillStyle = "#FFFFFF";
+		context.textBaseline = "top";
+		context.textAlign = "center";
+		context.fillText(contents.type, 250 + 6 + 68, 8, 150 - 16);
+		context.strokeStyle = "#FFFFFF";
+		context.lineWidth = 2;
+		context.strokeRect(250 + 6, 6, 150 - 12, 40 - 12);
+	}
 
 	//tags
-	createRoundRectPath(context, 80, 40, 100, 30, 8);
-	context.font = font(24, false);
+	createRoundRectPath(context, 8, 40, 124, 30, 8);
+	context.font = font(22, false);
 	context.textBaseline = "middle";
 	context.textAlign = "center";
 	if (contents.tags[0]) {
 		context.fillStyle = "#FFFFFF";
 		context.fill();
 		context.fillStyle = "#000000";
-		context.fillText(contents.tags[0], 80 + 50, 40 + 15, 100);
+		context.fillText(contents.tags[0], 8 + 62, 40 + 15, 124);
 	} else {
 		context.fillStyle = "#B4B4B4";
 		context.fill();
 	}
-	createRoundRectPath(context, 80 + 100 + 8, 40, 100, 30, 8);
+	createRoundRectPath(context, 8 + 128 + 2, 40, 124, 30, 8);
 	if (contents.tags[1]) {
 		context.fillStyle = "#FFFFFF";
 		context.fill();
 		context.fillStyle = "#000000";
-		context.fillText(contents.tags[1], 80 + 100 + 8 + 50, 40 + 15, 100);
+		context.fillText(contents.tags[1], 8 + 128 + 2 + 62, 40 + 15, 124);
 	} else {
 		context.fillStyle = "#B4B4B4";
 		context.fill();
 	}
-	createRoundRectPath(context, 80 + 100 * 2 + 8 * 2, 40, 100, 30, 8);
+	createRoundRectPath(context, 8 + 128 * 2 + 4, 40, 124, 30, 8);
 	if (contents.tags[2]) {
 		context.fillStyle = "#FFFFFF";
 		context.fill();
 		context.fillStyle = "#000000";
-		context.fillText(contents.tags[2], 80 + 100 * 2 + 8 * 2 + 50, 40 + 15, 100);
+		context.fillText(contents.tags[2], 8 + 128 * 2 + 4 + 62, 40 + 15, 124);
 	} else {
 		context.fillStyle = "#B4B4B4";
 		context.fill();
@@ -275,55 +260,37 @@ function drawFrame(context, colorTheme, contents) {
 	context.fillStyle = "#FFFFFF" + colorTheme.transparent;
 	context.fillRect(2, 80, 400 - 4, height - 80 - 2);
 
-	//rolls
-	context.font = font(24);
-	context.textAlign = "center";
-	context.textBaseline = "middle";
+	//rules
+	context.font = font(18);
+	let currentY = 84;
+	for (let index = 0; index < contents.rules.length; index++, currentY += 30) {
+		const rule = contents.rules[index];
 
-	context.fillStyle = "#000000";
-	context.fillRect(7, 87, 60, 40 - 2);
-	context.fillStyle = "#FFFFFF";
-	context.fillText("探知", 8 + 29, 88 + 18, 60 - 2);
+		context.strokeStyle = "#626262";
+		context.lineWidth = 1;
+		createRoundRectPath(context, 8, currentY, 400 - 16, 24, 8);
+		context.stroke();
+		context.textAlign = "left";
+		context.textBaseline = "middle";
+		context.fillStyle = "#000000";
+		context.fillText(rule.value, 120 + 8, currentY + 12, 280 - 20);
 
-	context.strokeStyle = "#000000";
-	context.lineWidth = 1;
-	createRoundRectPath(context, 8, 88, 120, 40 - 4, 8);
-	context.stroke();
-	context.fillStyle = "#000000";
-	context.fillText(contents.detection, 60 + 8 + 29, 88 + 18, 60 - 2);
-
-	context.fillStyle = "#000000";
-	context.fillRect(7 + 132, 87, 60, 40 - 2);
-	context.fillStyle = "#FFFFFF";
-	context.fillText("解析", 8 + 132 + 29, 88 + 18, 60 - 2);
-
-	context.strokeStyle = "#000000";
-	context.lineWidth = 1;
-	createRoundRectPath(context, 8 + 132, 88, 120, 40 - 4, 8);
-	context.stroke();
-	context.fillStyle = "#000000";
-	context.fillText(contents.analyze, 60 + 8 + 132 + 29, 88 + 18, 60 - 2);
-
-	context.fillStyle = "#000000";
-	context.fillRect(7 + 132 * 2, 87, 60, 40 - 2);
-	context.fillStyle = "#FFFFFF";
-	context.fillText("解除", 8 + 132 * 2 + 29, 88 + 18, 60 - 2);
-
-	context.strokeStyle = "#000000";
-	context.lineWidth = 1;
-	createRoundRectPath(context, 8 + 132 * 2, 88, 120, 40 - 4, 8);
-	context.stroke();
-	context.fillStyle = "#000000";
-	context.fillText(contents.release, 60 + 8 + 132 * 2 + 29, 88 + 18, 60 - 2);
+		context.textAlign = "center";
+		context.textBaseline = "middle";
+		context.fillStyle = "#626262";
+		context.fillRect(7, currentY - 1, 120 - 2, 26);
+		context.fillStyle = "#FFFFFF";
+		context.fillText(rule.name, 8 + 60 - 4, currentY + 12, 120 - 16);
+	}
 
 	//effect mark
-	const maxRowCount = 17;
+	const maxRowCount = 20;
 	const fontWidth = (400 - 16) / maxRowCount;
 	context.fillStyle = "#B8B8B8";
 	context.beginPath();
-	context.moveTo(8, 132);
-	context.lineTo(8, 156);
-	context.lineTo(25, (132 + 156) / 2);
+	context.moveTo(8, currentY + 4);
+	context.lineTo(8, currentY + 4 + fontWidth);
+	context.lineTo(24, currentY + 4 + fontWidth / 2);
 	context.closePath();
 	context.fill();
 
@@ -332,7 +299,7 @@ function drawFrame(context, colorTheme, contents) {
 	context.font = font(fontWidth, true);
 	context.textBaseline = "top";
 	context.textAlign = "left";
-	context.fillText("効果：", 32, 132);
+	context.fillText("効果：", 8 + fontWidth, currentY + 4);
 
 	context.font = font(fontWidth);
 	const effectCharacters = contents.effect.split("");
@@ -344,7 +311,7 @@ function drawFrame(context, colorTheme, contents) {
 		} else {
 			column += Math.floor((row + 1) / maxRowCount);
 			row = (row + 1) % maxRowCount;
-			context.fillText(chara, fontWidth * row + 8, (fontWidth + 8) * column + 132);
+			context.fillText(chara, fontWidth * row + 8, (fontWidth + 8) * column + currentY + 4);
 		}
 	}
 }
@@ -361,44 +328,8 @@ function createRoundRectPath(context, x, y, w, h, r) {
 	context.arc(x + r, y + r, r, Math.PI, Math.PI * (3 / 2), false);
 	context.closePath();
 }
-function drawRoundRectCorner(context, x, y, w, h, r) {
-	context.beginPath();
-	context.moveTo(x, y);
-	context.lineTo(x, y + r);
-	context.arc(x + r, y + r, r, Math.PI, Math.PI * (3 / 2), false);
-	context.closePath();
-	context.fill();
-
-	context.beginPath();
-	context.moveTo(x, y);
-	context.lineTo(x, y + r);
-	context.arc(x + r, y + r, r, Math.PI, Math.PI * (3 / 2), false);
-	context.closePath();
-	context.fill();
-
-	context.beginPath();
-	context.moveTo(x + w - r, y);
-	context.arc(x + w - r, y + r, r, Math.PI * (3 / 2), 0, false);
-	context.lineTo(x + w, y);
-	context.closePath();
-	context.fill();
-
-	context.beginPath();
-	context.moveTo(x + w, y + h - r);
-	context.arc(x + w - r, y + h - r, r, 0, Math.PI * (1 / 2), false);
-	context.lineTo(x + w, y + h);
-	context.closePath();
-	context.fill();
-
-	context.beginPath();
-	context.moveTo(x + r, y + h);
-	context.arc(x + r, y + h - r, r, Math.PI * (1 / 2), Math.PI, false);
-	context.lineTo(x, y + h);
-	context.closePath();
-	context.fill();
-}
 function calcHeight(contents) {
-	const maxRowCount = 17;
+	const maxRowCount = 20;
 	const fontWidth = (400 - 16) / maxRowCount;
 	const effectCharacters = contents.effect.split("");
 	let row = 3,
@@ -413,14 +344,14 @@ function calcHeight(contents) {
 			row = (row + 1) % maxRowCount;
 		}
 	}
-	return (fontWidth + 8) * (column + 1) + 132;
+	return (fontWidth + 8) * (column + 1) + 84 + contents.rules.length * 30 + 4;
 }
 $("#download").click(function () {
-	const canvas = document.getElementById("prop-frame");
+	const canvas = document.getElementById("action-frame");
 	var base64 = canvas.toDataURL("image/png");
 	const a = document.createElement("a");
 	document.body.appendChild(a);
-	a.download = "prop.png";
+	a.download = "action.png";
 	a.href = base64;
 	a.click();
 	a.remove();
@@ -429,13 +360,35 @@ $("#download").click(function () {
 $("#download-txt").click(function () {
 	if (navigator.clipboard) {
 		try {
-			let tags = "";
+			let text = `《${ui.name.value}》`;
+			if (ui.type.value) {
+				text += `[${ui.type.value}]`;
+			}
 			ui.tags.forEach((element) => {
 				if (element.value) {
-					tags += `［${element.value}］`;
+					text += `[${element.value}]`;
 				}
 			});
-			navigator.clipboard.writeText(`${ui.name.value}＿${tags}＿${ui.roll.detection.value}＿${ui.roll.analyze.value}＿${ui.roll.release.value}＿${ui.effect.value}`);
+			if (ui.rule.timing.value) {
+				text += ` タイミング：${ui.rule.timing.value}`;
+			}
+			if (ui.rule.roll.value) {
+				text += ` 判定：${ui.rule.roll.value}`;
+			}
+			if (ui.rule.target.value) {
+				text += ` 対象：${ui.rule.target.value}`;
+			}
+			if (ui.rule.range.value) {
+				text += ` 射程：${ui.rule.range.value}`;
+			}
+			if (ui.rule.cost.value) {
+				text += ` コスト：${ui.rule.cost.value}`;
+			}
+			if (ui.rule.limit.value) {
+				text += ` 制限：${ui.rule.limit.value}`;
+			}
+			text += ` 効果：${ui.effect.value}`;
+			navigator.clipboard.writeText(text);
 			showAlert("プロップ情報をテキスト化しました。", "green");
 		} catch (err) {
 			console.log(err);
