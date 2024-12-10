@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SheetVisualizer for LHRPG</title>
+  <title>WebSupportTools for LHRPG</title>
   <link rel="stylesheet" href="css/foundation.css">
   <link rel="stylesheet" href="css/app.css">
 </head>
@@ -14,297 +14,44 @@
   <div class="grid-container">
     <div class="grid-x grid-padding-x">
       <div class="large-10 medium-10 small-10 cell">
-        <img src="img//head_logo.png">
-        <a href="character/">version2.0βへ</a>
+        <a href="/"><img src="../img//head_logo.png"></a>
       </div>
       <div class="large-2 medium-2 small-2 cell">
-        <a class="button" href="javascript:void(0);" style="float: right;color: whitesmoke;font-weight: bold;margin: 1em 0;"
-          data-toggle="config-canvas">⚙</a>
       </div>
     </div>
 
     <hr />
-    <div class="off-canvas position-right" id="config-canvas" data-off-canvas>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 2rem;">
-        <div class="auto cell">
-          <h5>CCFOLIA出力</h5>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-ability" type="checkbox">
-            <label class="switch-paddle" for="output-ability">
-              <span class="show-for-sr">能力値判定</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>能力値判定</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-calc-damege" type="checkbox">
-            <label class="switch-paddle" for="output-calc-damege">
-              <span class="show-for-sr">被ダメ計算</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>被ダメ計算</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-skill" type="checkbox">
-            <label class="switch-paddle" for="output-skill">
-              <span class="show-for-sr">特技</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>特技</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-basic-skill" type="checkbox">
-            <label class="switch-paddle" for="output-basic-skill">
-              <span class="show-for-sr">基本動作特技</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>基本動作特技</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-equipment" type="checkbox">
-            <label class="switch-paddle" for="output-equipment">
-              <span class="show-for-sr">装備アイテム</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>装備アイテム</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-belongings" type="checkbox">
-            <label class="switch-paddle" for="output-belongings">
-              <span class="show-for-sr">所持アイテム</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>所持アイテム</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-consumables-chart" type="checkbox">
-            <label class="switch-paddle" for="output-consumables-chart">
-              <span class="show-for-sr">消耗表</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>消耗表</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-treasure-chart" type="checkbox">
-            <label class="switch-paddle" for="output-treasure-chart">
-              <span class="show-for-sr">財宝表</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>財宝表</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-other-chart" type="checkbox">
-            <label class="switch-paddle" for="output-other-chart">
-              <span class="show-for-sr">その他</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>その他</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 1rem;margin-bottom: 0;">
-        <div class="auto cell">
-          <h6>特技順</h6>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-skill-sort-inherit" type="radio" name="output-skill-sort-group">
-            <label class="switch-paddle" for="output-skill-sort-inherit">
-              <span class="show-for-sr">キャラシの特技順</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>キャラシの特技順</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-skill-sort-timing" type="radio" name="output-skill-sort-group">
-            <label class="switch-paddle" for="output-skill-sort-timing">
-              <span class="show-for-sr">タイミング</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>タイミング</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;" id="output-skill-sort-timing-order">
-        <div class="auto callout cell" style="align-content: space-evenly;">
-          <div style="font-size: x-small;">　　↓ドラッグで並び替え↓</div>
-          <ul style="list-style: none;padding: 0;">
-          </ul>
-        </div>
-      </div>
-      
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="output-alias-only" type="checkbox">
-            <label class="switch-paddle" for="output-alias-only">
-              <span class="show-for-sr">アイテムの別名のみを表示</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>別名のみを表示</div>
-        </div>
-      </div>
-
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 2em;">
-        <div class="auto cell">
-          <h5>その他</h5>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="advanced-mode" type="checkbox">
-            <label class="switch-paddle" for="advanced-mode">
-              <span class="show-for-sr">上級者向けモード</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>上級者向けモード</div>
-          <div>(資料作成中)</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;">
-        <div class="auto cell">
-          <div class="expanded button-group">
-            <a class="button" onclick="createBackup()">バックアップの作成</a>
-            <a class="button" onclick="restreBackup()">バックアップから復元</a>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="grid-x grid-padding-x">
-      <div class="large-9 medium-9 small-9 cell">
-        <input id="link" type="text" placeholder="キャラクターURL" onfocus="this.select();" autocomplete="off" />
+      <div class="large-8 medium-8 small-8 cell callout">
+        <h2>TRPG サポートツール</h2>
+        <h4><a href="character/">機能的なキャラクターシート</a></h4>
+        <p>キャラクターシートを読み込み、特技検索や関連QA検索、ココフォリアへの出力する機能を提供します。</p>
+        
+        <h4><a href="material/action/">素材作成：動作パネル</a></h4>
+        <p>EXパワーやシナリオ動作などの情報パネルを作成します。</p>
+        
+        <h4><a href="material/prop/">素材作成：プロップパネル</a></h4>
+        <p>プロップやシーンエフェクトなどの情報パネルを作成します。</p>
+        
+        <h4><a href="material/zone/">素材作成：ゾーン情報</a></h4>
+        <p>アニメで表示されるようなゾーン情報の画像を作成します。</p>
+        
       </div>
-      <div class="large-3 medium-3 small-3 cell">
-        <button id="load" href="javascript:void(0);" onclick="loadCharactor();" class="button">読み込み</button>
-        <button href="javascript:void(0);" class="secondary button" data-toggle="history"
-          style="background-color: #999;">履歴</button>
-      </div>
-      <div class="large reveal" id="history" data-reveal>
-        <button class="close-button" data-close aria-label="Close reveal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h5 style="color: black;">履歴</h5>
-      </div>
-    </div>
-    <ul id="character-tabs" class="tabs" data-tabs>
-      <li class="tabs-title is-active"><a class="primary" href="#howto" aria-selected="true"
-          style="display: none;">使い方</a></li>
-    </ul>
-    <div id="character-contents" class="tabs-content" data-tabs-content="character-tabs">
-      <div class="callout tabs-panel is-active" id="howto">
-        <ul class="accordion" data-accordion>
-          <li class="accordion-item is-active" data-accordion-item>
-            <a href="#" class="accordion-title" style="font-size: x-large;">使い方</a>
-            <div class="accordion-content" data-tab-content>
-              <ol>
-                <li><a href="https://lhrpg.com/lhz/top" target="_blank">ログ・ホライズン冒険窓口</a>から「マイページ」→「あなたの作成した〈冒険者〉」から冒険者を選択する。
-                </li>
-                <li>「基本情報を変更する」から、「外部ツールからの〈冒険者〉データ参照を許可する」にチェックを入れ、「変更を確定する」を選択する。</li>
-                <li>以下の形式のURLを上段のテキストボックスに入力し、「読み込む」を選択する。
-                  <ul>
-                    <li>https://lhrpg.com/lhz/pc?id=XXXXXX</li>
-                    <li>https://lhrpg.com/lhz/pc_status?id=XXXXXX</li>
-                    <li>https://lhrpg.com/lhz/pc_skill?id=XXXXXX</li>
-                    <li>https://lhrpg.com/lhz/pc_item?id=XXXXXX</li>
-                    <li>https://lhrpg.com/lhz/sheets/XXXXXX.html</li>
-                  </ul>
-                  ※いずれのURLでのこのサイトで動作は変わりません。<br>
-                  ※反応しない場合、再度「外部ツールからの〈冒険者〉データ参照を許可する」にチェックを入れ、「変更を確定する」を行ってください。
-                </li>
-                <li>不具合や要望等は<a href="https://marshmallow-qa.com/miriam_hobbies?t=LGdKqe&utm_medium=url_text&utm_source=promotion" target="_blank">こちら</a>に</li>
-              </ol>
-            </div>
+      <div class="large-4 medium-4 small-4 cell">
+        <ul class="vertical menu" data-docs-toc="" data-magellan="ux4a13-magellan" data-offset="130" data-resize="ipkkr8-magellan" data-scroll="ipkkr8-magellan" id="ipkkr8-magellan" data-events="scroll">
+          <li class="docs-nav-title">Official Links</li>
+          <li>
+            <a href="https://lhrpg.com/lhz/top" class="">ログ・ホライズンTRPG<br>冒険者窓口</a>
           </li>
-          <li class="accordion-item" data-accordion-item>
-            <a href="#" class="accordion-title" style="font-size: x-large;">このサイトでできること</a>
-            <div class="accordion-content" data-tab-content>
-              <ul>
-                <li>ココフォリア用のキャラ駒を出力する。<br>右上の ⚙ や各キャラの特技ごとに、出力方法をカスタマイズできる。
-                </li>
-                ※設定はブラウザごとに保存されるため、別のパソコン、スマホ等では共有されません。
-                ※設定のバックアップは ⚙ で開かれるメニューの最下部にある「バックアップの作成」から、復元は「バックアップから復元」から行えます。
-                (バックアップから復元した場合、ページの再読み込みが行われます。) 
-                ※特技ごとのチャパレ設定はキャラクターごとに個別です。
-                <li>エネミーデータの駒作成（実装予定）</li>
-                <li>ダメージ計算機（実装予定）</li>
-              </ul>
-            </div>
+          <li>
+            <a href="https://x.com/loghorizon_TRPG">広報エリッサ</a>
           </li>
-          <li class="accordion-item" data-accordion-item>
-            <a href="#" class="accordion-title" style="font-size: x-large;">更新履歴</a>
-            <div class="accordion-content" data-tab-content>
-              <p>2024/06/13 別名の中に元のアイテム名が記載されている場合、元のアイテム名をチャットパレットを出力するように</p>
-              <p>2024/06/13 装備アイテムの効果・解説をチャットパレットを出力するように</p>
-              <p>2024/06/02 《エクセプショナルブロウ》と《マエストロエコー》にダメージ計算を追加</p>
-              <p>2024/05/28 《フェイスフルブレード》の因果力2消費時ダメージロールを追加</p>
-              <p>2024/05/28 抵抗のヘイトアンダーを出力するように修正</p>
-              <p>2024/05/21 特技名をクリックでクリップボードにコピーする機能を追加</p>
-            </div>
+          <li>
+            <a href="https://tounomamare.com/log" class="">橙乃ままれ 公式サイト</a>
           </li>
         </ul>
       </div>
     </div>
-  </div>
-  <div id="alert" style="position: fixed;top: 0;right: 0;">
-
   </div>
 </div>
   <script src="js/vendor/jquery.js"></script>
@@ -312,7 +59,6 @@
   <script src="js/vendor/foundation.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   <script src="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/6-1-6/js/6-1-6.js"></script>
-  <script src="js/app.js"></script>
 </body>
 
 </html>

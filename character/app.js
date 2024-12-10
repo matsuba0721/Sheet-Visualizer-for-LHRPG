@@ -48,6 +48,7 @@ class Config {
 			"ダメージ適用直後",
 			"本文",
 		];
+		this.ccforiaOutput.skillSort.isCommonToButtom = false;
 		this.ccforiaOutput.isAliasOnly = false;
 		this.isAdvanced = false;
 	}
@@ -269,8 +270,15 @@ function init() {
 		timingUList.appendChild(li);
 	}
 
+	const commonToButtomCheckBox = document.getElementById("output-common-to-buttom");
+	commonToButtomCheckBox.checked = _config.ccforiaOutput.skillSort.isCommonToButtom;
+	commonToButtomCheckBox.addEventListener("change", (event) => {
+		_config.ccforiaOutput.skillSort.isCommonToButtom = event.target.checked;
+		_localStorage.Write("config", _config);
+	});
+
 	const aliasOnlyCheckBox = document.getElementById("output-alias-only");
-	aliasOnlyCheckBox.checked = _config.isAdvanced;
+	aliasOnlyCheckBox.checked = _config.isAliasOnly;
 	aliasOnlyCheckBox.addEventListener("change", (event) => {
 		_config.ccforiaOutput.isAliasOnly = event.target.checked;
 		_localStorage.Write("config", _config);
@@ -1703,12 +1711,20 @@ function createChatpalette(character) {
 		};
 		if (_config.ccforiaOutput.skillSort.byTiming) {
 			_config.ccforiaOutput.skillSort.timingOrder.forEach((timing) => {
-				const targetSkills = character.skills.filter((x) => x.timing == timing);
+				let targetSkills = character.skills.filter((x) => x.timing == timing);
+				if (_config.ccforiaOutput.skillSort.isCommonToButtom) {
+					targetSkills = targetSkills.filter((x) => !x.isCommon);
+				}
 				if (targetSkills.length > 0) {
 					chatpalettes.push(`○${timing}`);
 					targetSkills.forEach(createSkillChatpalette);
 				}
 			});
+
+			if (_config.ccforiaOutput.skillSort.isCommonToButtom) {
+				chatpalettes.push(`○基本動作`);
+				character.skills.filter((x) => x.isCommon).forEach(createSkillChatpalette);
+			}
 		} else {
 			character.skills.forEach(createSkillChatpalette);
 		}

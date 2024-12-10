@@ -15,7 +15,7 @@
   <div class="grid-container">
     <div class="grid-x grid-padding-x">
       <div class="large-10 medium-10 small-10 cell">
-        <img src="../img//head_logo.png">
+        <a href="/"><img src="../img//head_logo.png"></a>
       </div>
       <div class="large-2 medium-2 small-2 cell">
         <a class="secondary button" href="javascript:void(0);" style="float: right;background-color: #999;color: whitesmoke;font-weight: bold;margin: 1em 0;"
@@ -190,6 +190,20 @@
       <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
         <div class="large-4 medium-4 small-4 cell">
           <div class="switch tiny" style="margin: 0;">
+            <input class="switch-input" id="output-common-to-buttom" type="checkbox">
+            <label class="switch-paddle" for="output-common-to-buttom">
+              <span class="show-for-sr">基本動作を最下部へ</span>
+            </label>
+          </div>
+        </div>
+        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
+          <div>基本動作を最下部へ</div>
+        </div>
+      </div>
+
+      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
+        <div class="large-4 medium-4 small-4 cell">
+          <div class="switch tiny" style="margin: 0;">
             <input class="switch-input" id="output-alias-only" type="checkbox">
             <label class="switch-paddle" for="output-alias-only">
               <span class="show-for-sr">アイテムの別名のみを表示</span>
@@ -319,6 +333,12 @@
   </div>
   <div id="alert" style="position: fixed;top: 0;right: 0;">
 
+  </div>
+  <div class="reveal" id="ccfolia-config" data-reveal>
+    <button class="close-button" data-close aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h5 style="color: black;">ココフォリア出力</h5>
   </div>
 </div>
   <script src="../js/vendor/jquery.js"></script>
