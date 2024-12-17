@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>SheetVisualizer for LHRPG</title>
+		<link rel="stylesheet" href="../../css/foundation.css" />
+		<link rel="stylesheet" href="../../css/app.css" />
+	</head>
+
+	<body>
+		<div class="grid-container">
+			<div class="grid-x grid-padding-x">
+				<div class="large-10 medium-10 small-10 cell">
+					<a href="/"><img src="../../img//head_logo.png" /></a>
+				</div>
+				<div class="large-2 medium-2 small-2 cell"></div>
+			</div>
+			<hr />
+			<div class="grid-x grid-padding-x">
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" onclick="save()">保存</button>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" onclick="load()">読込</button>
+				</div>
+				<div class="large-6 medium-6 small-6 cell"></div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="success button expanded" onclick="exportCcofolia()" style="color: whitesmoke; font-weight: bold">CCFOLIA</button>
+				</div>
+			</div>
+			<h4>▼基本情報</h4>
+			<div class="grid-x grid-padding-x">
+				<div class="large-4 medium-4 small-4 cell">
+					<label>
+						名称
+						<input type="text" id="enemy-name" />
+					</label>
+				</div>
+				<div class="large-6 medium-6 small-6 cell">
+					<label>
+						フリガナ
+						<input type="text" id="enemy-ruby" />
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label
+						>CR
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-rank">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label
+						>大種族
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-race">
+							<option value="humanoid">人型</option>
+							<option value="nature">自然</option>
+							<option value="elemental">精霊</option>
+							<option value="beast">幻獣</option>
+							<option value="undead">不死</option>
+							<option value="construct">人造</option>
+							<option value="human">人間</option>
+							<option value="gimmick">ギミック</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label
+						>知名度
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-popularity">
+							<option value="0">超有名</option>
+							<option value="2">有名</option>
+							<option value="4">一般的</option>
+							<option value="6">普通</option>
+							<option value="7">珍しい</option>
+							<option value="9">無名</option>
+							<option value="12">秘密</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label
+						>識別難易度
+						<input type="text" id="enemy-identification" disabled style="cursor: default" value="自動" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label>
+						Eタイプ
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-type">
+							<option value="armorer">アーマラー</option>
+							<option value="fencer">フェンサー</option>
+							<option value="grappler">グラップラー</option>
+							<option value="supporter">サポーター</option>
+							<option value="healer">ヒーラー</option>
+							<option value="spear">スピア</option>
+							<option value="archer">アーチャー</option>
+							<option value="shooter">シューター</option>
+							<option value="bomber">ボマー</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label>
+						エネミーランク
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-throne">
+							<option value="normal">ノーマル</option>
+							<option value="mob">モブ</option>
+							<option value="single-boss">ソロボス</option>
+							<option value="multi-boss">群れボス</option>
+							<option value="single-raid-boss">ソロレイドボス</option>
+							<option value="multi-raid-boss">群れレイドボス</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label>
+						小種族
+						<input type="text" id="enemy-tribe" />
+					</label>
+				</div>
+				<div class="large-9 medium-9 small-9 cell">
+					<label>
+						タグ
+						<div class="grid-x" id="enemy-tags">
+							<div class="large-2 medium-2 small-2 cell">
+								<input type="text" onfocus="this.select();" />
+							</div>
+							<div class="large-2 medium-2 small-2 cell">
+								<input type="text" onfocus="this.select();" />
+							</div>
+							<div class="large-2 medium-2 small-2 cell">
+								<input type="text" onfocus="this.select();" />
+							</div>
+							<div class="large-2 medium-2 small-2 cell">
+								<input type="text" onfocus="this.select();" />
+							</div>
+							<div class="large-2 medium-2 small-2 cell">
+								<input type="text" onfocus="this.select();" />
+							</div>
+							<div class="large-2 medium-2 small-2 cell">
+								<input type="text" onfocus="this.select();" />
+							</div>
+						</div>
+					</label>
+				</div>
+			</div>
+			<div class="grid-x grid-padding-x">
+				<div class="large-10 medium-10 small-10 cell"><h4>▼能力値</h4></div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" onclick="initStatus()">能力値計算</button>
+				</div>
+			</div>
+			<div class="grid-x grid-padding-x">
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>STR
+						<input type="number" id="enemy-str" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>DEX
+						<input type="number" id="enemy-dex" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>POW
+						<input type="number" id="enemy-pow" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>INT
+						<input type="number" id="enemy-int" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label>回避 <input type="text" id="enemy-avoid" /></label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>抵抗
+						<input type="text" id="enemy-resist" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>物理防御力
+						<input type="number" id="enemy-physical-defense" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>魔法防御力
+						<input type="number" id="enemy-magical-defense" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>最大HP
+						<input type="number" id="enemy-hitpoint" />
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label
+						>ヘイト倍率
+						<input type="number" id="enemy-hate" />
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label
+						>行動力
+						<input type="number" id="enemy-initiative" />
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label
+						>移動力
+						<input type="number" id="enemy-move" />
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label>
+						因果力
+						<input type="number" id="enemy-fate" />
+					</label>
+				</div>
+			</div>
+			<h4>▼特技</h4>
+			<div class="grid-x grid-padding-x" id="enemy-skills">
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-0" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(0)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-1" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(1)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-2" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(2)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-3" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(3)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-4" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(4)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-5" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(5)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-6" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(6)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-7" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(7)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-8" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(8)">編集</button>
+				</div>
+				<div class="large-10 medium-10 small-10 cell">
+					<input type="text" id="enemy-skill-9" disabled style="cursor: default" />
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" data-toggle="emeny-skill-edit" onclick="openEditSkill(9)">編集</button>
+				</div>
+			</div>
+			<h4>▼ドロップ品</h4>
+			<div class="grid-x grid-padding-x">
+				<div class="large-6 medium-6 small-6 cell">
+					<label>
+						ドロップ期待値：<span id="enemy-drop-expected">0</span>G
+						<textarea id="enemy-drop" style="resize: vertical; height: 10rem"></textarea>
+					</label>
+				</div>
+			</div>
+			<h4>▼解説</h4>
+			<div class="grid-x grid-padding-x">
+				<div class="large-12 medium-12 small-12 cell">
+					<textarea id="enemy-explain" style="resize: vertical; height: 15rem"></textarea>
+				</div>
+			</div>
+			<div class="large reveal" id="emeny-skill-edit" data-reveal style="background: #664933">
+				<button class="close-button" data-close aria-label="Close reveal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4>▼特技編集</h4>
+				<div class="grid-x grid-padding-x">
+					<div class="large-12 medium-12 small-12 cell">
+						<label>
+							名称
+							<input type="text" id="enemy-skill-name" />
+						</label>
+					</div>
+					<div class="large-12 medium-12 small-12 cell">
+						<label>
+							タグ
+							<div class="grid-x" id="enemy-skill-tags">
+								<div class="large-2 medium-2 small-2 cell">
+									<input type="text" onfocus="this.select();" />
+								</div>
+								<div class="large-2 medium-2 small-2 cell">
+									<input type="text" onfocus="this.select();" />
+								</div>
+								<div class="large-2 medium-2 small-2 cell">
+									<input type="text" onfocus="this.select();" />
+								</div>
+								<div class="large-2 medium-2 small-2 cell">
+									<input type="text" onfocus="this.select();" />
+								</div>
+								<div class="large-2 medium-2 small-2 cell">
+									<input type="text" onfocus="this.select();" />
+								</div>
+								<div class="large-2 medium-2 small-2 cell">
+									<input type="text" onfocus="this.select();" />
+								</div>
+							</div>
+						</label>
+					</div>
+					<div class="large-4 medium-4 small-4 cell">
+						<label>
+							タイミング
+							<input type="text" id="enemy-skill-timing" list="skill-timing-list" />
+							<datalist id="skill-timing-list">
+								<option value="常時"></option>
+								<option value="セットアップ"></option>
+								<option value="メインプロセス"></option>
+								<option value="メジャー"></option>
+								<option value="ダメージロール"></option>
+								<option value="クリンナップ"></option>
+								<option value="本文"></option>
+							</datalist>
+						</label>
+					</div>
+					<div class="large-4 medium-4 small-4 cell">
+						<label>
+							判定
+							<input type="text" id="enemy-skill-roll" list="skill-roll-list" />
+							<datalist id="skill-roll-list">
+								<option value="対決 (0+0D / 回避)" id="skill-roll-list-avoid"></option>
+								<option value="対決 (0+0D / 抵抗)" id="skill-roll-list-resist"></option>
+								<option value="判定なし"></option>
+								<option value="自動成功"></option>
+							</datalist>
+						</label>
+					</div>
+					<div class="large-4 medium-4 small-4 cell">
+						<label>
+							対象
+							<input type="text" id="enemy-skill-target" list="skill-target-list" />
+							<datalist id="skill-target-list">
+								<option value="単体"></option>
+								<option value="範囲(選択)"></option>
+								<option value="広範囲(選択)"></option>
+								<option value="直線(選択)"></option>
+								<option value="広範囲(無差別)"></option>
+							</datalist>
+						</label>
+					</div>
+					<div class="large-4 medium-4 small-4 cell">
+						<label>
+							射程
+							<input type="text" id="enemy-skill-range" list="skill-range-list" />
+							<datalist id="skill-range-list">
+								<option value="至近"></option>
+								<option value="4sq"></option>
+							</datalist>
+						</label>
+					</div>
+					<div class="large-4 medium-4 small-4 cell">
+						<label>
+							コスト
+							<input type="text" id="enemy-skill-cost" />
+						</label>
+					</div>
+					<div class="large-4 medium-4 small-4 cell">
+						<label>
+							制限
+							<input type="text" id="enemy-skill-limit" list="skill-limit-list" />
+							<datalist id="skill-limit-list">
+								<option value="ラウンド1回"></option>
+								<option value="シーン1回"></option>
+								<option value="シナリオ1回"></option>
+							</datalist>
+						</label>
+					</div>
+					<div class="large-12 medium-12 small-12 cell">
+						<label>
+							効果
+							<textarea id="enemy-skill-effect" style="resize: vertical; height: 10rem"></textarea>
+						</label>
+					</div>
+					<div class="large-12 medium-12 small-12 cell">
+						<label>
+							チャットパレット
+							<textarea id="enemy-skill-command" style="resize: vertical; height: 10rem"></textarea>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div id="alert" style="position: fixed; top: 0; right: 0"></div>
+		</div>
+		<script src="../../js/vendor/jquery.js"></script>
+		<script src="../../js/vendor/what-input.js"></script>
+		<script src="../../js/vendor/foundation.js"></script>
+		<script type="module"></script>
+		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+		<script src="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/6-1-6/js/6-1-6.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>
