@@ -285,18 +285,20 @@ function initStatus() {
 		_enemy.hitpoint = 48 + Math.floor(_enemy.rank * 8.5);
 		_enemy.hate = 2 + Math.floor(_enemy.rank / 6);
 		_enemy.initiative = Math.floor((strBase + intBase) / 3) - 2;
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
-		const damege = 9 + Math.floor(_enemy.rank * 3.5);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "白兵攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+2D / 回避)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "至近";
-		basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
-		basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
+			const damege = 9 + Math.floor(_enemy.rank * 3.5);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "白兵攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+2D / 回避)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "至近";
+			basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
+			basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "fencer") {
 		const strBase = 7 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 4 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -313,18 +315,20 @@ function initStatus() {
 		_enemy.hitpoint = 45 + Math.floor(_enemy.rank * 8.4);
 		_enemy.hate = 1 + Math.floor(_enemy.rank / 6);
 		_enemy.initiative = Math.floor((strBase + powBase) / 3) - 2;
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
-		const damege = 9 + Math.floor(_enemy.rank * 3.5);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "白兵攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+2D / 回避)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "至近";
-		basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
-		basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
+			const damege = 9 + Math.floor(_enemy.rank * 3.5);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "白兵攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+2D / 回避)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "至近";
+			basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
+			basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "grappler") {
 		const strBase = 6 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 4 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -341,18 +345,20 @@ function initStatus() {
 		_enemy.hitpoint = 45 + Math.floor(_enemy.rank * 7.5);
 		_enemy.hate = 1 + Math.floor(_enemy.rank / 6);
 		_enemy.initiative = Math.floor((strBase + intBase) / 3);
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
-		const damege = 9 + Math.floor(_enemy.rank * 3.5);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "白兵攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+2D / 回避)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "至近";
-		basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
-		basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
+			const damege = 9 + Math.floor(_enemy.rank * 3.5);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "白兵攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+2D / 回避)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "至近";
+			basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
+			basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "supporter") {
 		const strBase = 4 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 2 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -369,18 +375,20 @@ function initStatus() {
 		_enemy.hitpoint = 35 + Math.floor(_enemy.rank * 5);
 		_enemy.hate = 1 + Math.floor(_enemy.rank / 6);
 		_enemy.initiative = Math.floor((dexBase + powBase) / 3) + 2;
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
-		const damege = 1 + Math.floor(_enemy.rank * 3.5);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "魔法攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+2D / 抵抗)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "4Sq";
-		basicSkill.effect = `対象に[${damege}+2D]の魔法ダメージを与える。`;
-		basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
+			const damege = 1 + Math.floor(_enemy.rank * 3.5);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "魔法攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+2D / 抵抗)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "4Sq";
+			basicSkill.effect = `対象に[${damege}+2D]の魔法ダメージを与える。`;
+			basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "healer") {
 		const strBase = 3 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 2 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -397,18 +405,20 @@ function initStatus() {
 		_enemy.hitpoint = 30 + Math.floor(_enemy.rank * 6);
 		_enemy.hate = 1 + Math.floor(_enemy.rank / 6);
 		_enemy.initiative = Math.floor((dexBase + powBase) / 3) - 2;
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
-		const damege = 9 + Math.floor(_enemy.rank * 3.5);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "白兵攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+2D / 回避)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "2Sq";
-		basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
-		basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 2;
+			const damege = 9 + Math.floor(_enemy.rank * 3.5);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "白兵攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+2D / 回避)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "2Sq";
+			basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
+			basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "spear") {
 		const strBase = 4 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 7 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -425,18 +435,20 @@ function initStatus() {
 		_enemy.hitpoint = 30 + Math.floor(_enemy.rank * 6);
 		_enemy.hate = 2 + Math.floor(_enemy.rank / 6);
 		_enemy.initiative = Math.floor((dexBase + powBase) / 3);
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 1;
-		const damege = 19 + Math.floor(_enemy.rank * 6);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "白兵攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+3D / 回避)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "至近";
-		basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
-		basicSkill.command = `3LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int) + 1;
+			const damege = 19 + Math.floor(_enemy.rank * 6);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "白兵攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+3D / 回避)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "至近";
+			basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
+			basicSkill.command = `3LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "archer") {
 		const strBase = 3 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 4 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -453,18 +465,20 @@ function initStatus() {
 		_enemy.hitpoint = 26 + Math.floor(_enemy.rank * 5);
 		_enemy.hate = 2 + Math.floor((_enemy.rank + 2) / 6);
 		_enemy.initiative = Math.floor((powBase + intBase) / 3);
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int);
-		const damege = 19 + Math.floor(_enemy.rank * 6);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "射撃攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+3D / 回避)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "3Sq";
-		basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
-		basicSkill.command = `3LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int);
+			const damege = 19 + Math.floor(_enemy.rank * 6);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "射撃攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+3D / 回避)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "3Sq";
+			basicSkill.effect = `対象に[${damege}+2D]の物理ダメージを与える。`;
+			basicSkill.command = `3LH+${hit} 基本攻撃手段 命中/回避\n2D+${damege} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "shooter") {
 		const strBase = 3 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 2 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -481,18 +495,20 @@ function initStatus() {
 		_enemy.hitpoint = 26 + Math.floor(_enemy.rank * 4);
 		_enemy.hate = 2 + Math.floor((_enemy.rank + 2) / 6);
 		_enemy.initiative = Math.floor((powBase + intBase) / 3);
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int);
-		const damege = 11 + Math.floor(_enemy.rank * 6);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "魔法攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+3D / 抵抗)`;
-		basicSkill.target = "単体";
-		basicSkill.range = "4Sq";
-		basicSkill.effect = `対象に[${damege}+2D]の魔法ダメージを与える。`;
-		basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int);
+			const damege = 11 + Math.floor(_enemy.rank * 6);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "魔法攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+3D / 抵抗)`;
+			basicSkill.target = "単体";
+			basicSkill.range = "4Sq";
+			basicSkill.effect = `対象に[${damege}+2D]の魔法ダメージを与える。`;
+			basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
+		}
 	} else if (ui.type.value == "bomber") {
 		const strBase = 3 + _enemy.rank + Math.floor(_enemy.rank / 10);
 		const dexBase = 2 + _enemy.rank + Math.floor(_enemy.rank / 10);
@@ -509,19 +525,22 @@ function initStatus() {
 		_enemy.hitpoint = 26 + Math.floor(_enemy.rank * 4);
 		_enemy.hate = 2 + Math.floor((_enemy.rank + 2) / 6);
 		_enemy.initiative = Math.floor((dexBase + intBase) / 3) - 2;
-		_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
-		const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int);
-		const damege = 11 + Math.floor(_enemy.rank * 6);
-		const basicSkill = _enemy.skills[0];
-		basicSkill.name = "基本攻撃手段";
-		basicSkill.tags[0] = "魔法攻撃";
-		basicSkill.timing = "メジャー";
-		basicSkill.roll = `対決 (${hit}+3D / 抵抗)`;
-		basicSkill.target = "範囲(選択)";
-		basicSkill.range = "4Sq";
-		basicSkill.effect = `対象に[${damege}+2D]の魔法ダメージを与える。`;
-		basicSkill.command = `3LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
+		if (_enemy.skills[0].name.length == 0 || _enemy.skills[0].name == "基本攻撃手段") {
+			_enemy.skills = Array.from({ length: 10 }, (_, i) => new Skill());
+			const hit = Math.max(_enemy.str, _enemy.dex, _enemy.pow, _enemy.int);
+			const damege = 11 + Math.floor(_enemy.rank * 6);
+			const basicSkill = _enemy.skills[0];
+			basicSkill.name = "基本攻撃手段";
+			basicSkill.tags[0] = "魔法攻撃";
+			basicSkill.timing = "メジャー";
+			basicSkill.roll = `対決 (${hit}+3D / 抵抗)`;
+			basicSkill.target = "範囲(選択)";
+			basicSkill.range = "4Sq";
+			basicSkill.effect = `対象に[${damege}+2D]の魔法ダメージを与える。`;
+			basicSkill.command = `3LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
+		}
 	}
+	_enemy.fate = 0;
 	if (ui.throne.value == "mob") {
 		_enemy.hitpoint = Math.floor(_enemy.hitpoint / 2);
 		_enemy.avoid = eval(_enemy.avoid.replace("D", "*3"));
@@ -563,7 +582,7 @@ function toSkillPlainText(skill) {
 		return "";
 	}
 	let result = `《${skill.name}》`;
-	if (skill.tags.length > 0) {
+	if (skill.tags.filter((t) => t.length > 0).length > 0) {
 		result +=
 			"_" +
 			skill.tags
