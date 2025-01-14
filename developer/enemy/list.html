@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>エネミーリスト</title>
+		<link rel="stylesheet" href="../../css/foundation.css" />
+		<link rel="stylesheet" href="../../css/app.css" />
+	</head>
+
+	<body>
+		<div class="grid-container">
+			<div class="grid-x grid-padding-x">
+				<div class="large-10 medium-10 small-10 cell">
+					<a href="/"><img src="../../img//head_logo.png" /></a>
+				</div>
+				<div class="large-2 medium-2 small-2 cell"></div>
+			</div>
+			<hr />
+			<h4></h4>
+			<div class="grid-x grid-padding-x">
+				<div class="large-9 medium-9 small-9 cell"><h4>オリジナルエネミーリスト</h4></div>
+				<div class="large-3 medium-3 small-3 cell">
+					<a class="button expanded" href="index.html">エネミーを作成する</a>
+				</div>
+			</div>
+			<div class="grid-x grid-padding-x">
+				<div class="large-5 medium-5 small-5 cell">
+					<label>
+						名称
+						<input type="text" id="enemy-name" onfocus="this.select();" />
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label>
+						CR
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-rank">
+							<option value="none">-</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label
+						>大種族
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-race">
+							<option value="none">-</option>
+							<option value="humanoid">人型</option>
+							<option value="nature">自然</option>
+							<option value="elemental">精霊</option>
+							<option value="beast">幻獣</option>
+							<option value="undead">不死</option>
+							<option value="construct">人造</option>
+							<option value="human">人間</option>
+							<option value="gimmick">ギミック</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label>
+						Eタイプ
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-type">
+							<option value="none">-</option>
+							<option value="armorer">アーマラー</option>
+							<option value="fencer">フェンサー</option>
+							<option value="grappler">グラップラー</option>
+							<option value="supporter">サポーター</option>
+							<option value="healer">ヒーラー</option>
+							<option value="spear">スピア</option>
+							<option value="archer">アーチャー</option>
+							<option value="shooter">シューター</option>
+							<option value="bomber">ボマー</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label>
+						エネミーランク
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-throne">
+							<option value="none">-</option>
+							<option value="normal">ノーマル</option>
+							<option value="mob">モブ</option>
+							<option value="single-boss">ソロボス</option>
+							<option value="multi-boss">群れボス</option>
+							<option value="single-raid-boss">ソロレイドボス</option>
+							<option value="multi-raid-boss">群れレイドボス</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-4 medium-4 small-4 cell">
+					<label>
+						製作者
+						<input type="text" id="enemy-author"  onfocus="this.select();"/>
+					</label>
+				</div>
+				<div class="large-3 medium-3 small-3 cell">
+					<label>
+						評価
+						<select style="height: 2.4375rem; font-size: 1rem; margin: 0 0 1rem" id="enemy-rate" disabled>
+							<option value="0">未実装</option>
+							<option value="1">0-1</option>
+							<option value="2">1-2</option>
+							<option value="3">2-3</option>
+							<option value="4">3-4</option>
+							<option value="5">4-5</option>
+						</select>
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button id="search" class="primary button expanded" onclick="search()" style="margin-top: 1.5rem">検索</button>
+				</div>
+			</div>
+			<div class="grid-x grid-padding-x">
+				<div class="cell callout">
+					<table>
+						<thead>
+							<tr style="color: whitesmoke">
+								<th>名称</th>
+								<th>CR</th>
+								<th>大種族</th>
+								<th>Eタイプ</th>
+								<th>エネミーランク</th>
+								<th>小種族・タグ</th>
+								<th>製作者</th>
+							</tr>
+						</thead>
+						<tbody id="enemies"></tbody>
+					</table>
+					<button id="load-next" class="small button expanded" onclick="next()" style="margin-top: 1.5rem">読み込み</button>
+				</div>
+		</div>
+		<script src="../../js/vendor/jquery.js"></script>
+		<script src="../../js/vendor/what-input.js"></script>
+		<script src="../../js/vendor/foundation.js"></script>
+		<script type="module"></script>
+		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+		<script src="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/6-1-6/js/6-1-6.js"></script>
+		<script src="list.js"></script>
+	</body>
+</html>

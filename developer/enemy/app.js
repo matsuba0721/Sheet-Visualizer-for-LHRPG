@@ -33,6 +33,11 @@ class Enemy {
 		this.drop = "";
 		this.dropExpected = 0;
 		this.explain = "";
+		this.uid = "";
+		this.author = "";
+		this.password = "";
+		this.createDate = "";
+		this.updateDate = "";
 	}
 }
 class Skill {
@@ -138,6 +143,8 @@ ui.skillEdit.cost = document.getElementById("enemy-skill-cost");
 ui.skillEdit.limit = document.getElementById("enemy-skill-limit");
 ui.skillEdit.effect = document.getElementById("enemy-skill-effect");
 ui.skillEdit.command = document.getElementById("enemy-skill-command");
+ui.author = document.getElementById("enemy-author");
+ui.password = document.getElementById("enemy-password");
 
 [ui.name, ui.ruby, ui.rank, ui.race, ui.popularity, ui.type, ui.throne, ui.tribe, ui.str, ui.dex, ui.pow, ui.int, ui.avoid, ui.resist, ui.physicalDefense, ui.magicalDefense, ui.hitpoint, ui.hate, ui.initiative, ui.move, ui.fate, ui.drop, ui.explain].concat(ui.tags).forEach((e) => {
 	e.addEventListener("change", (event) => {
@@ -203,6 +210,19 @@ ui.skillEdit.command = document.getElementById("enemy-skill-command");
 });
 
 let _enemy = new Enemy();
+init();
+function init() {
+	let url = new URL(window.location.href);
+	let uid = url.searchParams.get("uid");
+	if (uid == null) {
+		return;
+	}
+	get("enemies/data", uid).then((res) => {
+		res.uid = uid;
+		copy(_enemy, res);
+		toScreen(_enemy);
+	});
+}
 
 function getDropExpected(rank) {
 	if (rank == 1) {
@@ -541,6 +561,7 @@ function initStatus() {
 		}
 	}
 	_enemy.fate = 0;
+	_enemy.move = 2;
 	if (ui.throne.value == "mob") {
 		_enemy.hitpoint = Math.floor(_enemy.hitpoint / 2);
 		_enemy.avoid = eval(_enemy.avoid.replace("D", "*3"));
@@ -784,47 +805,9 @@ function load() {
 				const reader = new FileReader();
 				reader.readAsText(file);
 				reader.onload = function () {
-					const set = function (select, value) {
-						for (let index = 0; index < select.options.length; index++) {
-							const e = select.options[index];
-							e.selected = e.value == value;
-						}
-					};
 					const text = reader.result;
-					const enemy = JSON.parse(text);
-					_enemy = enemy;
-					ui.name.value = _enemy.name;
-					ui.ruby.value = _enemy.ruby;
-					set(ui.rank, _enemy.rank);
-					set(ui.popularity, _enemy.popularity);
-					ui.identification.value = _enemy.identification;
-					set(ui.type, _enemy.type);
-					set(ui.throne, _enemy.throne);
-					ui.tribe.value = _enemy.tribe;
-					for (let index = 0; index < ui.tags.length; index++) {
-						ui.tags[index].value = _enemy.tags[index];
-					}
-
-					ui.str.value = _enemy.str;
-					ui.dex.value = _enemy.dex;
-					ui.pow.value = _enemy.pow;
-					ui.int.value = _enemy.int;
-					ui.avoid.value = _enemy.avoid;
-					ui.resist.value = _enemy.resist;
-					ui.physicalDefense.value = _enemy.physicalDefense;
-					ui.magicalDefense.value = _enemy.magicalDefense;
-					ui.hitpoint.value = _enemy.hitpoint;
-					ui.hate.value = _enemy.hate;
-					ui.initiative.value = _enemy.initiative;
-					ui.move.value = _enemy.move;
-					ui.fate.value = _enemy.fate;
-					for (let index = 0; index < ui.skills.length; index++) {
-						const element = ui.skills[index];
-						element.value = toSkillPlainText(_enemy.skills[index]);
-						element.title = element.value;
-					}
-					ui.drop.value = _enemy.drop;
-					ui.explain.value = _enemy.explain;
+					copy(_enemy, JSON.parse(text));
+					toScreen(_enemy);
 				};
 			}
 		},
@@ -832,6 +815,47 @@ function load() {
 	);
 	input.click();
 	input.remove();
+}
+function toScreen() {
+	const set = function (select, value) {
+		for (let index = 0; index < select.options.length; index++) {
+			const e = select.options[index];
+			e.selected = e.value == value;
+		}
+	};
+	ui.name.value = _enemy.name;
+	ui.ruby.value = _enemy.ruby;
+	set(ui.rank, _enemy.rank);
+	set(ui.popularity, _enemy.popularity);
+	ui.identification.value = _enemy.identification;
+	set(ui.type, _enemy.type);
+	set(ui.throne, _enemy.throne);
+	ui.tribe.value = _enemy.tribe;
+	for (let index = 0; index < ui.tags.length; index++) {
+		ui.tags[index].value = _enemy.tags[index];
+	}
+
+	ui.str.value = _enemy.str;
+	ui.dex.value = _enemy.dex;
+	ui.pow.value = _enemy.pow;
+	ui.int.value = _enemy.int;
+	ui.avoid.value = _enemy.avoid;
+	ui.resist.value = _enemy.resist;
+	ui.physicalDefense.value = _enemy.physicalDefense;
+	ui.magicalDefense.value = _enemy.magicalDefense;
+	ui.hitpoint.value = _enemy.hitpoint;
+	ui.hate.value = _enemy.hate;
+	ui.initiative.value = _enemy.initiative;
+	ui.move.value = _enemy.move;
+	ui.fate.value = _enemy.fate;
+	for (let index = 0; index < ui.skills.length; index++) {
+		const element = ui.skills[index];
+		element.value = toSkillPlainText(_enemy.skills[index]);
+		element.title = element.value;
+	}
+	ui.drop.value = _enemy.drop;
+	ui.explain.value = _enemy.explain;
+	ui.author.value = _enemy.author;
 }
 function exportCcofolia() {
 	const ccforia = new Ccforia();
@@ -894,6 +918,8 @@ function exportCcofolia() {
 	command += `\n【回避】${_enemy.avoid} 【抵抗】${_enemy.resist} 【物理防御力】${_enemy.physicalDefense} 【魔法防御力】${_enemy.magicalDefense}`;
 	command += `\n【最大HP】${_enemy.hitpoint} 【ヘイト倍率】x${_enemy.hate} 【行動力】${_enemy.initiative} 【移動力】${_enemy.move} 【因果力】${_enemy.fate}`;
 
+	command += `\n\n▼その他\n{識別後データ}\n{解説}`;
+
 	ccforia.setCommands(command);
 	if (navigator.clipboard) {
 		try {
@@ -904,6 +930,116 @@ function exportCcofolia() {
 			showAlert("クリップボードのコピーに失敗しました。", "red");
 		}
 	}
+}
+async function publish() {
+	const password = await sha256(ui.password.value);
+	const getProfile = () => {
+		return { uid: _enemy.uid, name: _enemy.name, rank: _enemy.rank, race: _enemy.race, type: _enemy.type, throne: _enemy.throne, tribe: _enemy.tribe, tags: _enemy.tags, author: _enemy.author, createDate: _enemy.createDate, updateDate: _enemy.updateDate };
+	};
+	const getDate = () => {
+		const date = new Date();
+		const year = date.getFullYear();
+		const month = (date.getMonth() + 1).toString().padStart(2, "0");
+		const day = date.getDate().toString().padStart(2, "0");
+		const hour = date.getHours().toString().padStart(2, "0");
+		const minute = date.getMinutes().toString().padStart(2, "0");
+		const second = date.getSeconds().toString().padStart(2, "0");
+		return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+	};
+	_enemy.author = ui.author.value;
+	if (_enemy.uid && _enemy.uid.length > 0) {
+		if (_enemy.password != password) {
+			showAlert("パスワードが異なります。", "red");
+			return;
+		}
+		_enemy.updateDate = getDate();
+		upsert("enemies/data", _enemy.uid, _enemy)
+			.then((res) => {
+				upsert("enemies/profiles", _enemy.uid, getProfile())
+					.then((res) => {
+						window.location.href = "view.html?uid=" + _enemy.uid;
+					})
+					.catch(() => showAlert("公開に失敗しました。", "red"));
+			})
+			.catch(() => showAlert("公開に失敗しました。", "red"));
+	} else {
+		_enemy.password = password;
+		_enemy.createDate = getDate();
+		_enemy.updateDate = _enemy.createDate;
+		insert("enemies/data", _enemy)
+			.then((res) => {
+				_enemy.uid = res.name;
+				upsert("enemies/profiles", _enemy.uid, getProfile())
+					.then((res) => {
+						window.location.href = "view.html?uid=" + _enemy.uid;
+					})
+					.catch(() => showAlert("公開に失敗しました。", "red"));
+			})
+			.catch(() => showAlert("公開に失敗しました。", "red"));
+	}
+}
+
+function insert(strage, data) {
+	return new Promise((resolve, reject) => {
+		try {
+			var request = new XMLHttpRequest();
+			request.responseType = "json";
+			request.ontimeout = function () {
+				reject();
+			};
+			request.onload = function () {
+				resolve(this.response);
+			};
+
+			request.open("POST", "https://lhz-supporter-api-default-rtdb.firebaseio.com/" + strage + ".json", true);
+			request.setRequestHeader("Content-Type", "application/json");
+			request.send(JSON.stringify(data));
+		} catch (err) {
+			console.log(err);
+			reject();
+		}
+	});
+}
+function upsert(strage, uid, data) {
+	return new Promise((resolve, reject) => {
+		try {
+			var request = new XMLHttpRequest();
+			request.responseType = "json";
+			request.ontimeout = function () {
+				reject();
+			};
+			request.onload = function () {
+				resolve(this.response);
+			};
+
+			request.open("PUT", "https://lhz-supporter-api-default-rtdb.firebaseio.com/" + strage + "/" + uid + ".json", true);
+			request.setRequestHeader("Content-Type", "application/json");
+			request.send(JSON.stringify(data));
+		} catch (err) {
+			console.log(err);
+			reject();
+		}
+	});
+}
+function get(strage, uid) {
+	return new Promise((resolve, reject) => {
+		try {
+			var request = new XMLHttpRequest();
+			request.responseType = "json";
+			request.ontimeout = function () {
+				reject();
+			};
+			request.onload = function () {
+				resolve(this.response);
+			};
+
+			request.open("GET", "https://lhz-supporter-api-default-rtdb.firebaseio.com/" + strage + "/" + uid + ".json", true);
+			request.send();
+		} catch (err) {
+			console.log(err);
+			reject();
+		}
+	});
 }
 
 async function wait(timeout) {
@@ -947,4 +1083,19 @@ async function showAlert(content, color = "green") {
 		}
 	}
 	card.remove();
+}
+async function sha256(str) {
+	const buff = new Uint8Array([].map.call(str, (c) => c.charCodeAt(0))).buffer;
+	const digest = await crypto.subtle.digest("SHA-256", buff);
+	return [].map.call(new Uint8Array(digest), (x) => ("00" + x.toString(16)).slice(-2)).join("");
+}
+function copy(dest, source) {
+	Object.keys(source).forEach((key) => {
+		if (Object.getPrototypeOf(source[key]).constructor.name === "Object") {
+			if (!(key in source)) dest[key] = new Object();
+			copy(dest[key], source[key]);
+		} else {
+			dest[key] = source[key];
+		}
+	});
 }

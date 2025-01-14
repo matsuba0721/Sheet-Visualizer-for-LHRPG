@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="ie=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>SheetVisualizer for LHRPG</title>
+		<title>エネミー作成</title>
 		<link rel="stylesheet" href="../../css/foundation.css" />
 		<link rel="stylesheet" href="../../css/app.css" />
 	</head>
@@ -19,18 +19,11 @@
 			</div>
 			<hr />
 			<div class="grid-x grid-padding-x">
-				<div class="large-2 medium-2 small-2 cell">
-					<button class="primary button expanded" onclick="save()">保存</button>
-				</div>
-				<div class="large-2 medium-2 small-2 cell">
-					<button class="primary button expanded" onclick="load()">読込</button>
-				</div>
-				<div class="large-6 medium-6 small-6 cell"></div>
+				<div class="large-10 medium-10 small-10 cell"><h4>▼基本情報</h4></div>
 				<div class="large-2 medium-2 small-2 cell">
 					<button class="success button expanded" onclick="exportCcofolia()" style="color: whitesmoke; font-weight: bold">CCFOLIA</button>
 				</div>
 			</div>
-			<h4>▼基本情報</h4>
 			<div class="grid-x grid-padding-x">
 				<div class="large-4 medium-4 small-4 cell">
 					<label>
@@ -342,6 +335,31 @@
 				<div class="large-12 medium-12 small-12 cell">
 					<textarea id="enemy-explain" style="resize: vertical; height: 15rem"></textarea>
 				</div>
+			</div>
+			<hr />
+			<div class="grid-x grid-padding-x">
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" onclick="save()" style="margin-top: 1.5rem">保存</button>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="primary button expanded" onclick="load()" style="margin-top: 1.5rem">読込</button>
+				</div>
+				<div class="large-4 medium-4 small-4 cell">
+					<label>
+						制作者名
+						<input type="text" id="enemy-author" />
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<label>
+						パスワード
+						<input type="password" id="enemy-password" />
+					</label>
+				</div>
+				<div class="large-2 medium-2 small-2 cell">
+					<button class="success button expanded" onclick="publish()" style="color: whitesmoke; font-weight: bold; margin-top: 1.5rem">公開</button>
+				</div>
+				<div class="large-2 medium-2 small-2 cell"></div>
 			</div>
 			<div class="large reveal" id="emeny-skill-edit" data-reveal style="background: #664933">
 				<button class="close-button" data-close aria-label="Close reveal" type="button">
