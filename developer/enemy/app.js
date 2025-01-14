@@ -934,7 +934,7 @@ function exportCcofolia() {
 async function publish() {
 	const password = await sha256(ui.password.value);
 	const getProfile = () => {
-		return { uid: _enemy.uid, name: _enemy.name, rank: _enemy.rank, race: _enemy.race, type: _enemy.type, throne: _enemy.throne, tribe: _enemy.tribe, tags: _enemy.tags, author: _enemy.author, createDate: _enemy.createDate, updateDate: _enemy.updateDate };
+		return { uid: _enemy.uid, name: _enemy.name, ruby: _enemy.ruby, rank: _enemy.rank, race: _enemy.race, type: _enemy.type, throne: _enemy.throne, tribe: _enemy.tribe, tags: _enemy.tags, author: _enemy.author, createDate: _enemy.createDate, updateDate: _enemy.updateDate };
 	};
 	const getDate = () => {
 		const date = new Date();
