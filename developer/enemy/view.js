@@ -163,7 +163,7 @@ function create(enemy) {
 		dropPara.style.marginBottom = "2px";
 		dropPara.style.marginTop = "0";
 		dropPara.innerHTML = x;
-		skillDiv.appendChild(dropPara);
+		dropDiv.appendChild(dropPara);
 	});
 
 	const explainHeader = document.createElement("h3");
