@@ -132,6 +132,7 @@ ui.drop = document.getElementById("enemy-drop");
 ui.dropExpected = document.getElementById("enemy-drop-expected");
 ui.drop = document.getElementById("enemy-drop");
 ui.explain = document.getElementById("enemy-explain");
+ui.guide = document.getElementById("enemy-guide");
 ui.skillEdit = new Object();
 ui.skillEdit.name = document.getElementById("enemy-skill-name");
 ui.skillEdit.tags = Array.from(document.getElementById("enemy-skill-tags").getElementsByTagName("input"));
@@ -146,7 +147,7 @@ ui.skillEdit.command = document.getElementById("enemy-skill-command");
 ui.author = document.getElementById("enemy-author");
 ui.password = document.getElementById("enemy-password");
 
-[ui.name, ui.ruby, ui.rank, ui.race, ui.popularity, ui.type, ui.throne, ui.tribe, ui.str, ui.dex, ui.pow, ui.int, ui.avoid, ui.resist, ui.physicalDefense, ui.magicalDefense, ui.hitpoint, ui.hate, ui.initiative, ui.move, ui.fate, ui.drop, ui.explain].concat(ui.tags).forEach((e) => {
+[ui.name, ui.ruby, ui.rank, ui.race, ui.popularity, ui.type, ui.throne, ui.tribe, ui.str, ui.dex, ui.pow, ui.int, ui.avoid, ui.resist, ui.physicalDefense, ui.magicalDefense, ui.hitpoint, ui.hate, ui.initiative, ui.move, ui.fate, ui.drop, ui.explain, ui.guide].concat(ui.tags).forEach((e) => {
 	e.addEventListener("change", (event) => {
 		_enemy.name = ui.name.value;
 		_enemy.ruby = ui.ruby.value;
@@ -179,6 +180,7 @@ ui.password = document.getElementById("enemy-password");
 		}
 		_enemy.drop = ui.drop.value;
 		_enemy.explain = ui.explain.value;
+		_enemy.guide = ui.guide.value;
 	});
 });
 
@@ -219,6 +221,7 @@ function init() {
 	}
 	get("enemies/data", uid).then((res) => {
 		res.uid = uid;
+		if (res.guide == undefined) res.guide = "";
 		copy(_enemy, res);
 		toScreen(_enemy);
 	});
@@ -855,6 +858,7 @@ function toScreen() {
 	}
 	ui.drop.value = _enemy.drop;
 	ui.explain.value = _enemy.explain;
+	ui.guide.value = _enemy.guide;
 	ui.author.value = _enemy.author;
 }
 function exportCcofolia() {

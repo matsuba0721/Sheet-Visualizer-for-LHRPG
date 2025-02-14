@@ -177,6 +177,17 @@ function create(enemy) {
 	indexDiv.appendChild(explainDiv);
 	explainDiv.innerHTML = enemy.explain;
 
+	const guideHeader = document.createElement("h3");
+	guideHeader.textContent = "▼運用ガイド";
+	guideHeader.style.marginTop = "10px";
+	guideHeader.style.fontSize = "1.17em";
+	guideHeader.style.fontWeight = "bold";
+	indexDiv.appendChild(guideHeader);
+	const guideDiv = document.createElement("div");
+	guideDiv.style.marginTop = "10px";
+	indexDiv.appendChild(guideDiv);
+	guideDiv.innerHTML = enemy.guide == undefined ? "" : enemy.guide;
+
 	const creattionPara = document.createElement("p");
 	creattionPara.innerHTML = `作成：${enemy.createDate}　更新：${enemy.updateDate}　製作者：${enemy.author}`;
 	creattionPara.style.marginBottom = "0";
