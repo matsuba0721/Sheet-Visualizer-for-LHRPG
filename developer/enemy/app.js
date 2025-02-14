@@ -772,6 +772,17 @@ function openEditSkill(index) {
 
 	editSkill(skill);
 }
+function exchangeSkill(x, y) {
+	const skillx = _enemy.skills[x];
+	const skilly = _enemy.skills[y];
+	_enemy.skills[y] = skillx;
+	_enemy.skills[x] = skilly;
+
+	ui.skills[x].value = toSkillPlainText(_enemy.skills[x]);
+	ui.skills[x].title = ui.skills[x].value;
+	ui.skills[y].value = toSkillPlainText(_enemy.skills[y]);
+	ui.skills[y].title = ui.skills[y].value;
+}
 function editSkill(skill) {
 	ui.skillEdit.name.value = skill.name;
 	for (let index = 0; index < ui.skillEdit.tags.length; index++) {
