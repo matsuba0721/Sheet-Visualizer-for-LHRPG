@@ -527,7 +527,7 @@ function initStatus() {
 			basicSkill.target = "単体";
 			basicSkill.range = "4Sq";
 			basicSkill.effect = `対象に[${damege}+2D]の魔法ダメージを与える。`;
-			basicSkill.command = `2LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
+			basicSkill.command = `3LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damege} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${_enemy.hate}`;
 		}
 	} else if (ui.type.value == "bomber") {
 		const strBase = 3 + _enemy.rank + Math.floor(_enemy.rank / 10);
