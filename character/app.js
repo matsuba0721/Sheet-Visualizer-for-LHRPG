@@ -945,7 +945,7 @@ function createSkillTitleRow(skill) {
 		});
 		if (navigator.clipboard) {
 			try {
-				navigator.clipboard.writeText(`《${skill.name}》 ${tags} SR：${skill.skill_rank}/${skill.skill_max_rank} タイミング：${skill.timing} 判定：${skill.roll} 対象：${skill.target} 射程：${skill.range} コスト：${skill.cost} 制限：${skill.limit} 効果：${skill.function}"`);
+				navigator.clipboard.writeText(`《${skill.name}》 ${tags} SR：${skill.skill_rank}/${skill.skill_max_rank} タイミング：${skill.timing} 判定：${skill.roll} 対象：${skill.target} 射程：${skill.range} コスト：${skill.cost} 制限：${skill.limit} 効果：${skill.function}`);
 				showAlert("特技の説明をコピーしました。", "green");
 			} catch (err) {
 				console.log(err);
