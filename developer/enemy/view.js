@@ -121,7 +121,7 @@ function create(enemy) {
 	initiativeItem.textContent = `行動力：${enemy.initiative}`;
 	propList3.appendChild(initiativeItem);
 	const moveItem = document.createElement("li");
-	moveItem.textContent = `移動力：${enemy.str}`;
+	moveItem.textContent = `移動力：${enemy.move}`;
 	propList3.appendChild(moveItem);
 	if (enemy.fate > 0) {
 		const fateItem = document.createElement("li");
