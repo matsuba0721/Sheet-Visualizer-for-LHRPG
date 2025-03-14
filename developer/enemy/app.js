@@ -840,6 +840,7 @@ function toScreen() {
 	ui.name.value = _enemy.name;
 	ui.ruby.value = _enemy.ruby;
 	set(ui.rank, _enemy.rank);
+	set(ui.race, _enemy.race);
 	set(ui.popularity, _enemy.popularity);
 	ui.identification.value = _enemy.identification;
 	set(ui.type, _enemy.type);
