@@ -175,7 +175,13 @@ function create(enemy) {
 	const explainDiv = document.createElement("div");
 	explainDiv.style.marginTop = "10px";
 	indexDiv.appendChild(explainDiv);
-	explainDiv.innerHTML = enemy.explain;
+	enemy.explain.split("\n").forEach((x) => {
+		const explainPara = document.createElement("p");
+		explainPara.style.marginBottom = "2px";
+		explainPara.style.marginTop = "0";
+		explainPara.innerHTML = x;
+		explainDiv.appendChild(explainPara);
+	});
 
 	const guideHeader = document.createElement("h3");
 	guideHeader.textContent = "▼運用ガイド";
@@ -186,7 +192,14 @@ function create(enemy) {
 	const guideDiv = document.createElement("div");
 	guideDiv.style.marginTop = "10px";
 	indexDiv.appendChild(guideDiv);
-	guideDiv.innerHTML = enemy.guide == undefined ? "" : enemy.guide;
+	enemy.guide = enemy.guide == undefined ? "" : enemy.guide;
+	enemy.guide.split("\n").forEach((x) => {
+		const guidePara = document.createElement("p");
+		guidePara.style.marginBottom = "2px";
+		guidePara.style.marginTop = "0";
+		guidePara.innerHTML = x;
+		guideDiv.appendChild(guidePara);
+	});
 
 	const creattionPara = document.createElement("p");
 	creattionPara.innerHTML = `作成：${enemy.createDate}　更新：${enemy.updateDate}　製作者：${enemy.author}`;
