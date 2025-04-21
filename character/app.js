@@ -310,10 +310,6 @@ function init() {
 				searchElissaQA();
 			}
 		});
-
-		//TESTCODE
-		document.getElementById("link").value = "https://lhrpg.com/lhz/sheets/214167.html";
-		loadCharactor();
 	});
 
 	$("#elissa-qa").on("closed.zf.reveal", (e) => {
