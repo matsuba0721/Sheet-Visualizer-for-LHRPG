@@ -310,6 +310,10 @@ function init() {
 				searchElissaQA();
 			}
 		});
+
+		//TESTCODE
+		document.getElementById("link").value = "https://lhrpg.com/lhz/sheets/214167.html";
+		loadCharactor();
 	});
 
 	$("#elissa-qa").on("closed.zf.reveal", (e) => {
@@ -1112,6 +1116,7 @@ function createEquipmentTitleDataList(item) {
 	titleRowData.style.padding = "0.2em";
 	const priceRowData = document.createElement("td");
 	priceRowData.style.padding = "0.2em";
+	priceRowData.style.textAlign = "right";
 
 	if (item.name) {
 		const itemNameList = document.createElement("ul");
@@ -1257,6 +1262,9 @@ function createBelongingsTitleDataList(item) {
 	targetData.style.padding = "0.2em";
 	const rangeData = document.createElement("td");
 	rangeData.style.padding = "0.2em";
+	const priceRowData = document.createElement("td");
+	priceRowData.style.padding = "0.2em";
+	priceRowData.style.textAlign = "right";
 
 	if (item.name) {
 		const itemNameList = document.createElement("ul");
@@ -1295,13 +1303,15 @@ function createBelongingsTitleDataList(item) {
 		timingData.textContent = `タイミング：${item.timing}`;
 		targetData.textContent = `対象：${item.target}`;
 		rangeData.textContent = `射程：${item.range}`;
+		priceRowData.textContent = `価格：${item.price}`;
 	} else {
 		titleRowData.textContent = "　";
 		timingData.textContent = "　";
 		targetData.textContent = "　";
 		rangeData.textContent = "　";
+		priceRowData.textContent = "　";
 	}
-	return [titleRowData, timingData, targetData, rangeData];
+	return [titleRowData, timingData, targetData, rangeData, priceRowData];
 }
 function createBelongingsFunctionData(belongings) {
 	const rowData = document.createElement("td");
