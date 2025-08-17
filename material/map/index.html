@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Square Map Builder — TRPG</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<!-- 既存サイトのヘッダーを差し替えてください -->
+		<header class="site-header">
+			<div class="header-inner">
+				<div class="brand">
+					<a href="/"><img src="../../img//head_logo.png" /></a>
+				</div>
+			</div>
+		</header>
+
+		<main class="page">
+			<div class="toolbar card">
+				<div class="left">
+					<div class="field">
+						<label>列</label>
+						<input id="cols" type="number" min="1" max="50" value="8" />
+					</div>
+					<div class="field">
+						<label>行</label>
+						<input id="rows" type="number" min="1" max="50" value="8" />
+					</div>
+					<div class="field">
+						<label>タイル</label>
+						<select id="tileSize">
+							<option value="32">32px</option>
+							<option value="40">40px</option>
+							<option value="48">48px</option>
+							<option value="60">80px</option>
+							<option value="64" selected>64px</option>
+							<option value="80">80px</option>
+							<option value="96">96px</option>
+						</select>
+					</div>
+					<button id="apply" class="btn">更新</button>
+				</div>
+
+				<div class="right">
+					<button id="download" class="btn primary">PNGダウンロード</button>
+				</div>
+			</div>
+
+			<section class="workspace">
+				<aside class="sidebar card">
+					<h2 class="section-title">レイヤー</h2>
+					<div id="layers" class="tabs">
+						<button class="tab active" data-layer="ground">背景</button>
+						<button class="tab" data-layer="terrain">地形</button>
+						<button class="tab" data-layer="object">オブジェクト</button>
+					</div>
+
+					<h2 class="section-title">マップチップ</h2>
+					<div id="chipGroups" class="tabs" style="display: block">
+						<button class="tab active" data-tips="colors">単色</button>
+						<button class="tab" data-tips="LPCField">LPC Field</button>
+					</div>
+
+					<div id="palette" class="palette"></div>
+
+					<h2 class="section-title">ガイド</h2>
+					<div class="tabs">
+						<div class="field">
+							<label for="grid">グリッド線</label>
+							<select id="grid">
+								<option value="0 #FFFFFF00">なし</option>
+								<option value="1 #FFFFFFDD" selected>白</option>
+								<option value="1 #000000DD">黒</option>
+							</select>
+						</div>
+						<div class="field">
+							<label for="coord">座標</label>
+							<select id="coord">
+								<option value="0 #FFFFFF00">なし</option>
+								<option value="16 #FFFFFFFF" selected>白</option>
+								<option value="16 #000000FF">黒</option>
+							</select>
+						</div>
+					</div>
+					<div class="tabs">
+						<div class="field">
+							<label for="checkered">チェック</label>
+							<select id="checkered">
+								<option value="0 #FFFFFF00" selected>なし</option>
+								<option value="4 #88888888">あり</option>
+							</select>
+						</div>
+						<div class="field">
+							<label for="centermark">中心点</label>
+							<select id="centermark">
+								<option value="0 #FFFFFF00">なし</option>
+								<option value="1 #FFFFFFFF" selected>白</option>
+								<option value="1 #000000FF">黒</option>
+							</select>
+						</div>
+					</div>
+					<div class="hint">
+						左クリック：配置／切替<br />
+						右クリック：セルを空にする<br />
+					</div>
+				</aside>
+
+				<section class="canvas-pane card">
+					<canvas id="canvas"></canvas>
+				</section>
+			</section>
+		</main>
+		<div class="copyright">© 2022 Leana Zimmerman All rights reserved.<br /></div>
+
+		<script src="script.js"></script>
+	</body>
+</html>

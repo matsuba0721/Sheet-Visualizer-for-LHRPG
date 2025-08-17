@@ -1,0 +1,137 @@
+/* --- Base --- */
+:root{
+  --bg:#0b1020;
+  --card:#0f162e;
+  --muted:#1a2245;
+  --ring:#6ea8ff;
+  --text:#e6ecff;
+  --text-dim:#a9b4d0;
+  --accent:#5b8cff;
+  --accent-strong:#2f6bff;
+  --border:#203061;
+  --shadow:0 10px 25px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#0b1020,#0c1532 55%,#0b1020);
+  color:var(--text);
+  font:14px/1.5 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+}
+
+/* --- Header (replace with site header if needed) --- */
+.site-header{
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:saturate(140%) blur(8px);
+  background:rgba(5,10,25,.6);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.header-inner{
+  max-width:1200px;margin:auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;
+}
+.brand{display:flex;gap:8px;align-items:center}
+.brand-logo{font-size:20px}
+.brand-title{font-weight:700;letter-spacing:.2px}
+.nav a{
+  color:var(--text-dim);text-decoration:none;margin-left:16px;
+  padding:8px 10px;border-radius:10px;transition:all .15s ease;
+}
+.nav a:hover{color:var(--text)}
+.nav a.active{color:var(--text);background:rgba(255,255,255,.06)}
+
+/* --- Layout --- */
+.page{max-width:1200px;margin:18px auto;padding:0 16px}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;margin-bottom:16px;
+}
+.toolbar .left,.toolbar .right{display:flex;gap:12px;align-items:center}
+.field{display:flex;gap:8px;align-items:center;background:var(--muted);padding:4px 5px;border-radius:12px;border:1px solid var(--border)}
+.field label{color:var(--text-dim)}
+.field input,.field select{
+  width:64px;background:transparent;border:none;outline:none;color:var(--text);
+  font-weight:600;
+}
+select option {
+  background:var(--muted);color:var(--text);
+}
+.switch{display:flex;gap:8px;align-items:center;color:var(--text-dim)}
+.switch input{accent-color:var(--accent)}
+
+.btn{
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border:1px solid var(--border);
+  padding:5px 7px;border-radius:12px;cursor:pointer;
+  font-weight:700;letter-spacing:.2px;
+  transition:transform .04s ease, background .15s ease, border .15s ease;
+}
+.btn:hover{background:rgba(255,255,255,.1)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(180deg,var(--accent),var(--accent-strong));
+  border-color:#1f3f88}
+
+.workspace{display:grid;grid-template-columns:320px 1fr;gap:16px}
+.sidebar{padding:14px}
+.canvas-pane{padding:12px;display:flex;align-items:center;justify-content:center;min-height:420px}
+
+.section-title{margin:0 0 10px;font-size:16px}
+.tabs{display:flex;gap:8px;margin-bottom:10px}
+.tab{
+  flex:1;text-align:center;padding:4px 5px;border-radius:12px;cursor:pointer;
+  background:var(--muted);border:1px solid var(--border);color:var(--text-dim);font-weight:700;font-size:13px
+}
+.tab.active{color:var(--text);outline:2px solid rgba(94,150,255,.45);outline-offset:2px}
+
+.palette{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:6px;overflow-y: auto;overflow-x: hidden;height: 300px;
+  padding:6px;margin-bottom:10px;background:var(--muted);border-radius:14px;border:1px solid var(--border)
+}
+.chip{
+  width:40px;height:40px;border-radius:7px;border:1px solid var(--border);
+  background-size:cover;background-position:center;background-color:#222;
+  position:relative;cursor:pointer;transition:transform .06s ease, box-shadow .15s ease;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+.chip:hover{transform:translateY(-1px)}
+.chip.selected{outline:3px solid var(--ring);outline-offset:2px}
+
+.hint{
+  margin-top:12px;color:var(--text-dim);font-size:12px;
+  background:rgba(255,255,255,.04);border:1px dashed var(--border);
+  padding:8px;border-radius:12px
+}
+.copyright{
+  margin-top:6px;color:var(--text-dim);font-size:9px;
+  text-align:end;padding:8px;border-radius:12px
+}
+
+/* --- Canvas --- */
+#canvas{
+  background:
+    conic-gradient(from 90deg at 1px 1px, #ffffff 0 90deg, #ffffff 0) 0 0/100% 100%;
+  border-radius:14px;border:1px solid var(--border);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  max-width:100%;height:auto;display:block;
+}
+
+/* Optional helper for hidden element (not used now) */
+.hidden{display:none}
+
+img[src*="head_logo"] {
+  max-height: 60px;
+  transition: transform 0.2s ease-in-out;
+  filter: drop-shadow(0 0 5px #3f51b5);
+}
+img[src*="head_logo"]:hover {
+  transform: scale(1.05);
+}
