@@ -199,13 +199,13 @@ function draw(dl = false) {
 		CTX.lineWidth = GRID_STYLE.width;
 		CTX.strokeStyle = GRID_STYLE.color;
 		CTX.setLineDash([5, 5]);
-		for (let r = 0; r <= rows; r++) {
+		for (let r = 1; r <= rows; r++) {
 			CTX.beginPath();
 			CTX.moveTo(0, r * tile + 0.5);
 			CTX.lineTo(cols * tile, r * tile + 0.5);
 			CTX.stroke();
 		}
-		for (let c = 0; c <= cols; c++) {
+		for (let c = 1; c <= cols; c++) {
 			CTX.beginPath();
 			CTX.moveTo(c * tile + 0.5, 0);
 			CTX.lineTo(c * tile + 0.5, rows * tile);
