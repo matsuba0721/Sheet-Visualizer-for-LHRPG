@@ -2,6 +2,7 @@
 const SITE_VERSION = "0.1.0";
 const CANVAS = document.getElementById("canvas");
 const CTX = CANVAS.getContext("2d");
+const SYSTEM_MESSAGE = document.getElementById("message");
 
 const colsInput = document.getElementById("cols");
 const rowsInput = document.getElementById("rows");
@@ -114,6 +115,7 @@ async function preloadImagesFor(category) {
 	const items = CATALOG[category] || [];
 	for (const item of items) {
 		if (item.type === "image") {
+			SYSTEM_MESSAGE.innerHTML = `Preloading ${items.length} images for ${category}...${items.indexOf(item) + 1}/${items.length}`;
 			if (IMAGE_CACHE.has(item.key)) continue;
 			let base64 = loadCachedImage(item.key);
 			if (!base64) {
@@ -130,6 +132,7 @@ async function preloadImagesFor(category) {
 				console.warn("Failed to load", item.value);
 			};
 			img.src = base64;
+			SYSTEM_MESSAGE.innerHTML = "";
 		}
 	}
 }
@@ -350,7 +353,6 @@ chipGroupsTabs.forEach((btn) => {
 		chipGroupsTabs.forEach((b) => b.classList.remove("active"));
 		btn.classList.add("active");
 		currentChipGroup = btn.dataset.tips;
-		await preloadImagesFor(currentChipGroup);
 		renderPalette();
 	});
 });
@@ -408,6 +410,7 @@ dlBtn.addEventListener("click", () => {
 	// 先に単色は即時、他カテゴリはパレット切替時にプリロード
 	renderPalette();
 	draw();
+	preloadImagesFor("LPCField");
 })();
 
 // ====== Load ======
