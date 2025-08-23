@@ -80,7 +80,7 @@ function create(enemy) {
 	rankItem.textContent = `ランク：${enemy.rank}`;
 	propList1.appendChild(rankItem);
 	const popularityItem = document.createElement("li");
-	popularityItem.textContent = `識別難易度：${enemy.popularity == 0 ? "自動" : enemy.popularity}`;
+	popularityItem.textContent = `識別難易度：${enemy.identification}`;
 	propList1.appendChild(popularityItem);
 
 	const propList2 = document.createElement("ul");

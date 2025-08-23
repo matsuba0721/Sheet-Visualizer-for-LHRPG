@@ -190,6 +190,10 @@ ui.password = document.getElementById("enemy-password");
 		const rank = parseInt(ui.rank.value);
 		ui.identification.value = popularity == 0 ? "自動" : Math.floor((rank - 1) / 3 + 1 + popularity);
 		ui.dropExpected.innerHTML = getDropExpected(rank);
+
+		_enemy.popularity = ui.popularity.value;
+		_enemy.popularityName = ui.popularity.selectedOptions[0].innerText;
+		_enemy.identification = ui.identification.value;
 	});
 });
 [ui.skillEdit.name, ui.skillEdit.timing, ui.skillEdit.roll, ui.skillEdit.target, ui.skillEdit.range, ui.skillEdit.cost, ui.skillEdit.limit, ui.skillEdit.effect, ui.skillEdit.command].concat(ui.skillEdit.tags).forEach((e) => {
