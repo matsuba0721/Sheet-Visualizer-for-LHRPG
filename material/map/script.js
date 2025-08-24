@@ -48,11 +48,19 @@ const COLOR_TILES = ["#FFFF66", "#FFCC66", "#FF99CC", "#FF9966", "#FF6666", "#CC
 	.map((col) => col.hex)
 	.concat(["#FFF", "#CCC", "#999", "#666", "#333", "#000"]);
 const LPC_FIELD_TILES = createChips("lpc_field_chips", 33, 6);
+const PIPOYA_1_TILES = createChips("pipoya_1", 36, 8);
+const PIPOYA_2_TILES = createChips("pipoya_2", 36, 8);
+const PIPOYA_3_TILES = createChips("pipoya_3", 46, 8);
+const PIPOYA_4_TILES = createChips("pipoya_4", 32, 8);
 
 // カタログ構造
 const CATALOG = {
 	colors: COLOR_TILES.map((hex, i) => ({ type: "color", key: `color_${i}`, value: hex })),
 	LPCField: LPC_FIELD_TILES.map((t) => ({ type: "image", key: `LPCField_${t.key}`, value: t.url })),
+	PIPOYA1: PIPOYA_1_TILES.map((t) => ({ type: "image", key: `PIPOYA1_${t.key}`, value: t.url })),
+	PIPOYA2: PIPOYA_2_TILES.map((t) => ({ type: "image", key: `PIPOYA2_${t.key}`, value: t.url })),
+	PIPOYA3: PIPOYA_3_TILES.map((t) => ({ type: "image", key: `PIPOYA3_${t.key}`, value: t.url })),
+	PIPOYA4: PIPOYA_4_TILES.map((t) => ({ type: "image", key: `PIPOYA4_${t.key}`, value: t.url })),
 };
 
 // ====== Utilities ======
@@ -78,7 +86,7 @@ function resizeCanvas() {
 	CANVAS.height = ROWS * TILE;
 }
 
-async function preloadImagesFor(category) {
+async function preloadImagesFor(categories) {
 	function fileToBase64(file) {
 		return new Promise((resolve, reject) => {
 			const reader = new FileReader();
@@ -112,33 +120,41 @@ async function preloadImagesFor(category) {
 		localStorage.setItem(key, JSON.stringify(meta));
 	}
 
-	const items = CATALOG[category] || [];
-	for (const item of items) {
-		if (item.type === "image") {
-			SYSTEM_MESSAGE.innerHTML = `Preloading ${items.length} images for ${category}...${items.indexOf(item) + 1}/${items.length}`;
-			if (IMAGE_CACHE.has(item.key)) continue;
-			let base64 = loadCachedImage(item.key);
-			if (!base64) {
-				const file = await fetch(item.value).then((res) => res.blob());
-				base64 = await fileToBase64(file);
-				saveCachedImage(item.key, base64);
-			}
+	for (const category of categories) {
+		const items = CATALOG[category] || [];
+		for (const item of items) {
+			if (item.type === "image") {
+				SYSTEM_MESSAGE.innerHTML = `Preloading ${items.length} images for ${category}...${items.indexOf(item) + 1}/${items.length}`;
+				if (IMAGE_CACHE.has(item.key)) continue;
+				let base64 = loadCachedImage(item.key);
+				if (!base64) {
+					const file = await fetch(item.value).then((res) => res.blob());
+					base64 = await fileToBase64(file);
+					saveCachedImage(item.key, base64);
+				}
 
-			const img = new Image();
-			img.onload = () => {
-				IMAGE_CACHE.set(item.key, img);
-			};
-			img.onerror = (e) => {
-				console.warn("Failed to load", item.value);
-			};
-			img.src = base64;
-			SYSTEM_MESSAGE.innerHTML = "";
+				const img = new Image();
+				img.onload = () => {
+					IMAGE_CACHE.set(item.key, img);
+				};
+				img.onerror = (e) => {
+					console.warn("Failed to load", item.value);
+				};
+				img.src = base64;
+				SYSTEM_MESSAGE.innerHTML = "";
+			}
 		}
 	}
 }
 
 function renderPalette() {
 	paletteEl.innerHTML = "";
+
+	if (currentChipGroup.startsWith("PIPOYA")) {
+		paletteEl.classList.add("small");
+	} else {
+		paletteEl.classList.remove("small");
+	}
 	const items = CATALOG[currentChipGroup] || [];
 	items.forEach((item) => {
 		const chip = document.createElement("button");
@@ -285,27 +301,6 @@ function cellFromEvent(e) {
 	return { r, c, dr, dc };
 }
 
-// function toggleWallByLocal(r, c, lx, ly) {
-// 	const band = Math.max(10, TILE * 0); // クリックしやすい帯
-// 	if (ly < band) {
-// 		walls[r][c].top = !walls[r][c].top;
-// 		return true;
-// 	}
-// 	if (ly > TILE - band) {
-// 		walls[r][c].bottom = !walls[r][c].bottom;
-// 		return true;
-// 	}
-// 	if (lx < band) {
-// 		walls[r][c].left = !walls[r][c].left;
-// 		return true;
-// 	}
-// 	if (lx > TILE - band) {
-// 		walls[r][c].right = !walls[r][c].right;
-// 		return true;
-// 	}
-// 	return false;
-// }
-
 CANVAS.addEventListener("click", (e) => {
 	const { r, c, dr, dc } = cellFromEvent(e);
 	if (r < 0 || c < 0 || r >= ROWS || c >= COLS) return;
@@ -410,7 +405,7 @@ dlBtn.addEventListener("click", () => {
 	// 先に単色は即時、他カテゴリはパレット切替時にプリロード
 	renderPalette();
 	draw();
-	preloadImagesFor("LPCField");
+	preloadImagesFor(["LPCField", "PIPOYA1", "PIPOYA2", "PIPOYA3", "PIPOYA4"]);
 })();
 
 // ====== Load ======
