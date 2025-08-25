@@ -85,7 +85,7 @@ select option {
 .canvas-pane{padding:12px;display:flex;align-items:center;justify-content:center;min-height:420px}
 
 .section-title{margin:0 0 10px;font-size:16px}
-.tabs{display:flex;gap:8px;margin-bottom:10px}
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
 .tab{
   flex:1;text-align:center;padding:4px 5px;border-radius:12px;cursor:pointer;
   background:var(--muted);border:1px solid var(--border);color:var(--text-dim);font-weight:700;font-size:13px

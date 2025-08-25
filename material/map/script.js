@@ -68,18 +68,10 @@ function initGrid() {
 	layers = {
 		ground: { grid: Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => null)) },
 		terrain: { grid: Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => null)) },
-		object: { grid: Array.from({ length: ROWS * 2 }, () => Array.from({ length: COLS * 2 }, () => null)) },
+		object1: { grid: Array.from({ length: ROWS * 2 }, () => Array.from({ length: COLS * 2 }, () => null)) },
+		object2: { grid: Array.from({ length: ROWS * 2 }, () => Array.from({ length: COLS * 2 }, () => null)) },
 	};
 }
-// 	walls = Array.from({ length: ROWS }, () =>
-// 		Array.from({ length: COLS }, () => ({
-// 			top: false,
-// 			right: false,
-// 			bottom: false,
-// 			left: false,
-// 		}))
-// 	);
-// }
 
 function resizeCanvas() {
 	CANVAS.width = COLS * TILE;
@@ -273,7 +265,8 @@ function draw(dl = false) {
 	}
 	drawCells(layers.ground.grid, ROWS, COLS, TILE);
 	drawCells(layers.terrain.grid, ROWS, COLS, TILE);
-	drawCells(layers.object.grid, ROWS * 2, COLS * 2, TILE / 2);
+	drawCells(layers.object1.grid, ROWS * 2, COLS * 2, TILE / 2);
+	drawCells(layers.object2.grid, ROWS * 2, COLS * 2, TILE / 2);
 	if (GRID_STYLE.width > 0) {
 		drawGridLines(ROWS, COLS, TILE);
 	}
@@ -311,7 +304,7 @@ CANVAS.addEventListener("click", (e) => {
 		if (currentLayer === "ground" || currentLayer === "terrain") {
 			grid[r][c] = { ...currentChip };
 			draw();
-		} else if (currentLayer === "object") {
+		} else if (currentLayer.startsWith("object")) {
 			grid[dr][dc] = { ...currentChip };
 			draw();
 		}
@@ -328,7 +321,7 @@ CANVAS.addEventListener("contextmenu", (e) => {
 	if (currentLayer === "ground" || currentLayer === "terrain") {
 		grid[r][c] = null;
 		draw();
-	} else if (currentLayer === "object") {
+	} else if (currentLayer.startsWith("object")) {
 		grid[dr][dc] = null;
 		draw();
 	}
