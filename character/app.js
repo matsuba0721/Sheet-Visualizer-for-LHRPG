@@ -123,16 +123,15 @@ init();
 function getJson(url) {
 	return new Promise((resolve) => {
 		try {
-			var request = new XMLHttpRequest();
-			request.ontimeout = function () {
-				showAlert("JSONデータの取得に失敗しました。", "red");
-			};
-			request.onload = function () {
-				var jsonRaw = this.response;
-				resolve(JSON.parse(jsonRaw));
-			};
-			request.open("GET", url, true);
-			request.send();
+			fetch(url, { cache: "no-store" })
+				.then(function (data) {
+					console.log(data);
+					return data.json(); // 読み込むデータをJSONに設定
+				})
+				.then(function (json) {
+					console.log(json);
+					resolve(json);
+				});
 		} catch (err) {
 			console.log(err);
 			showAlert("JSONデータの取得に失敗しました。", "red");
