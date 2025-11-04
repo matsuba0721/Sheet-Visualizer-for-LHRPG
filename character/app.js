@@ -567,6 +567,7 @@ function createProfileCell(character) {
 	const profileTags = document.createElement("div");
 	const profileTotalMagicGrade = document.createElement("div");
 	const profileTotalPrice = document.createElement("div");
+	const profileId = document.createElement("div");
 	profileName.className = "header-1";
 	profileName.innerText = character.name;
 	profileCrLv.className = "text-1";
@@ -582,12 +583,27 @@ function createProfileCell(character) {
 	profileTotalMagicGrade.style.marginTop = "5px";
 	profileTotalPrice.className = "text-3";
 	profileTotalPrice.innerText = `所持品の価格合計:${character.totalPrice}G`;
+	profileId.className = "text-3";
+	profileId.innerText = `ID:${character.id}`;
+	profileId.style.cursor = "pointer";
+	profileId.addEventListener("click", () => {
+		if (navigator.clipboard) {
+			try {
+				navigator.clipboard.writeText(character.id);
+				showAlert("IDをクリップボードにコピーしました。", "green");
+			} catch (err) {
+				console.log(err);
+				showAlert("クリップボードのコピーに失敗しました。", "red");
+			}
+		}
+	});
 	profileCell.appendChild(profileName);
 	profileCell.appendChild(profileCrLv);
 	profileCell.appendChild(profileAttr);
 	profileCell.appendChild(profileTags);
 	profileCell.appendChild(profileTotalMagicGrade);
 	profileCell.appendChild(profileTotalPrice);
+	profileCell.appendChild(profileId);
 
 	return profileCell;
 }
