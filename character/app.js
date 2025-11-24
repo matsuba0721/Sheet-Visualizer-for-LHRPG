@@ -339,6 +339,36 @@ function loadCharactorFrom(url) {
 
 	getJson(`https://lhrpg.com/lhz/api/${id}.json`).then((character) => {
 		character.id = id;
+		const addtionalSkills = [];
+		character.skills.forEach((skill) => {
+			if (skill.id == 148) {
+				addtionalSkills.push(_master.extraSkills[0]);
+				addtionalSkills.push(_master.extraSkills[1]);
+			} else if (skill.id == 150) {
+				if (character.character_rank >= 10) {
+					addtionalSkills.push(_master.extraSkills[2]);
+				} else {
+					addtionalSkills.push(_master.extraSkills[4]);
+				}
+				if (skill.skill_rank == 2) {
+					addtionalSkills.push(_master.extraSkills[3]);
+				}
+			} else if (skill.id == 3506) {
+				addtionalSkills.push(_master.extraSkills[5]);
+				addtionalSkills.push(_master.extraSkills[6]);
+			} else if (skill.id == 4706) {
+				addtionalSkills.push(_master.extraSkills[4]);
+				addtionalSkills.push(_master.extraSkills[7]);
+			} else if (skill.id == 4707) {
+				addtionalSkills.push(_master.extraSkills[8]);
+				addtionalSkills.push(_master.extraSkills[9]);
+			} else if (skill.id == 4707) {
+				addtionalSkills.push(_master.extraSkills[10]);
+				addtionalSkills.push(_master.extraSkills[11]);
+			}
+		});
+		character.skills = character.skills.concat(addtionalSkills);
+
 		const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag];
 		equipments
 			.filter((equipment) => equipment)
@@ -458,7 +488,8 @@ function initCharacter(character) {
 	for (let index = 0; index < character.skills.length; index++) {
 		const skill = character.skills[index];
 		character._skillIndexes[skill.id] = index;
-		skill.isCommon = skill.id >= 10000;
+		skill.isCommon = skill.id >= 10000 && skill.id < 11000;
+		skill.isExtra = skill.id >= 11000;
 		skill.characterId = character.id;
 	}
 	character.getSkillById = (id) => {
@@ -873,7 +904,9 @@ function createSkillTitleRow(skill) {
 		skillTableHeadRowData.style.color = "#333";
 		skillTableHeadRowData.style.background = "#BBB";
 	}
-
+	if (skill.isExtra) {
+		skillTableHeadRowData.style.background = "#663355";
+	}
 	const skillTableHeadRowTitle = document.createElement("ul");
 	skillTableHeadRowTitle.style.margin = 0;
 	skillTableHeadRowTitle.style.padding = 0;

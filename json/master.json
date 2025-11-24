@@ -337,6 +337,248 @@
 			"cell": {}
 		}
 	],
+	"extraSkills": [
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ビーストダッシュ",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "判定なし",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたは３Ｓｑまで［通常移動］をしてもよい。〔マイナー〕あなたはこの［通常移動］の直前に１Ｓｑまで［即時移動］をしてもよい。",
+			"explain": "乗騎の瞬発力を表すＥＸパワー。目にも留まらぬ速度で、敵の目の前から離脱し駆け出すことができる。",
+			"id": 11000,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ワイルドスタンプ",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "クリンナップ",
+			"roll": "自動成功",
+			"target": "単体",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたがこのラウンド中に対象に１点でもＨＰダメージを与えていた場合、対象に［硬直］を与える。",
+			"explain": "野生のパワーを乗せた一撃で、相手の動きを止めるＥＸパワー。むき出しの野生にさらされた敵はその足を止めてしまうだろう。",
+			"id": 11001,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ウォートロット",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "判定なし",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたは３Ｓｑまで［通常移動］をしてもよい。〔マイナー〕移動距離は＋２Ｓｑされる。〔マイナー〕この移動中、あなたは［モブ］エネミーの［阻止能力］の対象にならない。",
+			"explain": "軍馬の優れた移動能力を表わすＥＸパワー。その力強い足取りが弱敵にさえぎられることはない。",
+			"id": 11002,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ホースキック",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "自動成功",
+			"target": "単体",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "対象を１Ｓｑまで［即時移動（強制）］させてもよい。〔マイナー＆対象：モブ〕さらに対象に［萎縮］を与える。",
+			"explain": "馬の脚力で敵を蹴飛ばさせるＥＸパワー。強靭な足で蹴り飛ばされた敵は、思うように体を動かせなくなるだろう。",
+			"id": 11003,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ホーストロット",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "判定なし",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたは３Ｓｑまで［通常移動］をしてもよい。〔マイナー〕移動距離は＋２Ｓｑされる。",
+			"explain": "乗騎に速足で移動させるＥＸパワー。",
+			"id": 11004,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "グラスハイカー",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "判定なし",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたは３Ｓｑまで［通常移動］をしてもよい。あなたが［天然］タグを持つ［地形］プロップにいるなら、この移動は［即時移動］になる。〔マイナー〕移動距離は＋１Ｓｑされる。",
+			"explain": "大自然に生きる獣の踏破能力を表すＥＸパワー。野生の獣にとっては、天然の地形など障害にもならない。",
+			"id": 11005,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ドラッグファング",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "マイナー",
+			"roll": "自動成功",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたがこのメインプロセスで「対象：単体／射程：至近」の［武器攻撃］を行ない、その対象が［防御判定］に失敗した場合、メインプロセス終了時に１Ｓｑまで［即時移動］をしてもよい。また、あなたの移動と同時に攻撃の対象をあなたが移動したＳｑに［即時移動（強制）］させる。",
+			"explain": "攻撃と同時に乗騎が敵の足にかじりつき、そのまま引きずって移動するＥＸパワー。あなたの攻撃でひるんだ敵は、足元をすくわれ思うままに引き回されてしまうだろう。",
+			"id": 11006,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ホースチャージ",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "判定なし",
+			"target": "自身",
+			"range": "至近",
+			"cost": "本文",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "コストとして直後のマイナーアクションを１回失う。あなたは３Ｓｑまで［通常移動］をしてもよい。ただし、あなたの現在位置から直線上にしか移動できない。あなたがこのメインプロセスで行なう「対象：単体」の［白兵攻撃］のダメージロールに＋【ＳＴＲ】する。",
+			"explain": "乗騎に命じて突撃を行なうＥＸパワー。一直線に突撃することで、あなたの攻撃の威力も上昇するだろう。",
+			"id": 11007,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ナイトメアウォーク",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "判定なし",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたは３Ｓｑまで［通常移動］をしてもよい。この移動中、あなたが［阻止能力］の対象にならなければ、さらに１Ｓｑまで［通常移動］をしてもよい。〔マイナー〕この移動中、あなたは［阻止能力］の対象にならない。",
+			"explain": "悪夢馬の亡霊のような歩みを表すＥＸパワー。あなたの乗騎はひづめの音すらさせず、無音のまま敵をすり抜けてしまう。",
+			"id": 11008,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ナイトメアシフト",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "判定なし",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたがこのメインプロセスで「対象：単体／射程：至近」の［白兵攻撃］を行なう場合、その攻撃は「射程：２Ｓｑ」に変更される。また、攻撃の対象が［防御判定］に失敗した場合、メインプロセス終了時にあなたは対象と同じＳｑに［瞬間転移］してもよい。",
+			"explain": "悪夢馬とともに離れた敵へと攻撃を仕掛けるＥＸパワー。あなたと乗騎は亡霊のごとく姿を消し、敵の目の前に忽然と姿を現わす。",
+			"id": 11009,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "ギガントパンチ",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "メジャー",
+			"roll": "対決（命中／回避）",
+			"target": "単体",
+			"range": "至近",
+			"cost": "ヘイト２",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["魔法攻撃"],
+			"function": "［【魔力】＋３Ｄ］の物理ダメージを与える。この攻撃のダメージにはさらに＋［《従者召喚：ゴーレム》のＳＲ×５］される。",
+			"explain": "ゴーレムのパワフルな拳で一撃を与えるＥＸパワー。ゴーレム操作の技量に比例してその威力は高まる。",
+			"id": 11010,
+			"isCommon": true,
+			"cell": {}
+		},
+		{
+			"job_type": "EXパワー",
+			"type": "EXパワー",
+			"name": "タイタントランプル",
+			"skill_rank": "－",
+			"skill_max_rank": "－",
+			"timing": "ムーブ",
+			"roll": "自動成功",
+			"target": "自身",
+			"range": "至近",
+			"cost": "－",
+			"post": "その他",
+			"limit": "－",
+			"tags": ["移動"],
+			"function": "あなたは１Ｓｑまで［通常移動］をしてもよい。この移動中、あなたは［モブ］エネミーの［阻止能力］の対象にならない。〔マイナー〕移動距離は＋２Ｓｑされる。〔因果力１〕この移動中、あなたと同じＳｑになった［モブ］エネミーを即座に［戦闘不能］にする。",
+			"explain": "ゴーレムの巨躯を活かし、敵を蹂躙しながら移動するＥＸパワー。弱敵であればそのまま踏み潰されてしまうだろう。",
+			"id": 11011,
+			"isCommon": true,
+			"cell": {}
+		}
+	],
 	"skillChatpalettes": {
 		"1": [
 			{
@@ -8612,6 +8854,102 @@
 				"type": "Roll",
 				"condition": "",
 				"text": "${ANALYZE-DICE}LH+${ANALYZE-MOD}>=0 《${NAME}》解析/解析難易度",
+				"isAdvanced": true
+			}
+		],
+		"11000": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11001": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11002": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11003": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11004": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11005": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11006": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11007": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11008": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11009": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11010": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
+				"isAdvanced": true
+			}
+		],
+		"11011": [
+			{
+				"type": "Explain",
+				"condition": "",
+				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
 				"isAdvanced": true
 			}
 		]
