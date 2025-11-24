@@ -8945,6 +8945,12 @@
 				"isAdvanced": true
 			},
 			{
+				"type": "Roll",
+				"condition": "",
+				"text": "${HIT-DICE}LH+${HIT-MOD}>=0 《${NAME}》命中/回避",
+				"isAdvanced": true
+			},
+			{
 				"type": "Effect",
 				"condition": "",
 				"text": "{魔力}+3D6+0*5 《${NAME}》物理ダメージ",
