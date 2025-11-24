@@ -362,7 +362,7 @@ function loadCharactorFrom(url) {
 			} else if (skill.id == 4707) {
 				addtionalSkills.push(_master.extraSkills[8]);
 				addtionalSkills.push(_master.extraSkills[9]);
-			} else if (skill.id == 4707) {
+			} else if (skill.id == 4708) {
 				addtionalSkills.push(_master.extraSkills[10]);
 				addtionalSkills.push(_master.extraSkills[11]);
 			}

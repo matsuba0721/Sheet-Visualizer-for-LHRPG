@@ -8943,6 +8943,12 @@
 				"condition": "",
 				"text": "《${NAME}》 ${TAGS} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
 				"isAdvanced": true
+			},
+			{
+				"type": "Effect",
+				"condition": "",
+				"text": "{魔力}+3D6+0*5 《${NAME}》物理ダメージ",
+				"isAdvanced": true
 			}
 		],
 		"11011": [
