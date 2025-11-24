@@ -6357,6 +6357,18 @@
 				"condition": "",
 				"text": "《${NAME}》 ${TAGS} SR：${SR}/${MSR} タイミング：${TIMING} 判定：${ROLL} 対象：${TARGET} 射程：${RANGE} コスト：${COST} 制限：${LIMIT} 効果：${FUNCTION}",
 				"isAdvanced": true
+			},
+			{
+				"type": "Effect",
+				"condition": "character.hand1 ? character.hand1.type == \"盾\" : false",
+				"text": "c${W1PD}*2 《${NAME}》障壁値(右手)",
+				"isAdvanced": true
+			},
+			{
+				"type": "Effect",
+				"condition": "character.hand2 ? character.hand2.type == \"盾\" : false",
+				"text": "c${W2PD}*2 《${NAME}》障壁値(左手)",
+				"isAdvanced": true
 			}
 		],
 		"4021": [
