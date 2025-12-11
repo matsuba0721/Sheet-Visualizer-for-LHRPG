@@ -1,0 +1,675 @@
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Roboto', "メイリオ", Meiryo, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif;
+			background: #121212;
+			color: #e0e0e0;
+			font-size: 14px;
+			line-height: 1.6;
+		}
+
+		.container {
+			max-width: 1000px;
+			margin: 20px auto;
+			background: #1e1e1e;
+			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+			border-radius: 8px;
+		}
+
+		/* ヘッダー */
+		.header {
+			background: #212121;
+			color: #e0e0e0;
+			padding: 20px 24px;
+			border-bottom: 1px solid #333;
+			border-radius: 8px 8px 0 0;
+		}			.header h1 {
+				font-size: 20px;
+				font-weight: bold;
+				margin: 0;
+			}
+
+			.header-buttons {
+				margin-top: 10px;
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+			}
+
+		.header-buttons button {
+			padding: 8px 16px;
+			background: #2c2c2c;
+			border: none;
+			color: #e0e0e0;
+			cursor: pointer;
+			border-radius: 4px;
+			font-size: 13px;
+			transition: all 0.2s;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		}
+
+		.header-buttons button:hover {
+			background: #3c3c3c;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+		}			/* メインコンテンツ */
+			.content {
+				padding: 20px;
+			}
+
+		/* セクション */
+		.section {
+			margin-bottom: 20px;
+			border: none;
+			background: #2a2a2a;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+		}
+
+		.section-header {
+			background: #2a2a2a;
+			border-bottom: 1px solid #404040;
+			padding: 12px 16px;
+			font-weight: 500;
+			font-size: 15px;
+			color: #e0e0e0;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-radius: 8px 8px 0 0;
+		}
+
+	.section-body {
+		padding: 16px;
+		background: #2a2a2a;
+		border-radius: 0 0 8px 8px;
+	}
+
+	.section-body textarea {
+		width: 100%;
+		min-height: 200px;
+		padding: 12px;
+		border: 1px solid #505050;
+		background: #1a1a1a;
+		color: #e0e0e0;
+		border-radius: 4px;
+		font-size: 13px;
+		font-family: inherit;
+		resize: vertical;
+		transition: all 0.2s;
+	}
+
+	.section-body textarea:focus {
+		outline: none;
+		border-color: #1e88e5;
+		background: #252525;
+		box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+	}
+
+	.section-body textarea#enemy-drop {
+		min-height: 80px;
+	}
+	/* テーブルスタイル */
+			.data-table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 10px;
+			}
+
+		.data-table th {
+			background: #1e1e1e;
+			border: 1px solid #404040;
+			padding: 8px 10px;
+			font-weight: 500;
+			font-size: 12px;
+			text-align: left;
+			white-space: nowrap;
+			color: #b0b0b0;
+		}
+
+		.data-table td {
+			border: 1px solid #404040;
+			padding: 6px 8px;
+			background: #2a2a2a;
+		}
+
+	.data-table input[type="text"],
+	.data-table input[type="number"],
+	.data-table select {
+		width: 100%;
+		border: 1px solid #505050;
+		padding: 6px 8px;
+		font-size: 13px;
+		background: #1a1a1a;
+		color: #e0e0e0;
+		border-radius: 4px;
+	}
+
+	.data-table select option {
+		background: #1a1a1a;
+		color: #e0e0e0;
+	}
+	.data-table input[type="text"]:focus,
+			.data-table input[type="number"]:focus,
+			.data-table select:focus {
+				outline: none;
+				border-color: #1e88e5;
+				background: #252525;
+				box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+			}
+
+			.data-table input[readonly] {
+				background: #1e1e1e;
+				color: #808080;
+				border-color: #3a3a3a;
+			}
+
+			/* 2カラムレイアウト */
+			.two-column {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 10px;
+			}
+
+			.three-column {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+				gap: 10px;
+			}
+
+			.four-column {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 10px;
+			}
+
+			.five-column {
+				display: grid;
+				grid-template-columns: repeat(5, 1fr);
+				gap: 10px;
+			}
+
+			/* フォームグループ */
+			.form-group {
+				margin-bottom: 15px;
+			}
+
+		.form-group label {
+			display: block;
+			font-weight: 500;
+			margin-bottom: 6px;
+			font-size: 13px;
+			color: #b0b0b0;
+		}
+
+		.form-group input,
+		.form-group select,
+		.form-group textarea {
+			width: 100%;
+			border: 1px solid #505050;
+			padding: 8px 12px;
+			font-size: 13px;
+			font-family: inherit;
+			background: #1a1a1a;
+			color: #e0e0e0;
+			border-radius: 4px;
+			transition: all 0.2s;
+		}
+
+		.form-group input:focus,
+		.form-group select:focus,
+		.form-group textarea:focus {
+			outline: none;
+			border-color: #1e88e5;
+			background: #252525;
+			box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+		}			.form-group textarea {
+				min-height: 80px;
+				resize: vertical;
+			}
+
+		/* 特技リスト */
+		.skill-list {
+			border: 1px solid #404040;
+			border-radius: 4px;
+			overflow: hidden;
+		}		.skill-item {
+			border-bottom: 1px solid #404040;
+			background: #2a2a2a;
+			cursor: move;
+			transition: all 0.2s;
+		}
+
+		.skill-item:last-child {
+			border-bottom: none;
+		}
+
+		.skill-item.dragging {
+			opacity: 0.5;
+			background: #1e1e1e;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+		}
+
+		.skill-item.drag-over {
+			border-top: 3px solid #1e88e5;
+		}
+
+		.skill-header {
+			background: #2a2a2a;
+			padding: 12px 16px;
+			cursor: grab;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-bottom: 1px solid #404040;
+			transition: background 0.2s;
+		}
+
+		.skill-header:active {
+			cursor: grabbing;
+		}		.skill-header:hover {
+				background: #323232;
+			}
+
+		.skill-header .skill-name {
+			font-weight: 500;
+			color: #e0e0e0;
+		}
+
+		.skill-header .skill-info {
+			font-size: 12px;
+			color: #909090;
+			margin-left: 10px;
+		}			.skill-controls {
+				display: flex;
+				gap: 5px;
+			}
+
+		.skill-controls button {
+			padding: 4px 10px;
+			font-size: 11px;
+			border: none;
+			background: #3c3c3c;
+			color: #e0e0e0;
+			cursor: pointer;
+			border-radius: 4px;
+			transition: all 0.2s;
+		}
+
+		.skill-controls button:hover {
+			background: #4c4c4c;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		}		.skill-body {
+			cursor: default;
+			display: none;
+			padding: 16px;
+			background: #1e1e1e;
+		}			.skill-item.expanded .skill-body {
+				display: block;
+			}
+
+		/* ボタン */
+		.btn {
+			padding: 8px 16px;
+			border: none;
+			background: #2c2c2c;
+			color: #e0e0e0;
+			cursor: pointer;
+			font-size: 13px;
+			border-radius: 4px;
+			font-family: inherit;
+			transition: all 0.2s;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+			font-weight: 500;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.btn:hover {
+			background: #3c3c3c;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+			transform: translateY(-1px);
+		}
+
+		.btn:active {
+			background: #1c1c1c;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+			transform: translateY(0);
+		}		.btn-primary {
+			background: #1e88e5;
+			color: white;
+		}
+
+		.btn-primary:hover {
+			background: #1976d2;
+		}
+
+		.btn-success {
+			background: #43a047;
+			color: white;
+		}
+
+		.btn-success:hover {
+			background: #388e3c;
+		}
+
+		.btn-warning {
+			background: #fb8c00;
+			color: white;
+		}
+
+		.btn-warning:hover {
+			background: #f57c00;
+		}
+
+		.btn-danger {
+			background: #e53935;
+			color: white;
+		}
+
+		.btn-danger:hover {
+			background: #d32f2f;
+		}			.btn-small {
+				padding: 3px 8px;
+				font-size: 11px;
+			}
+
+		/* フッター */
+		.footer {
+			background: #212121;
+			border-top: 1px solid #333;
+			padding: 16px 24px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 12px;
+			border-radius: 0 0 8px 8px;
+		}
+
+		.footer-group {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+		}
+
+		.footer input {
+			padding: 8px 12px;
+			border: 1px solid #505050;
+			font-size: 13px;
+			background: #1a1a1a;
+			color: #e0e0e0;
+			border-radius: 4px;
+		}
+
+		.footer label {
+			color: #b0b0b0;
+		}			/* 注釈 */
+			.note {
+				font-size: 12px;
+				color: #666;
+				margin-top: 5px;
+				font-style: italic;
+			}
+
+			.required {
+				color: #d9534f;
+				font-weight: bold;
+			}
+
+			/* レスポンシブ */
+			@media (max-width: 768px) {
+				.container {
+					margin: 10px;
+				}
+
+				.two-column,
+				.three-column,
+				.four-column,
+				.five-column {
+					grid-template-columns: 1fr;
+				}
+
+				.data-table {
+					font-size: 12px;
+				}
+
+				.data-table th,
+				.data-table td {
+					padding: 4px;
+				}
+			}
+
+		/* タブ風スタイル */
+		.tabs {
+			display: flex;
+			border-bottom: 2px solid #1e88e5;
+			margin-bottom: 15px;
+		}
+
+		.tab {
+			padding: 10px 24px;
+			background: #2a2a2a;
+			border: none;
+			border-bottom: 2px solid transparent;
+			cursor: pointer;
+			margin-right: 4px;
+			font-size: 13px;
+			color: #b0b0b0;
+			transition: all 0.2s;
+		}
+
+		.tab.active {
+			background: #2a2a2a;
+			color: #1e88e5;
+			font-weight: 500;
+			border-bottom: 2px solid #1e88e5;
+		}
+
+		.tab:hover {
+			background: #323232;
+			color: #e0e0e0;
+		}			.tab-content {
+				display: none;
+			}
+
+			.tab-content.active {
+				display: block;
+			}
+
+			/* 能力値テーブル */
+			.status-table {
+				width: 100%;
+			}
+
+			.status-table td {
+				padding: 4px;
+				text-align: center;
+			}
+
+			.status-table input {
+				text-align: center;
+				width: 60px;
+			}
+
+			.status-label {
+				font-weight: bold;
+				background: #f0f0f0;
+				padding: 4px 8px;
+				text-align: center;
+			}
+
+/* 印刷用スタイル（B5サイズ想定） */
+@media print {
+	@page {
+		size: B5;
+		margin: 10mm;
+	}
+
+	body {
+		background: white;
+		color: black;
+		font-size: 10px;
+		line-height: 1.4;
+	}
+
+	.container {
+		max-width: 100%;
+		margin: 0;
+		background: white;
+		box-shadow: none;
+		border-radius: 0;
+	}
+
+	/* ヘッダーのボタンを非表示 */
+	.header {
+		background: white;
+		color: black;
+		padding: 5mm 0;
+		border-bottom: 2px solid black;
+	}
+
+	.header h1 {
+		font-size: 14px;
+	}
+
+	.header-buttons {
+		display: none;
+	}
+
+	/* メインコンテンツ */
+	.content {
+		padding: 5mm 0;
+	}
+
+	/* セクション */
+	.section {
+		margin-bottom: 3mm;
+		background: white;
+		border: 1px solid #ccc;
+		border-radius: 0;
+		box-shadow: none;
+		page-break-inside: avoid;
+	}
+
+	.section-header {
+		background: #f5f5f5;
+		border-bottom: 1px solid #999;
+		padding: 2mm 3mm;
+		font-size: 11px;
+		color: black;
+		border-radius: 0;
+	}
+
+	.section-body {
+		padding: 3mm;
+		background: white;
+		border-radius: 0;
+	}
+
+	/* テーブル */
+	.data-table {
+		font-size: 9px;
+		border-collapse: collapse;
+	}
+
+	.data-table th {
+		background: #f0f0f0;
+		color: black;
+		border: 1px solid #999;
+		padding: 1mm 2mm;
+	}
+
+	.data-table td {
+		border: 1px solid #ccc;
+		color: black;
+		padding: 1mm 2mm;
+	}
+
+	.data-table input,
+	.data-table select,
+	.data-table textarea {
+		border: none;
+		background: transparent;
+		color: black;
+		font-size: 9px;
+		padding: 0;
+	}
+
+	/* テキストエリア */
+	.section-body textarea {
+		border: 1px solid #ccc;
+		background: white;
+		color: black;
+		font-size: 9px;
+		min-height: auto;
+		padding: 2mm;
+	}
+
+	/* 特技 */
+	.skills-section {
+		page-break-inside: avoid;
+	}
+
+	.skill-item {
+		background: white;
+		border: 1px solid #ccc;
+		margin-bottom: 2mm;
+		page-break-inside: avoid;
+	}
+
+	.skill-header {
+		background: #f5f5f5;
+		border-bottom: 1px solid #ccc;
+		padding: 1mm 2mm;
+		cursor: default;
+	}
+
+	.skill-name {
+		font-size: 10px;
+		color: black;
+	}
+
+	.skill-info {
+		font-size: 8px;
+		color: #333;
+	}
+
+	.skill-controls {
+		display: none;
+	}
+
+	.skill-body {
+		display: block !important;
+		padding: 2mm;
+	}
+
+	/* ボタン類を非表示 */
+	button {
+		display: none;
+	}
+
+	/* モーダルを非表示 */
+	#skill-catalog-modal {
+		display: none !important;
+	}
+
+	/* アラート領域を非表示 */
+	#alert {
+		display: none !important;
+	}
+
+	/* 必須マーク */
+	.required {
+		color: red;
+	}
+
+	/* ページブレーク制御 */
+	.no-break {
+		page-break-inside: avoid;
+	}
+}

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="ログホライゾンTRPGのエネミーデータを簡単に作成・編集できるツールです。884種類の公式特技データベースを搭載し、自動計算、ココフォリア出力、印刷機能を備えています。" />
+		<meta name="keywords" content="ログホライゾン,ログホラ,TRPG,エネミー,敵キャラクター,作成ツール,データ管理,ココフォリア,Log Horizon" />
+		<meta name="author" content="LHZ Supporter" />
+		<meta name="robots" content="noindex, nofollow" />
+		<title>エネミーデータ作成ツール - ログホライゾンTRPG</title>
+
+		<!-- Open Graph -->
+		<meta property="og:title" content="エネミーデータ作成ツール - ログホライゾンTRPG" />
+		<meta property="og:description" content="ログホライゾンTRPGのエネミーデータを簡単に作成・編集できるツール。884種類の公式特技を搭載。" />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<!-- Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+		<!-- Stylesheet -->
+		<link rel="stylesheet" href="edit.css" />
+	</head>
+	<body>
+		<div class="container">
+			<!-- ヘッダー -->
+			<div class="header">
+				<h1>ログホライゾンTRPG エネミーデータ作成ツール</h1>
+				<div class="header-buttons">
+					<button onclick="saveData()">💾 保存</button>
+					<button onclick="loadData()">📂 読込</button>
+					<button onclick="exportCcfolia()">📤 ココフォリア出力</button>
+					<button onclick="printSheet()">🖨️ 印刷</button>
+					<button onclick="resetForm()">🔄 リセット</button>
+				</div>
+			</div>
+
+			<!-- メインコンテンツ -->
+			<div class="content">
+				<!-- 基本情報 -->
+				<div class="section">
+					<div class="section-header">
+						<span>基本情報</span>
+					</div>
+					<div class="section-body">
+						<table class="data-table">
+							<tr>
+								<th style="width: 80px">名称<span class="required">*</span></th>
+								<td colspan="3"><input type="text" id="enemy-name" placeholder="エネミー名を入力" /></td>
+								<th style="width: 80px">フリガナ</th>
+								<td colspan="2"><input type="text" id="enemy-ruby" placeholder="フリガナ" /></td>
+							</tr>
+							<tr>
+								<th>CR<span class="required">*</span></th>
+								<td>
+									<select id="enemy-rank" required>
+										<option value="1" selected>1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+										<option value="13">13</option>
+										<option value="14">14</option>
+										<option value="15">15</option>
+										<option value="16">16</option>
+										<option value="17">17</option>
+										<option value="18">18</option>
+										<option value="19">19</option>
+										<option value="20">20</option>
+										<option value="21">21</option>
+										<option value="22">22</option>
+										<option value="23">23</option>
+										<option value="24">24</option>
+										<option value="25">25</option>
+										<option value="26">26</option>
+										<option value="27">27</option>
+										<option value="28">28</option>
+										<option value="29">29</option>
+										<option value="30">30</option>
+									</select>
+								</td>
+								<th>大種族<span class="required">*</span></th>
+								<td>
+									<select id="enemy-race">
+										<option value="">-</option>
+										<option value="humanoid">人型</option>
+										<option value="nature">自然</option>
+										<option value="elemental">精霊</option>
+										<option value="beast">幻獣</option>
+										<option value="undead">不死</option>
+										<option value="construct">人造</option>
+										<option value="human">人間</option>
+										<option value="gimmick">ギミック</option>
+									</select>
+								</td>
+								<th>小種族</th>
+								<td colspan="2"><input type="text" id="enemy-tribe" placeholder="小種族" /></td>
+							</tr>
+							<tr>
+								<th>知名度<span class="required">*</span></th>
+								<td>
+									<select id="enemy-popularity">
+										<option value="">-</option>
+										<option value="0">超有名</option>
+										<option value="2">有名</option>
+										<option value="4">一般的</option>
+										<option value="6">普通</option>
+										<option value="7">珍しい</option>
+										<option value="9">無名</option>
+										<option value="12">秘密</option>
+									</select>
+								</td>
+								<th>識別難易度</th>
+								<td><input type="text" id="enemy-identification" value="" readonly /></td>
+								<th>Eタイプ<span class="required">*</span></th>
+								<td colspan="2">
+									<select id="enemy-type" required>
+										<option value="armorer" selected>アーマラー</option>
+										<option value="fencer">フェンサー</option>
+										<option value="grappler">グラップラー</option>
+										<option value="supporter">サポーター</option>
+										<option value="healer">ヒーラー</option>
+										<option value="spear">スピア</option>
+										<option value="archer">アーチャー</option>
+										<option value="shooter">シューター</option>
+										<option value="bomber">ボマー</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th>ランク<span class="required">*</span></th>
+								<td colspan="6">
+									<select id="enemy-throne" required>
+										<option value="normal" selected>ノーマル</option>
+										<option value="mob">モブ</option>
+										<option value="single-boss">ソロボス</option>
+										<option value="multi-boss">群れボス</option>
+										<option value="single-raid-boss">ソロレイドボス</option>
+										<option value="multi-raid-boss">群れレイドボス</option>
+									</select>
+								</td>
+							</tr>
+						</table>
+						<div class="form-group" style="margin-top: 10px">
+							<label>タグ（最大10個）</label>
+							<div class="five-column">
+								<input type="text" id="enemy-tag-0" placeholder="タグ1" />
+								<input type="text" id="enemy-tag-1" placeholder="タグ2" />
+								<input type="text" id="enemy-tag-2" placeholder="タグ3" />
+								<input type="text" id="enemy-tag-3" placeholder="タグ4" />
+								<input type="text" id="enemy-tag-4" placeholder="タグ5" />
+								<input type="text" id="enemy-tag-5" placeholder="タグ6" />
+								<input type="text" id="enemy-tag-6" placeholder="タグ7" />
+								<input type="text" id="enemy-tag-7" placeholder="タグ8" />
+								<input type="text" id="enemy-tag-8" placeholder="タグ9" />
+								<input type="text" id="enemy-tag-9" placeholder="タグ10" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 能力値 -->
+				<div class="section">
+					<div class="section-header">
+						<span>能力値</span>
+						<button class="btn btn-warning btn-small" onclick="calculateStatus()">自動計算</button>
+					</div>
+					<div class="section-body">
+						<table class="data-table">
+							<tr>
+								<th class="status-label">STR</th>
+								<th class="status-label">DEX</th>
+								<th class="status-label">POW</th>
+								<th class="status-label">INT</th>
+								<th class="status-label">回避</th>
+								<th class="status-label">抵抗</th>
+							</tr>
+							<tr class="status-table">
+								<td><input type="number" id="enemy-str" value="10" min="1" /></td>
+								<td><input type="number" id="enemy-dex" value="10" min="1" /></td>
+								<td><input type="number" id="enemy-pow" value="10" min="1" /></td>
+								<td><input type="number" id="enemy-int" value="10" min="1" /></td>
+								<td><input type="text" id="enemy-avoid" value="10" /></td>
+								<td><input type="text" id="enemy-resist" value="10" /></td>
+							</tr>
+						</table>
+						<table class="data-table" style="margin-top: 10px">
+							<tr>
+								<th class="status-label">物理防御</th>
+								<th class="status-label">魔法防御</th>
+								<th class="status-label">最大HP</th>
+								<th class="status-label">ヘイト倍率</th>
+								<th class="status-label">行動力</th>
+								<th class="status-label">移動力</th>
+								<th class="status-label">因果力</th>
+							</tr>
+							<tr class="status-table">
+								<td><input type="number" id="enemy-physical-defense" value="0" min="0" /></td>
+								<td><input type="number" id="enemy-magical-defense" value="0" min="0" /></td>
+								<td><input type="number" id="enemy-hitpoint" value="50" min="1" /></td>
+								<td><input type="number" id="enemy-hate" value="1" min="0" step="0.1" /></td>
+								<td><input type="number" id="enemy-initiative" value="10" min="0" /></td>
+								<td><input type="number" id="enemy-move" value="5" min="0" /></td>
+								<td><input type="number" id="enemy-fate" value="1" min="0" /></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<!-- 特技 -->
+				<div class="section">
+					<div class="section-header">
+						<span>特技</span>
+						<div style="display: flex; gap: 5px">
+							<button class="btn btn-small" onclick="initializeSkills()">初期化</button>
+							<button class="btn btn-small" onclick="openSkillCatalog()">📚 引用</button>
+							<button class="btn btn-primary btn-small" onclick="addSkill()">追加</button>
+						</div>
+					</div>
+					<div class="section-body">
+						<div class="skill-list" id="skills-container">
+							<!-- 特技がここに追加されます -->
+						</div>
+					</div>
+				</div>
+
+				<!-- ドロップ品 -->
+				<div class="section">
+					<div class="section-header">
+						<span>ドロップ品</span>
+						<span style="font-size: 12px; font-weight: normal">期待値: <span id="drop-expected-value">0</span>G</span>
+					</div>
+					<div class="section-body">
+						<textarea id="enemy-drop" placeholder="ドロップアイテムを入力"></textarea>
+					</div>
+				</div>
+
+				<!-- 解説 -->
+				<div class="section">
+					<div class="section-header">解説</div>
+					<div class="section-body">
+						<textarea id="enemy-explain" placeholder="エネミーの解説を入力（プレイヤーに公開される情報）"></textarea>
+					</div>
+				</div>
+
+				<!-- 運用ガイド -->
+				<div class="section">
+					<div class="section-header">運用ガイド（GM用）</div>
+					<div class="section-body">
+						<textarea id="enemy-guide" placeholder="GMへの運用ガイドを入力"></textarea>
+					</div>
+				</div>
+			</div>
+
+			<!-- フッター -->
+			<div class="footer" style="display: none">
+				<div class="footer-group">
+					<label style="font-size: 13px">制作者:</label>
+					<input type="text" id="enemy-author" placeholder="制作者名" style="width: 150px" />
+					<label style="font-size: 13px">パスワード:</label>
+					<input type="password" id="enemy-password" placeholder="編集用" style="width: 120px" />
+				</div>
+				<div class="footer-group">
+					<button class="btn btn-success" onclick="publishData()" disabled>🚀 データを公開</button>
+				</div>
+			</div>
+		</div>
+
+		<script src="edit.js"></script>
+
+		<!-- データリスト -->
+		<datalist id="timing-list">
+			<option value="常時"></option>
+			<option value="セットアップ"></option>
+			<option value="メインプロセス"></option>
+			<option value="ムーブ"></option>
+			<option value="マイナー"></option>
+			<option value="メジャー"></option>
+			<option value="ダメージロール"></option>
+			<option value="クリンナップ"></option>
+			<option value="本文"></option>
+		</datalist>
+
+		<datalist id="roll-list">
+			<option value="対決 (0+0D / 回避)"></option>
+			<option value="対決 (0+0D / 抵抗)"></option>
+			<option value="判定なし"></option>
+			<option value="自動成功"></option>
+		</datalist>
+
+		<datalist id="target-list">
+			<option value="自身"></option>
+			<option value="単体"></option>
+			<option value="範囲(選択)"></option>
+			<option value="広範囲(選択)"></option>
+			<option value="直線(選択)"></option>
+			<option value="広範囲(無差別)"></option>
+		</datalist>
+
+		<datalist id="range-list">
+			<option value="至近"></option>
+			<option value="4sq"></option>
+			<option value="武器"></option>
+		</datalist>
+
+		<datalist id="limit-list">
+			<option value="なし"></option>
+			<option value="ラウンド1回"></option>
+			<option value="シーン1回"></option>
+			<option value="シナリオ1回"></option>
+		</datalist>
+
+		<div id="alert" style="position: fixed; top: 0; right: 0; z-index: 9999"></div>
+
+		<!-- 特技引用モーダル -->
+		<div id="skill-catalog-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10000; align-items: center; justify-content: center">
+			<div style="background: #1e1e1e; border-radius: 8px; max-width: 1000px; width: 95%; height: 90vh; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5)">
+				<div style="padding: 20px; border-bottom: 1px solid #505050; display: flex; justify-content: space-between; align-items: center">
+					<h3 style="margin: 0; color: #e0e0e0; font-size: 18px">特技引用 (884件)</h3>
+					<button onclick="closeSkillCatalog()" style="background: none; border: none; color: #e0e0e0; font-size: 24px; cursor: pointer; padding: 0; width: 32px; height: 32px">&times;</button>
+				</div>
+				<div style="padding: 20px; display: flex; flex-direction: column; flex: 1; min-height: 0">
+					<!-- 検索フィルター -->
+					<div style="background: #2a2a2a; border: 1px solid #505050; border-radius: 4px; padding: 15px; margin-bottom: 15px; flex-shrink: 0">
+						<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px">
+							<select id="filter-timing" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+								<option value="">タイミング: すべて</option>
+							</select>
+							<select id="filter-target" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+								<option value="">対象: すべて</option>
+							</select>
+							<select id="filter-range" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+								<option value="">射程: すべて</option>
+							</select>
+						</div>
+						<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px">
+							<input type="text" id="filter-skill-name" placeholder="特技名" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+							<input type="text" id="filter-tag" placeholder="タグ" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+							<input type="text" id="filter-effect" placeholder="効果内容" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+						</div>
+						<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px">
+							<input type="text" id="filter-enemy-name" placeholder="エネミー名" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+							<select id="filter-throne" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+								<option value="">ランク: すべて</option>
+								<option value="normal">ノーマル</option>
+								<option value="mob">モブ</option>
+								<option value="boss">ボス</option>
+								<option value="raid-boss">レイドボス</option>
+							</select>
+							<input type="number" id="filter-cr-min" placeholder="CR最小" min="1" max="30" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+							<input type="number" id="filter-cr-max" placeholder="CR最大" min="1" max="30" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+						</div>
+						<div style="margin-top: 10px; text-align: right">
+							<button onclick="clearSkillFilters()" style="padding: 6px 12px; background: #2a2a2a; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 12px">フィルタークリア</button>
+						</div>
+					</div>
+
+					<div style="color: #b0b0b0; font-size: 12px; margin-bottom: 10px; text-align: right; flex-shrink: 0">検索結果: <span id="skill-result-count">0</span>件</div>
+
+					<div id="skill-catalog-list" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1; min-height: 0">
+						<!-- 特技一覧がここに表示されます -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
