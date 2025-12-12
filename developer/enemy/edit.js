@@ -50,6 +50,25 @@ class Ccforia {
 let skillCounter = 0;
 let draggedElement = null;
 
+// roll-listを更新
+function updateRollList() {
+	const rollList = document.getElementById("roll-list");
+	if (!rollList) return;
+
+	const type = document.getElementById("enemy-type").value;
+	const [str, dex, pow, int] = [parseInt(document.getElementById("enemy-str").value) || 0, parseInt(document.getElementById("enemy-dex").value) || 0, parseInt(document.getElementById("enemy-pow").value) || 0, parseInt(document.getElementById("enemy-int").value) || 0];
+
+	const hitDice = ["spear", "archer", "shooter", "bomber"].includes(type) ? 3 : 2;
+	const hitMod = Math.max(str, dex, pow, int) + (["archer", "shooter", "bomber"].includes(type) ? 0 : ["spear"].includes(type) ? 1 : 2);
+
+	rollList.innerHTML = `
+		<option value="対決 (${hitMod}+${hitDice}D / 回避)"></option>
+		<option value="対決 (${hitMod}+${hitDice}D / 抵抗)"></option>
+		<option value="判定なし"></option>
+		<option value="自動成功"></option>
+	`;
+}
+
 // ユーティリティ関数
 async function wait(timeout) {
 	return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -361,7 +380,7 @@ function addSkill() {
                         <tr>
                             <th>コマンド</th>
                             <td colspan="3">
-                                <textarea id="skill-command-${skillId}" placeholder="チャットパレット用コマンド" style="width: 100%; min-height: 60px"></textarea>
+                                <textarea id="skill-command-${skillId}" placeholder="チャットパレット用コマンド" style="width: 100%; min-height: 70px"></textarea>
                             </td>
                         </tr>
                     </table>
@@ -687,6 +706,9 @@ function calculateStatus() {
 	// 基本攻撃手段を生成（最初の特技スロットに設定）
 	generateBasicSkill(type, rank, str, dex, pow, int, hate);
 
+	// roll-listを更新
+	updateRollList();
+
 	showAlert("能力値を自動計算しました。", "green");
 }
 
@@ -944,6 +966,7 @@ function populateFormData(data) {
 	}
 
 	updateIdentificationDifficulty();
+	updateRollList();
 }
 
 // データ公開

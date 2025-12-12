@@ -123,7 +123,7 @@
 								<td><input type="text" id="enemy-identification" value="" readonly /></td>
 								<th>Eタイプ<span class="required">*</span></th>
 								<td colspan="2">
-									<select id="enemy-type" required>
+									<select id="enemy-type" onchange="updateRollList()" required>
 										<option value="armorer" selected>アーマラー</option>
 										<option value="fencer">フェンサー</option>
 										<option value="grappler">グラップラー</option>
@@ -185,12 +185,12 @@
 								<th class="status-label">抵抗</th>
 							</tr>
 							<tr class="status-table">
-								<td><input type="number" id="enemy-str" value="1" min="1" /></td>
-								<td><input type="number" id="enemy-dex" value="1" min="1" /></td>
-								<td><input type="number" id="enemy-pow" value="1" min="1" /></td>
-								<td><input type="number" id="enemy-int" value="1" min="1" /></td>
-								<td><input type="text" id="enemy-avoid" value="1+2D" /></td>
-								<td><input type="text" id="enemy-resist" value="1+2D" /></td>
+								<td><input type="number" id="enemy-str" value="1" min="1" onchange="updateRollList()" /></td>
+								<td><input type="number" id="enemy-dex" value="1" min="1" onchange="updateRollList()" /></td>
+								<td><input type="number" id="enemy-pow" value="1" min="1" onchange="updateRollList()" /></td>
+								<td><input type="number" id="enemy-int" value="1" min="1" onchange="updateRollList()" /></td>
+								<td><input type="text" id="enemy-avoid" value="10" /></td>
+								<td><input type="text" id="enemy-resist" value="10" /></td>
 							</tr>
 						</table>
 						<table class="data-table" style="margin-top: 10px">
