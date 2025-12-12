@@ -1440,11 +1440,11 @@ function renderSkillCatalog(skills) {
 		headerRow.appendChild(titleSpan);
 
 		// タグ
-		const tagsText = Array.isArray(skill.tags) ? skill.tags.join(", ") : skill.tags || "";
+		const tagsText = Array.isArray(skill.tags) ? skill.tags.map((tag) => `[${tag}]`).join(" ") : skill.tags || "";
 		if (tagsText) {
 			const tagsSpan = document.createElement("span");
 			tagsSpan.style.cssText = "font-size: 12px; color: #ffa726;";
-			tagsSpan.textContent = `[${tagsText}]`;
+			tagsSpan.textContent = `${tagsText}`;
 			headerRow.appendChild(tagsSpan);
 		}
 
