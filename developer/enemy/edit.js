@@ -1117,6 +1117,9 @@ function exportCcfolia() {
 function printSheet() {
 	const data = collectFormData();
 
+	// タグを整形
+	const tagsText = data.tags.filter((t) => t).join(" / ");
+
 	// 印刷用HTMLを生成
 	let printHTML = `
 <!DOCTYPE html>
@@ -1124,11 +1127,11 @@ function printSheet() {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>${data.name || "エネミーデータ"} - 印刷用</title>
+	<title>${data.name || "エネミーデータ"}</title>
 	<style>
 		@page {
 			size: B5;
-			margin: 8mm;
+			margin: 10mm 15mm;
 		}
 		* {
 			margin: 0;
@@ -1136,223 +1139,163 @@ function printSheet() {
 			box-sizing: border-box;
 		}
 		body {
-			font-family: 'Meiryo', 'メイリオ', sans-serif;
-			font-size: 8px;
-			line-height: 1.3;
+			font-family: 'Yu Gothic', 'YuGothic', 'Meiryo', sans-serif;
+			font-size: 10.5px;
+			line-height: 1.7;
 			color: #000;
 		}
 		.container {
 			max-width: 100%;
 		}
 		h1 {
-			font-size: 11px;
-			text-align: center;
-			padding: 2mm 0;
-			border-bottom: 1.5px solid #000;
-			margin-bottom: 2mm;
-		}
-		.two-column {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 2mm;
-			margin-bottom: 2mm;
-		}
-		.section {
-			border: 0.5px solid #999;
-			page-break-inside: avoid;
-			margin-bottom: 1.5mm;
-		}
-		.section-header {
-			background: #f0f0f0;
-			border-bottom: 0.5px solid #666;
-			padding: 1mm 1.5mm;
-			font-size: 8.5px;
+			font-size: 16px;
 			font-weight: bold;
+			margin-bottom: 3mm;
+			padding-bottom: 2mm;
+			border-bottom: 2px solid #000;
 		}
-		.section-body {
-			padding: 1.5mm;
+		h2 {
+			font-size: 12px;
+			font-weight: bold;
+			margin: 4mm 0 2mm 0;
+			padding-left: 2mm;
+			border-left: 3px solid #333;
 		}
-		table {
-			width: 100%;
-			border-collapse: collapse;
-			font-size: 7px;
+		.info-grid {
+			display: grid;
+			grid-template-columns: auto 1fr auto 1fr;
+			gap: 1mm 3mm;
+			margin-bottom: 3mm;
+			font-size: 10px;
+			line-height: 1.6;
 		}
-		th {
-			background: #f8f8f8;
-			border: 0.5px solid #aaa;
-			padding: 0.5mm 1mm;
-			text-align: left;
+		.info-label {
 			font-weight: bold;
 			white-space: nowrap;
 		}
-		td {
-			border: 0.5px solid #ccc;
-			padding: 0.5mm 1mm;
+		.info-value {
+			
+		}
+		.tags {
+			color: #555;
+			font-size: 9.5px;
+			margin-bottom: 3mm;
 		}
 		.skill-item {
-			border: 0.5px solid #ccc;
-			margin-bottom: 1mm;
+			margin-bottom: 3mm;
 			page-break-inside: avoid;
 		}
-		.skill-header {
-			background: #f8f8f8;
-			padding: 0.8mm 1.2mm;
-			font-size: 7.5px;
+		.skill-name {
 			font-weight: bold;
-			border-bottom: 0.5px solid #ccc;
+			font-size: 11px;
 		}
-		.skill-info {
-			font-size: 6.5px;
-			color: #555;
-			font-weight: normal;
+		.skill-tags {
+			color: #666;
+			font-size: 9px;
+			margin-left: 2mm;
 		}
-		.skill-detail {
-			padding: 1mm;
-			font-size: 6.5px;
-			line-height: 1.3;
+		.skill-params {
+			font-size: 10px;
+			margin: 0.5mm 0;
 		}
-		.skill-detail-row {
-			margin-bottom: 0.5mm;
+		.skill-effect {
+			font-size: 10px;
+			line-height: 1.7;
+			text-indent: 1em;
 		}
-		.skill-label {
-			font-weight: bold;
-			margin-right: 1mm;
-		}
-		textarea-content {
+		.description {
+			font-size: 10px;
+			line-height: 1.7;
+			text-indent: 1em;
 			white-space: pre-wrap;
-			font-size: 7px;
-			line-height: 1.3;
 		}
-		.compact-info {
-			font-size: 7px;
-			line-height: 1.4;
+		.drop-list {
+			font-size: 10px;
+			line-height: 1.6;
+			white-space: pre-wrap;
 		}
 	</style>
 </head>
 <body>
 	<div class="container">
-		<h1>${data.name || "エネミーデータ"}${data.ruby ? " 〈" + data.ruby + "〉" : ""} - CR${data.rank || "?"} ${data.race || ""} ${data.type || ""}</h1>
+		<h1>${data.name || ""}${data.ruby ? " 《" + data.ruby + "》" : ""}</h1>
 		
-		<div class="two-column">
-			<div class="section">
-				<div class="section-header">基本情報</div>
-				<div class="section-body">
-					<table>
-						<tr>
-							<th style="width: 40px">CR</th>
-							<td>${data.rank || ""}</td>
-							<th style="width: 40px">知名度</th>
-							<td>${data.popularity || ""}</td>
-						</tr>
-						<tr>
-							<th>種族</th>
-							<td>${data.race || ""}</td>
-							<th>分類</th>
-							<td>${data.tribe || ""}</td>
-						</tr>
-						<tr>
-							<th>識別</th>
-							<td>${data.identification || ""}</td>
-							<th>Eランク</th>
-							<td>${data.throne || ""}</td>
-						</tr>
-						<tr>
-							<th>タグ</th>
-							<td colspan="3" style="font-size: 6.5px">${data.tags.join(", ")}</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			
-			<div class="section">
-				<div class="section-header">基本能力</div>
-				<div class="section-body">
-					<table>
-						<tr>
-							<th>STR</th><td>${data.str || ""}</td>
-							<th>DEX</th><td>${data.dex || ""}</td>
-							<th>POW</th><td>${data.pow || ""}</td>
-							<th>INT</th><td>${data.int || ""}</td>
-						</tr>
-						<tr>
-							<th>回避</th><td colspan="3">${data.avoid || ""}</td>
-							<th>抵抗</th><td colspan="2">${data.resist || ""}</td>
-						</tr>
-						<tr>
-							<th>物防</th><td>${data.physicalDefense || ""}</td>
-							<th>魔防</th><td>${data.magicalDefense || ""}</td>
-							<th>HP</th><td colspan="2">${data.hitpoint || ""}</td>
-						</tr>
-						<tr>
-							<th>ヘイト</th><td>×${data.hate || ""}</td>
-							<th>行動</th><td>${data.initiative || ""}</td>
-							<th>移動</th><td>${data.move || ""}</td>
-							<th>因果</th><td>${data.fate || ""}</td>
-						</tr>
-					</table>
-				</div>
-			</div>
+		${tagsText ? '<div class="tags">' + tagsText + "</div>" : ""}
+		
+		<div class="info-grid">
+			<div class="info-label">ランク：</div>
+			<div class="info-value">${data.rank || ""}</div>
+			<div class="info-label">識別難易度：</div>
+			<div class="info-value">${data.identification || ""}</div>
 		</div>
 		
-		<div class="section">
-			<div class="section-header">特技</div>
-			<div class="section-body">
+		<div class="info-grid" style="margin-top: 2mm">
+			<div class="info-label">ＳＴＲ：</div>
+			<div class="info-value">${data.str || ""}</div>
+			<div class="info-label">ＤＥＸ：</div>
+			<div class="info-value">${data.dex || ""}</div>
+			<div class="info-label">ＰＯＷ：</div>
+			<div class="info-value">${data.pow || ""}</div>
+			<div class="info-label">ＩＮＴ：</div>
+			<div class="info-value">${data.int || ""}</div>
+			<div class="info-label">回避：</div>
+			<div class="info-value">${data.avoid || ""}</div>
+			<div class="info-label">抵抗：</div>
+			<div class="info-value">${data.resist || ""}</div>
+		</div>
+		
+		<div class="info-grid" style="margin-top: 2mm">
+			<div class="info-label">物理防御力：</div>
+			<div class="info-value">${data.physicalDefense || ""}</div>
+			<div class="info-label">魔法防御力：</div>
+			<div class="info-value">${data.magicalDefense || ""}</div>
+			<div class="info-label">最大ＨＰ：</div>
+			<div class="info-value">${data.hitpoint || ""}</div>
+			<div class="info-label">ヘイト倍率：</div>
+			<div class="info-value">×${data.hate || ""}</div>
+			<div class="info-label">行動力：</div>
+			<div class="info-value">${data.initiative || ""}</div>
+			<div class="info-label">移動力：</div>
+			<div class="info-value">${data.move || ""}</div>
+		</div>
+		
+		<h2>▼特技</h2>
 `;
 
-	// 特技データを追加
+	// 特技データを追加（公式サイトスタイル）
 	data.skills.forEach((skill, index) => {
 		if (!skill.name) return;
 
+		const skillTagsText = skill.tags && skill.tags.length > 0 ? "［" + skill.tags.join("］［") + "］＿" : "";
+
+		const paramsText = [skill.timing || "", skill.roll ? `対決（${skill.roll}）` : "", skill.target || "", skill.range || ""].filter((p) => p).join("＿");
+
 		printHTML += `
-				<div class="skill-item">
-					<div class="skill-header">
-						${skill.name}
-						<span class="skill-info">${skill.timing || "-"} / ${skill.target || "-"} / ${skill.range || "-"}</span>
-					</div>
-					<div class="skill-detail">
-						<div class="skill-detail-row">
-							<span class="skill-label">判定:</span>${skill.roll || "-"}
-							<span class="skill-label" style="margin-left: 3mm">対抗:</span>${skill.opposedCheck || "-"}
-						</div>
-						<div class="skill-detail-row">
-							<span class="skill-label">コスト:</span>${skill.cost || "-"}
-							<span class="skill-label" style="margin-left: 3mm">制限:</span>${skill.limit || "-"}
-						</div>
-						<div class="skill-detail-row">${skill.effect || ""}</div>
-						${skill.tags && skill.tags.length > 0 ? '<div class="skill-detail-row" style="font-size: 6px; color: #666">[' + skill.tags.join(", ") + "]</div>" : ""}
-					</div>
-				</div>
+		<div class="skill-item">
+			<div class="skill-name">《${skill.name}》＿${skillTagsText}${paramsText ? paramsText + "＿" : ""}${skill.effect || ""}</div>
+		</div>
 `;
 	});
 
 	printHTML += `
-			</div>
-		</div>
+		<h2>▼ドロップ品</h2>
+		<div class="drop-list">${data.drop || "なし"}</div>
 		
-		<div class="two-column">
-			<div class="section">
-				<div class="section-header">ドロップ品</div>
-				<div class="section-body">
-					<div class="compact-info">${data.drop || "-"}</div>
-				</div>
-			</div>
-			
-			<div class="section">
-				<div class="section-header">GM情報</div>
-				<div class="section-body">
-					<div class="compact-info">${data.guide || "-"}</div>
-				</div>
-			</div>
-		</div>
+		<h2>▼解説</h2>
+		<div class="description">${data.explain || ""}</div>
 		
-		<div class="section">
-			<div class="section-header">解説</div>
-			<div class="section-body">
-				<div class="compact-info">${data.explain || "-"}</div>
-			</div>
-		</div>
+		${data.guide ? '<h2>▼ＧＭ情報</h2><div class="description">' + data.guide + "</div>" : ""}
 		
 	</div>
+	<script>
+		window.onload = function() {
+			window.print();
+			// 印刷ダイアログが閉じられた後にウィンドウを閉じる
+			window.onafterprint = function() {
+				window.close();
+			};
+		};
+	</script>
 </body>
 </html>
 `;
