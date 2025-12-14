@@ -50,6 +50,22 @@ class Ccforia {
 let skillCounter = 0;
 let draggedElement = null;
 
+// テーマ切り替え
+function toggleTheme() {
+	const body = document.body;
+	const isLightMode = body.classList.toggle("light-mode");
+	localStorage.setItem("theme", isLightMode ? "light" : "dark");
+	showAlert(isLightMode ? "ライトモードに切り替えました" : "ダークモードに切り替えました", "blue");
+}
+
+// テーマを読み込み
+function loadTheme() {
+	const savedTheme = localStorage.getItem("theme");
+	if (savedTheme === "light") {
+		document.body.classList.add("light-mode");
+	}
+}
+
 // roll-listを更新
 function updateRollList() {
 	const rollList = document.getElementById("roll-list");
@@ -193,6 +209,7 @@ let masterSkills = [];
 
 // ページ読み込み時の初期化
 window.addEventListener("DOMContentLoaded", () => {
+	loadTheme();
 	initializeSkills();
 	updateIdentificationDifficulty();
 	loadMasterSkills();
@@ -205,8 +222,8 @@ window.addEventListener("DOMContentLoaded", () => {
 function updateIdentificationDifficulty() {
 	const cr = parseInt(document.getElementById("enemy-rank").value) || 0;
 	const popularity = parseInt(document.getElementById("enemy-popularity").value) || 0;
-	const difficulty = cr + popularity;
-	document.getElementById("enemy-identification").value = difficulty > 0 ? difficulty : "";
+	const difficulty = popularity == 0 ? "自動" : Math.floor((cr - 1) / 3 + 1 + popularity);
+	document.getElementById("enemy-identification").value = difficulty;
 }
 // ドロップ期待値を取得
 function getDropExpected(rank) {

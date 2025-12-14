@@ -27,14 +27,17 @@
 		<div class="container">
 			<!-- ヘッダー -->
 			<div class="header">
-				<h1>ログホライゾンTRPG エネミーデータ作成ツール</h1>
-				<div class="header-buttons">
-					<button onclick="saveData()">💾 保存</button>
-					<button onclick="loadData()">📂 読込</button>
-					<button onclick="exportCcfolia()">📤 ココフォリア出力</button>
-					<button onclick="printSheet()">🖨️ 印刷</button>
-					<button onclick="resetForm()">🔄 リセット</button>
+				<div class="header-left">
+					<h1>ログホライゾンTRPG エネミーデータ作成ツール</h1>
+					<div class="header-buttons">
+						<button onclick="saveData()">💾 保存</button>
+						<button onclick="loadData()">📂 読込</button>
+						<button onclick="exportCcfolia()">📤 ココフォリア出力</button>
+						<button onclick="printSheet()">🖨️ 印刷</button>
+						<button onclick="resetForm()">🔄 リセット</button>
+					</div>
 				</div>
+				<button class="theme-toggle" onclick="toggleTheme()" title="テーマ切替">🌓</button>
 			</div>
 
 			<!-- メインコンテンツ -->
@@ -322,49 +325,49 @@
 		<div id="alert" style="position: fixed; top: 0; right: 0; z-index: 9999"></div>
 
 		<!-- 特技引用モーダル -->
-		<div id="skill-catalog-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10000; align-items: center; justify-content: center">
-			<div style="background: #1e1e1e; border-radius: 8px; max-width: 1000px; width: 95%; height: 90vh; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5)">
-				<div style="padding: 20px; border-bottom: 1px solid #505050; display: flex; justify-content: space-between; align-items: center">
-					<h3 style="margin: 0; color: #e0e0e0; font-size: 18px">特技引用 (884件)</h3>
-					<button onclick="closeSkillCatalog()" style="background: none; border: none; color: #e0e0e0; font-size: 24px; cursor: pointer; padding: 0; width: 32px; height: 32px">&times;</button>
+		<div id="skill-catalog-modal" class="modal-overlay">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">特技引用 (884件)</h3>
+					<button onclick="closeSkillCatalog()" class="modal-close">&times;</button>
 				</div>
-				<div style="padding: 20px; display: flex; flex-direction: column; flex: 1; min-height: 0">
+				<div class="modal-body">
 					<!-- 検索フィルター -->
-					<div style="background: #2a2a2a; border: 1px solid #505050; border-radius: 4px; padding: 15px; margin-bottom: 15px; flex-shrink: 0">
-						<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px">
-							<select id="filter-timing" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+					<div class="filter-container">
+						<div class="filter-row">
+							<select id="filter-timing" class="filter-input" onchange="filterSkillCatalog()">
 								<option value="">タイミング: すべて</option>
 							</select>
-							<select id="filter-target" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+							<select id="filter-target" class="filter-input" onchange="filterSkillCatalog()">
 								<option value="">対象: すべて</option>
 							</select>
-							<select id="filter-range" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+							<select id="filter-range" class="filter-input" onchange="filterSkillCatalog()">
 								<option value="">射程: すべて</option>
 							</select>
 						</div>
-						<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px">
-							<input type="text" id="filter-skill-name" placeholder="特技名" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
-							<input type="text" id="filter-tag" placeholder="タグ" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
-							<input type="text" id="filter-effect" placeholder="効果内容" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+						<div class="filter-row">
+							<input type="text" id="filter-skill-name" placeholder="特技名" class="filter-input" oninput="filterSkillCatalog()" />
+							<input type="text" id="filter-tag" placeholder="タグ" class="filter-input" oninput="filterSkillCatalog()" />
+							<input type="text" id="filter-effect" placeholder="効果内容" class="filter-input" oninput="filterSkillCatalog()" />
 						</div>
-						<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px">
-							<input type="text" id="filter-enemy-name" placeholder="エネミー名" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
-							<select id="filter-throne" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" onchange="filterSkillCatalog()">
+						<div class="filter-row-4">
+							<input type="text" id="filter-enemy-name" placeholder="エネミー名" class="filter-input" oninput="filterSkillCatalog()" />
+							<select id="filter-throne" class="filter-input" onchange="filterSkillCatalog()">
 								<option value="">ランク: すべて</option>
 								<option value="normal">ノーマル</option>
 								<option value="mob">モブ</option>
 								<option value="boss">ボス</option>
 								<option value="raid-boss">レイドボス</option>
 							</select>
-							<input type="number" id="filter-cr-min" placeholder="CR最小" min="1" max="30" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
-							<input type="number" id="filter-cr-max" placeholder="CR最大" min="1" max="30" style="padding: 8px; background: #1e1e1e; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; font-size: 13px" oninput="filterSkillCatalog()" />
+							<input type="number" id="filter-cr-min" placeholder="CR最小" min="1" max="30" class="filter-input" oninput="filterSkillCatalog()" />
+							<input type="number" id="filter-cr-max" placeholder="CR最大" min="1" max="30" class="filter-input" oninput="filterSkillCatalog()" />
 						</div>
-						<div style="margin-top: 10px; text-align: right">
-							<button onclick="clearSkillFilters()" style="padding: 6px 12px; background: #2a2a2a; border: 1px solid #505050; color: #e0e0e0; border-radius: 4px; cursor: pointer; font-size: 12px">フィルタークリア</button>
+						<div class="filter-actions">
+							<button onclick="clearSkillFilters()" class="filter-clear-btn">フィルタークリア</button>
 						</div>
 					</div>
 
-					<div style="color: #b0b0b0; font-size: 12px; margin-bottom: 10px; text-align: right; flex-shrink: 0">検索結果: <span id="skill-result-count">0</span>件</div>
+					<div class="search-result-count">検索結果: <span id="skill-result-count">0</span>件</div>
 
 					<div id="skill-catalog-list" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1; min-height: 0">
 						<!-- 特技一覧がここに表示されます -->
