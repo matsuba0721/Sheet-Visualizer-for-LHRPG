@@ -1062,7 +1062,8 @@ function exportCcfolia() {
 		tags = "[モブ]";
 	}
 
-	if (data.race) tags += `[${data.race}]`;
+	races = Object.fromEntries(Array.from(document.getElementById("enemy-race").children).map((item) => [item.value, item.text]));
+	if (data.race) tags += `[${races[data.race] || data.race}]`;
 
 	if (data.tags && data.tags.length > 0) {
 		tags += data.tags
