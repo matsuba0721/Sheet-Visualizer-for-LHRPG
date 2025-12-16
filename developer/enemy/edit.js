@@ -25,6 +25,17 @@ const CONSTANTS = {
 };
 
 // ========================================
+// ヘルパー関数
+// ========================================
+
+// ひらがなをカタカナに変換
+function hiraganaToKatakana(str) {
+	return str.replace(/[\u3041-\u3096]/g, (match) => {
+		return String.fromCharCode(match.charCodeAt(0) + 0x60);
+	});
+}
+
+// ========================================
 // Ccfoliaクラス
 // ========================================
 
@@ -1760,7 +1771,7 @@ function openSkillCatalog() {
 function closeSkillCatalog() {
 	const modal = document.getElementById("skill-catalog-modal");
 	modal.style.display = "none";
-	clearSkillFilters();
+	// フィルター情報は維持する
 }
 
 // 特技カタログを描画
@@ -1819,11 +1830,11 @@ function renderSkillCatalog(skills) {
 			headerRow.appendChild(tagsSpan);
 		}
 
-		// タイミング/射程/対象/制限
+		// タイミング/対象/射程/制限
 		const infoItems = [];
 		if (skill.timing) infoItems.push(skill.timing);
-		if (skill.range) infoItems.push(skill.range);
 		if (skill.target) infoItems.push(skill.target);
+		if (skill.range) infoItems.push(skill.range);
 		if (skill.limit) infoItems.push(skill.limit);
 
 		if (infoItems.length > 0) {
@@ -1860,8 +1871,7 @@ function populateFilterOptions() {
 	});
 
 	const timingSelect = document.getElementById("filter-timing");
-	const targetSelect = document.getElementById("filter-target");
-	const rangeSelect = document.getElementById("filter-range");
+	const tagSelect = document.getElementById("filter-tag");
 
 	// タイミング
 	timingSelect.innerHTML = '<option value="">タイミング: すべて</option>';
@@ -1874,88 +1884,242 @@ function populateFilterOptions() {
 			timingSelect.appendChild(option);
 		});
 
-	// 対象
-	targetSelect.innerHTML = '<option value="">対象: すべて</option>';
-	Array.from(targets)
-		.sort()
-		.forEach((target) => {
-			const option = document.createElement("option");
-			option.value = target;
-			option.textContent = target;
-			targetSelect.appendChild(option);
-		});
+	// タグ（特技のタグとボスのタグを合わせる）
+	const allTags = new Set();
+	masterSkills.forEach((skill) => {
+		// 特技のタグ
+		if (skill.tags) {
+			if (Array.isArray(skill.tags)) {
+				skill.tags.forEach((tag) => allTags.add(tag));
+			} else {
+				allTags.add(skill.tags);
+			}
+		}
+		// ボスのタグ
+		if (skill.from && skill.from.tags) {
+			if (Array.isArray(skill.from.tags)) {
+				skill.from.tags.forEach((tag) => allTags.add(tag));
+			} else {
+				allTags.add(skill.from.tags);
+			}
+		}
+	});
 
-	// 射程
-	rangeSelect.innerHTML = '<option value="">射程: すべて</option>';
-	Array.from(ranges)
-		.sort()
-		.forEach((range) => {
-			const option = document.createElement("option");
-			option.value = range;
-			option.textContent = range;
-			rangeSelect.appendChild(option);
-		});
+	// タグの分類定義
+	const tagCategories = {
+		大種族: ["人型", "自然", "精霊", "幻獣", "不死", "人造", "人間", "ギミック"],
+		小種族: ["オーガ", "オーク", "クロックワーク", "コボルド", "ゴブリン", "サファギン", "スパルトイ", "ネイリティー", "ヤカー", "ラットマン", "リザードマン", "冒険者", "吸血鬼", "天狗", "巨人", "恐竜", "植物", "狼", "竜"],
+		出自: ["機械", "物品", "天然", "魔法", "典災"],
+		ダメージ属性: ["火炎", "冷気", "電撃", "光輝", "邪毒", "精神"],
+		武器: ["白兵攻撃", "射撃攻撃", "魔法攻撃", "特殊攻撃", "剣", "槌斧", "槍", "弓"],
+		ルール: ["移動", "暗視", "水棲", "封印", "準備", "高位保護", "EXパワー"],
+	};
+
+	tagSelect.innerHTML = '<option value="">タグ: すべて</option>';
+
+	// 分類ごとにoptgroupを作成
+	Object.keys(tagCategories).forEach((category) => {
+		const categoryTags = tagCategories[category].filter((tag) => allTags.has(tag));
+		if (categoryTags.length > 0) {
+			const optgroup = document.createElement("optgroup");
+			optgroup.label = category;
+			categoryTags.forEach((tag) => {
+				const option = document.createElement("option");
+				option.value = tag;
+				option.textContent = tag;
+				optgroup.appendChild(option);
+			});
+			tagSelect.appendChild(optgroup);
+		}
+	});
+}
+
+// 詳細フィルター表示切り替え
+function toggleDetailFilters() {
+	const detailFilters = document.getElementById("detail-filters");
+	const toggleBtn = document.querySelector(".detail-filters-toggle-title");
+	const isHidden = detailFilters.classList.contains("hidden");
+
+	if (isHidden) {
+		detailFilters.classList.remove("hidden");
+		toggleBtn.textContent = "詳細フィルター ▲";
+	} else {
+		detailFilters.classList.add("hidden");
+		toggleBtn.textContent = "詳細フィルター ▼";
+	}
+}
+
+// 対象フィルターの詳細を更新
+function updateTargetFilters() {
+	const targetType = document.getElementById("filter-target-type").value;
+	const countSelect = document.getElementById("filter-target-count");
+	const areaSelect = document.getElementById("filter-area-size");
+	const selectionSelect = document.getElementById("filter-target-selection");
+
+	// すべて無効化
+	countSelect.disabled = true;
+	areaSelect.disabled = true;
+	selectionSelect.disabled = true;
+
+	// 対象タイプに応じて有効化
+	if (targetType === "multiple") {
+		countSelect.disabled = false;
+	} else if (targetType === "area") {
+		areaSelect.disabled = false;
+		selectionSelect.disabled = false;
+	} else if (targetType === "line") {
+		selectionSelect.disabled = false;
+	}
+}
+
+// 射程フィルターの詳細を更新
+function updateRangeFilters() {
+	const rangeType = document.getElementById("filter-range-type").value;
+	const rangeInput = document.getElementById("filter-range-value");
+
+	if (rangeType === "ranged") {
+		rangeInput.disabled = false;
+	} else {
+		rangeInput.disabled = true;
+	}
 }
 
 // フィルタークリア
 function clearSkillFilters() {
-	document.getElementById("filter-skill-name").value = "";
 	document.getElementById("filter-timing").value = "";
-	document.getElementById("filter-target").value = "";
-	document.getElementById("filter-range").value = "";
+	document.getElementById("filter-target-type").value = "";
+	document.getElementById("filter-range-type").value = "";
 	document.getElementById("filter-tag").value = "";
 	document.getElementById("filter-effect").value = "";
+	document.getElementById("filter-target-count").value = "";
+	document.getElementById("filter-area-size").value = "";
+	document.getElementById("filter-target-selection").value = "";
+	document.getElementById("filter-range-value").value = "";
+	document.getElementById("filter-etype").value = "";
 	document.getElementById("filter-enemy-name").value = "";
 	document.getElementById("filter-throne").value = "";
 	document.getElementById("filter-cr-min").value = "";
 	document.getElementById("filter-cr-max").value = "";
+
+	updateTargetFilters();
+	updateRangeFilters();
 	filterSkillCatalog();
 }
 
 // 特技カタログをフィルタリング
 function filterSkillCatalog() {
-	const skillName = document.getElementById("filter-skill-name").value.toLowerCase();
+	// 基本フィルター
 	const timing = document.getElementById("filter-timing").value;
-	const target = document.getElementById("filter-target").value;
-	const range = document.getElementById("filter-range").value;
-	const tag = document.getElementById("filter-tag").value.toLowerCase();
+	const targetType = document.getElementById("filter-target-type").value;
+	const rangeType = document.getElementById("filter-range-type").value;
+	const tag = document.getElementById("filter-tag").value;
+	const name = document.getElementById("filter-name").value.toLowerCase();
 	const effect = document.getElementById("filter-effect").value.toLowerCase();
+
+	// 詳細フィルター
+	const targetCount = document.getElementById("filter-target-count").value;
+	const areaSize = document.getElementById("filter-area-size").value;
+	const targetSelection = document.getElementById("filter-target-selection").value;
+	const rangeValue = document.getElementById("filter-range-value").value.toLowerCase();
+	const etype = document.getElementById("filter-etype").value;
 	const enemyName = document.getElementById("filter-enemy-name").value.toLowerCase();
 	const throne = document.getElementById("filter-throne").value;
 	const crMin = parseInt(document.getElementById("filter-cr-min").value) || 0;
 	const crMax = parseInt(document.getElementById("filter-cr-max").value) || 999;
-	const filtered = masterSkills.filter((skill) => {
-		// 特技名フィルター
-		if (skillName && (!skill.name || !skill.name.toLowerCase().includes(skillName))) {
-			return false;
-		}
 
+	const filtered = masterSkills.filter((skill) => {
 		// タイミングフィルター
 		if (timing && skill.timing !== timing) {
 			return false;
 		}
 
-		// 対象フィルター
-		if (target && skill.target !== target) {
+		// 対象タイプフィルター
+		if (targetType) {
+			const target = skill.target || "";
+			if (targetType === "single" && target !== "自身" && target !== "単体") {
+				return false;
+			}
+			if (targetType === "multiple" && !target.match(/\d+体/)) {
+				return false;
+			}
+			if (targetType === "area" && !target.includes("範囲")) {
+				return false;
+			}
+			if (targetType === "line" && !target.includes("直線")) {
+				return false;
+			}
+			if (targetType === "other" && (target === "自身" || target === "単体" || target.match(/\d+体/) || target.includes("範囲") || target.includes("直線"))) {
+				return false;
+			}
+		}
+
+		// 複数体の数フィルター
+		if (targetCount) {
+			const match = (skill.target || "").match(/(\d+)体/);
+			if (!match || match[1] !== targetCount) {
+				return false;
+			}
+		}
+
+		// 範囲の広さフィルター
+		if (areaSize && !(skill.target || "").includes(areaSize)) {
 			return false;
 		}
 
-		// 射程フィルター
-		if (range && skill.range !== range) {
+		// 選択方法フィルター
+		if (targetSelection && !(skill.target || "").includes(targetSelection)) {
 			return false;
 		}
 
-		// タグフィルター
+		// 射程タイプフィルター
+		if (rangeType) {
+			const range = skill.range || "";
+			if (rangeType === "close" && range !== "至近") {
+				return false;
+			}
+			if (rangeType === "ranged" && range === "至近") {
+				return false;
+			}
+			if (rangeType === "other" && (range === "至近" || range.match(/\d+sq/))) {
+				return false;
+			}
+		}
+
+		// 射程の値フィルター
+		if (rangeValue && !(skill.range || "").toLowerCase().includes(rangeValue)) {
+			return false;
+		}
+
+		// Eタイプフィルター
+		if (etype && (!skill.from || !skill.from.type || skill.from.type !== etype)) {
+			return false;
+		}
+
+		// タグフィルター（特技のタグとボスのタグの両方を検索）
 		if (tag) {
 			let tagMatch = false;
+			// 特技のタグをチェック
 			if (skill.tags) {
 				if (Array.isArray(skill.tags)) {
-					tagMatch = skill.tags.some((t) => t.toLowerCase().includes(tag));
+					tagMatch = skill.tags.includes(tag);
 				} else {
-					tagMatch = skill.tags.toLowerCase().includes(tag);
+					tagMatch = skill.tags === tag;
+				}
+			}
+			// ボスのタグをチェック
+			if (!tagMatch && skill.from && skill.from.tags) {
+				if (Array.isArray(skill.from.tags)) {
+					tagMatch = skill.from.tags.includes(tag);
+				} else {
+					tagMatch = skill.from.tags === tag;
 				}
 			}
 			if (!tagMatch) return false;
+		}
+
+		// フィルター
+		if (name && (!skill.name || !skill.name.toLowerCase().includes(name))) {
+			return false;
 		}
 
 		// 効果フィルター
@@ -1963,9 +2127,18 @@ function filterSkillCatalog() {
 			return false;
 		}
 
-		// エネミー名フィルター
-		if (enemyName && (!skill.from || !skill.from.name || !skill.from.name.toLowerCase().includes(enemyName))) {
-			return false;
+		// エネミー名フィルター（rubyタグ内のふりがなも検索、ひらがなをカタカナとして扱う）
+		if (enemyName) {
+			if (!skill.from || !skill.from.name || !skill.from.ruby) {
+				return false;
+			}
+			const searchKey = hiraganaToKatakana(enemyName.toLowerCase());
+			const enemyNameText = hiraganaToKatakana(skill.from.name.toLowerCase());
+			const rubyText = hiraganaToKatakana(skill.from.ruby.toLowerCase());
+
+			if (!enemyNameText.includes(searchKey) && !rubyText.includes(searchKey)) {
+				return false;
+			}
 		}
 
 		// ランクフィルター

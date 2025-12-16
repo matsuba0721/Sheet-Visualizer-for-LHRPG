@@ -338,34 +338,111 @@
 				<div class="modal-body">
 					<!-- 検索フィルター -->
 					<div class="filter-container">
-						<div class="filter-row">
-							<select id="filter-timing" class="filter-input" onchange="filterSkillCatalog()">
-								<option value="">タイミング: すべて</option>
-							</select>
-							<select id="filter-target" class="filter-input" onchange="filterSkillCatalog()">
-								<option value="">対象: すべて</option>
-							</select>
-							<select id="filter-range" class="filter-input" onchange="filterSkillCatalog()">
-								<option value="">射程: すべて</option>
-							</select>
-						</div>
-						<div class="filter-row">
-							<input type="text" id="filter-skill-name" placeholder="特技名" class="filter-input" oninput="filterSkillCatalog()" />
-							<input type="text" id="filter-tag" placeholder="タグ" class="filter-input" oninput="filterSkillCatalog()" />
+						<!-- 基本フィルター -->
+						<div class="basic-filters">
+							<div class="filter-row">
+								<select id="filter-timing" class="filter-input" onchange="filterSkillCatalog()">
+									<option value="">タイミング: すべて</option>
+								</select>
+								<select id="filter-target-type" class="filter-input" onchange="updateTargetFilters(); filterSkillCatalog()">
+									<option value="">対象: すべて</option>
+									<option value="single">単体</option>
+									<option value="multiple">複数体</option>
+									<option value="area">範囲</option>
+									<option value="line">直線</option>
+									<option value="other">本文</option>
+								</select>
+								<select id="filter-range-type" class="filter-input" onchange="updateRangeFilters(); filterSkillCatalog()">
+									<option value="">射程: すべて</option>
+									<option value="close">至近</option>
+									<option value="ranged">遠隔</option>
+									<option value="other">本文</option>
+								</select>
+							</div>
+							<div class="filter-row">
+								<select id="filter-tag" class="filter-input" onchange="filterSkillCatalog()">
+								<option value="">タグ: すべて</option>
+							</select>								
+							<input type="text" id="filter-name" placeholder="特技名" class="filter-input" oninput="filterSkillCatalog()" />
 							<input type="text" id="filter-effect" placeholder="効果内容" class="filter-input" oninput="filterSkillCatalog()" />
+							</div>
 						</div>
-						<div class="filter-row-4">
-							<input type="text" id="filter-enemy-name" placeholder="エネミー名" class="filter-input" oninput="filterSkillCatalog()" />
-							<select id="filter-throne" class="filter-input" onchange="filterSkillCatalog()">
-								<option value="">ランク: すべて</option>
-								<option value="normal">ノーマル</option>
-								<option value="mob">モブ</option>
-								<option value="boss">ボス</option>
-								<option value="raid-boss">レイドボス</option>
-							</select>
-							<input type="number" id="filter-cr-min" placeholder="CR最小" min="1" max="30" class="filter-input" oninput="filterSkillCatalog()" />
-							<input type="number" id="filter-cr-max" placeholder="CR最大" min="1" max="30" class="filter-input" oninput="filterSkillCatalog()" />
+						<div class="detail-filters-toggle">
+							<div class="detail-filters-toggle-title" onclick="toggleDetailFilters()">詳細フィルター ▼</div>
 						</div>
+
+						<!-- 詳細フィルター -->
+					<div class="detail-filters hidden" id="detail-filters">
+						<div class="detail-row">
+							<!-- 対象の詳細 -->
+							<div class="detail-section" id="target-detail-section">
+								<label class="detail-label">対象の詳細:</label>
+								<div class="detail-inputs">
+									<select id="filter-target-count" class="filter-input-small" onchange="filterSkillCatalog()" disabled>
+										<option value="">体数: すべて</option>
+										<option value="2">2体</option>
+										<option value="3">3体</option>
+										<option value="4">4体</option>
+									</select>
+									<select id="filter-area-size" class="filter-input-small" onchange="filterSkillCatalog()" disabled>
+										<option value="">範囲: すべて</option>
+										<option value="範囲">範囲</option>
+										<option value="広範囲">広範囲</option>
+									</select>
+									<select id="filter-target-selection" class="filter-input-small" onchange="filterSkillCatalog()" disabled>
+										<option value="">選択方法: すべて</option>
+										<option value="選択">選択</option>
+										<option value="無差別">無差別</option>
+									</select>
+								</div>
+							</div>
+
+							<!-- 射程の詳細 -->
+							<div class="detail-section" id="range-detail-section">
+								<label class="detail-label">射程の詳細:</label>
+								<div class="detail-inputs">
+									<select id="filter-range-value" class="filter-input-small" onchange="filterSkillCatalog()" disabled>
+										<option value="">すべて</option>
+										<option value="1sq">1Sq</option>
+										<option value="2sq">2Sq</option>
+										<option value="3sq">3Sq</option>
+										<option value="4sq">4Sq</option>
+										<option value="6sq">6Sq</option>
+										<option value="8sq">8Sq</option>
+										<option value="20sq">20Sq</option>
+									</select>
+								</div>
+							</div>
+						</div>
+							<!-- その他の詳細 -->
+							<div class="detail-section">
+								<label class="detail-label">その他:</label>
+								<div class="detail-inputs">
+									<select id="filter-etype" class="filter-input-small" onchange="filterSkillCatalog()">
+										<option value="">Eタイプ: すべて</option>
+										<option value="armorer">アーマラー</option>
+										<option value="fencer">フェンサー</option>
+										<option value="grappler">グラップラー</option>
+										<option value="supporter">サポーター</option>
+										<option value="healer">ヒーラー</option>
+										<option value="spear">スピア</option>
+										<option value="archer">アーチャー</option>
+										<option value="shooter">シューター</option>
+										<option value="bomber">ボマー</option>
+									</select>
+									<select id="filter-throne" class="filter-input-small" onchange="filterSkillCatalog()">
+										<option value="">ランク: すべて</option>
+										<option value="normal">ノーマル</option>
+										<option value="mob">モブ</option>
+										<option value="boss">ボス</option>
+										<option value="raid-boss">レイドボス</option>
+									</select>
+									<input type="text" id="filter-enemy-name" placeholder="エネミー名" class="filter-input-small" oninput="filterSkillCatalog()" />
+									<input type="number" id="filter-cr-min" placeholder="CR最小" min="1" max="30" class="filter-input-small" oninput="filterSkillCatalog()" />
+									<input type="number" id="filter-cr-max" placeholder="CR最大" min="1" max="30" class="filter-input-small" oninput="filterSkillCatalog()" />
+								</div>
+							</div>
+					</div>
 						<div class="import-settings">
 							<div class="import-settings-title">引用時の設定</div>
 							<div class="import-settings-content">
@@ -400,12 +477,11 @@
 								</div>
 							</div>
 						</div>
-					</div>
+				</div>
 
 					<div id="skill-catalog-list" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex: 1; min-height: 0">
 						<!-- 特技一覧がここに表示されます -->
 					</div>
-				</div>
 				<div class="modal-footer">
 					<div class="search-result-count">検索結果: <span id="skill-result-count">0</span>件</div>
 				</div>

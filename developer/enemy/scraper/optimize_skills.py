@@ -115,6 +115,7 @@ def create_enemy_index(enemies: List[Dict]) -> Dict[str, Dict]:
             estimated_type = estimate_enemy_type(enemy)
             index[enemy_id] = {
                 "name": enemy.get("name", ""),
+                "ruby": enemy.get("ruby", ""),
                 "cr": enemy.get("character_rank", 0),
                 "type": estimated_type,
                 "throne": enemy.get("rank", ""),
@@ -150,6 +151,7 @@ def optimize_skill_data(skills: List[Dict], enemy_index: Dict[str, Dict]) -> Lis
         if enemy_info:
             optimized_skill["from"] = {
                 "name": enemy_info.get("name", ""),
+                "ruby": enemy_info.get("ruby", ""),
                 "id": source_id,
                 "cr": enemy_info.get("cr", ""),
                 "type": enemy_info.get("type", ""),
