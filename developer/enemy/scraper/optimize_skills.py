@@ -26,102 +26,302 @@ def save_json(data: any, filepath: Path):
 def estimate_enemy_type(enemy: Dict) -> str:
     """
     エネミーのステータスからtypeを推定
-    
-    判定基準:
-    - armorer/fencer/grappler: 物理防御が高い、回避系、2D
-    - supporter: 魔法攻撃、抵抗が高い、2D
-    - healer: 回復系、抵抗が高い、2D
-    - spear: 白兵攻撃、高火力、3D相当(avoid_dice判定)
-    - archer: 射撃攻撃、回避系、3D相当
-    - shooter: 魔法攻撃、抵抗系、3D相当
-    - bomber: 魔法攻撃、範囲、抵抗系、3D相当
+    基本能力値(STR/DEX/POW/INT)の一致を最優先し、
+    それで絞り込めない場合はAvoid/Resistのダイス数で判定
     """
+    import math
+    
+    # ステータスを取得
     str_val = enemy.get("strength", 0) or 0
     dex_val = enemy.get("dexterity", 0) or 0
     pow_val = enemy.get("power", 0) or 0
     int_val = enemy.get("intelligence", 0) or 0
-    avoid = enemy.get("avoid", 0) or 0
+    rank = enemy.get("character_rank", 1) or 1
+    
+    # Avoid/Resistのダイス数
     avoid_dice = enemy.get("avoid_dice", 0) or 0
-    resist = enemy.get("resist", 0) or 0
     resist_dice = enemy.get("resist_dice", 0) or 0
-    physical_def = enemy.get("physical_defense", 0) or 0
-    magic_def = enemy.get("magic_defense", 0) or 0
+    has_3d = (avoid_dice >= 3 or resist_dice >= 3)
     
-    # 最大能力値
-    max_stat = max(str_val, dex_val, pow_val, int_val)
+    # 必要なステータスが揃っていない場合はNoneを返す
+    if str_val == 0 and dex_val == 0 and pow_val == 0 and int_val == 0:
+        return None
     
-    # 回避と抵抗の比較（ダイス含む平均値）
-    avoid_total = avoid + (avoid_dice * 3.5)
-    resist_total = resist + (resist_dice * 3.5)
+    # フェーズ1: grapplerの特別判定（+3Dを持つ場合は優先）
+    if has_3d:
+        return "grappler"
     
-    # 物理と魔法の防御比較
-    is_physical_oriented = physical_def >= magic_def
-    is_magical_oriented = magic_def > physical_def
+    # フェーズ2: 基本能力値(STR/DEX/POW/INT)の完全一致チェック
+    types = ["armorer", "fencer", "supporter", "healer", "spear", "archer", "shooter", "bomber"]
     
-    # 回避型か抵抗型か
-    is_avoid_type = avoid_total >= resist_total
-    is_resist_type = resist_total > avoid_total
+    for enemy_type in types:
+        # 各タイプの基本値を計算
+        if enemy_type == "armorer":
+            str_base = 7 + rank + (rank // 10)
+            dex_base = 3 + rank + (rank // 10)
+            pow_base = 4 + rank + (rank // 10)
+            int_base = 2 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (4 + rank + (rank // 5)) // 3 + 6  # +2D = +6
+            expected_resist = (2 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        elif enemy_type == "fencer":
+            str_base = 7 + rank + (rank // 10)
+            dex_base = 4 + rank + (rank // 10)
+            pow_base = 2 + rank + (rank // 10)
+            int_base = 3 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (4 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+            expected_resist = (2 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        elif enemy_type == "grappler":
+            str_base = 6 + rank + (rank // 10)
+            dex_base = 4 + rank + (rank // 10)
+            pow_base = 2 + rank + (rank // 10)
+            int_base = 3 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (2 + rank + (rank // 10)) // 3 + 9  # +3D = +9
+            expected_resist = (4 + rank + (rank // 10)) // 3 + 9  # +3D = +9
+        elif enemy_type == "supporter":
+            str_base = 4 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 7 + rank + (rank // 10)
+            int_base = 3 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (2 + rank + (rank // 5)) // 3 + 6  # +2D = +6
+            expected_resist = (7 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        elif enemy_type == "healer":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 7 + rank + (rank // 10)
+            int_base = 4 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (2 + rank + (rank // 5)) // 3 + 6  # +2D = +6
+            expected_resist = (7 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        elif enemy_type == "spear":
+            str_base = 4 + rank + (rank // 10)
+            dex_base = 7 + rank + (rank // 10)
+            pow_base = 2 + rank + (rank // 10)
+            int_base = 3 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (7 + rank + (rank // 5)) // 3 + 6  # +2D = +6
+            expected_resist = (2 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        elif enemy_type == "archer":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 4 + rank + (rank // 10)
+            pow_base = 2 + rank + (rank // 10)
+            int_base = 7 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (4 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+            expected_resist = (2 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        elif enemy_type == "shooter":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 5 + rank + (rank // 10)
+            int_base = 7 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (2 + rank + (rank // 5)) // 3 + 6  # +2D = +6
+            expected_resist = (5 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        elif enemy_type == "bomber":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 5 + rank + (rank // 10)
+            int_base = 7 + rank + (rank // 10)
+            expected_str = str_base // 3
+            expected_dex = dex_base // 3
+            expected_pow = pow_base // 3
+            expected_int = int_base // 3
+            expected_avoid = (2 + rank + (rank // 5)) // 3 + 6  # +2D = +6
+            expected_resist = (5 + rank + (rank // 10)) // 3 + 6  # +2D = +6
+        
+        # 基本能力値が完全一致するかチェック
+        if (str_val == expected_str and dex_val == expected_dex and 
+            pow_val == expected_pow and int_val == expected_int):
+            return enemy_type
     
-    # 3D相当の判定（avoid_dice >= 2 または resist_dice >= 2）
-    is_3d_type = avoid_dice >= 2 or resist_dice >= 2
+    # フェーズ3: 完全一致なし→距離で評価
+    best_match = None
+    min_distance = float('inf')
     
-    # 高火力型の判定（能力値が高い）
-    is_high_power = max_stat >= 5
+    for enemy_type in types:
+        # 各タイプの基本値を再計算
+        if enemy_type == "armorer":
+            str_base = 7 + rank + (rank // 10)
+            dex_base = 3 + rank + (rank // 10)
+            pow_base = 4 + rank + (rank // 10)
+            int_base = 2 + rank + (rank // 10)
+        elif enemy_type == "fencer":
+            str_base = 7 + rank + (rank // 10)
+            dex_base = 4 + rank + (rank // 10)
+            pow_base = 2 + rank + (rank // 10)
+            int_base = 3 + rank + (rank // 10)
+        elif enemy_type == "supporter":
+            str_base = 4 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 7 + rank + (rank // 10)
+            int_base = 3 + rank + (rank // 10)
+        elif enemy_type == "healer":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 7 + rank + (rank // 10)
+            int_base = 4 + rank + (rank // 10)
+        elif enemy_type == "spear":
+            str_base = 4 + rank + (rank // 10)
+            dex_base = 7 + rank + (rank // 10)
+            pow_base = 2 + rank + (rank // 10)
+            int_base = 3 + rank + (rank // 10)
+        elif enemy_type == "archer":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 4 + rank + (rank // 10)
+            pow_base = 2 + rank + (rank // 10)
+            int_base = 7 + rank + (rank // 10)
+        elif enemy_type == "shooter":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 5 + rank + (rank // 10)
+            int_base = 7 + rank + (rank // 10)
+        elif enemy_type == "bomber":
+            str_base = 3 + rank + (rank // 10)
+            dex_base = 2 + rank + (rank // 10)
+            pow_base = 5 + rank + (rank // 10)
+            int_base = 7 + rank + (rank // 10)
+        
+        expected_str = str_base // 3
+        expected_dex = dex_base // 3
+        expected_pow = pow_base // 3
+        expected_int = int_base // 3
+        
+        # 距離計算
+        distance = math.sqrt(
+            (str_val - expected_str) ** 2 +
+            (dex_val - expected_dex) ** 2 +
+            (pow_val - expected_pow) ** 2 +
+            (int_val - expected_int) ** 2
+        )
+        
+        if distance < min_distance:
+            min_distance = distance
+            best_match = enemy_type
     
-    # タイプ推定ロジック
-    if is_3d_type:
-        # 3D系（spear, archer, shooter, bomber）
-        if is_avoid_type:
-            if is_physical_oriented:
-                # 物理防御寄り → spear or archer
-                if str_val >= dex_val:
-                    return "spear"  # 筋力が高い → 槍使い
-                else:
-                    return "archer"  # 器用が高い → 弓使い
-            else:
-                return "archer"  # 魔法防御寄りでも回避型なら弓
+    # フェーズ4: 同距離の場合のタイブレーク
+    candidates = []
+    for enemy_type in types:
+        # 期待値再計算（簡略化のため再度計算）
+        if enemy_type == "armorer":
+            str_base, dex_base, pow_base, int_base = 7 + rank + (rank // 10), 3 + rank + (rank // 10), 4 + rank + (rank // 10), 2 + rank + (rank // 10)
+        elif enemy_type == "fencer":
+            str_base, dex_base, pow_base, int_base = 7 + rank + (rank // 10), 4 + rank + (rank // 10), 2 + rank + (rank // 10), 3 + rank + (rank // 10)
+        elif enemy_type == "supporter":
+            str_base, dex_base, pow_base, int_base = 4 + rank + (rank // 10), 2 + rank + (rank // 10), 7 + rank + (rank // 10), 3 + rank + (rank // 10)
+        elif enemy_type == "healer":
+            str_base, dex_base, pow_base, int_base = 3 + rank + (rank // 10), 2 + rank + (rank // 10), 7 + rank + (rank // 10), 4 + rank + (rank // 10)
+        elif enemy_type == "spear":
+            str_base, dex_base, pow_base, int_base = 4 + rank + (rank // 10), 7 + rank + (rank // 10), 2 + rank + (rank // 10), 3 + rank + (rank // 10)
+        elif enemy_type == "archer":
+            str_base, dex_base, pow_base, int_base = 3 + rank + (rank // 10), 4 + rank + (rank // 10), 2 + rank + (rank // 10), 7 + rank + (rank // 10)
+        elif enemy_type == "shooter":
+            str_base, dex_base, pow_base, int_base = 3 + rank + (rank // 10), 2 + rank + (rank // 10), 5 + rank + (rank // 10), 7 + rank + (rank // 10)
+        elif enemy_type == "bomber":
+            str_base, dex_base, pow_base, int_base = 3 + rank + (rank // 10), 2 + rank + (rank // 10), 5 + rank + (rank // 10), 7 + rank + (rank // 10)
         else:
-            # 抵抗型
-            if is_high_power:
-                return "bomber"  # 高能力値 → 範囲攻撃型
-            else:
-                return "shooter"  # 通常 → 単体魔法型
-    else:
-        # 2D系（armorer, fencer, grappler, supporter, healer）
-        if is_resist_type:
-            # 抵抗型 → supporter or healer
-            if int_val >= pow_val:
-                return "supporter"  # 知力が高い → サポート型
-            else:
-                return "healer"  # 魔力が高い → ヒーラー型
-        else:
-            # 回避型 → armorer, fencer, grappler
-            if physical_def >= 8:
-                return "armorer"  # 物理防御が非常に高い → 重装甲
-            elif dex_val >= max_stat:
-                return "fencer"  # 器用が最高 → フェンサー
-            else:
-                return "grappler"  # その他 → グラップラー
+            continue
+        
+        expected_str = str_base // 3
+        expected_dex = dex_base // 3
+        expected_pow = pow_base // 3
+        expected_int = int_base // 3
+        
+        distance = math.sqrt(
+            (str_val - expected_str) ** 2 +
+            (dex_val - expected_dex) ** 2 +
+            (pow_val - expected_pow) ** 2 +
+            (int_val - expected_int) ** 2
+        )
+        
+        if abs(distance - min_distance) < 0.01:
+            candidates.append(enemy_type)
     
-    # デフォルト
-    return "fencer"
+    # タイブレークルール
+    if len(candidates) > 1:
+        # shooter vs bomber: INTが厳密に高い方をbomber
+        if "shooter" in candidates and "bomber" in candidates:
+            if int_val > pow_val:
+                return "bomber"
+            else:
+                return "shooter"
+        # supporter vs healer: POWが厳密に高い方をsupporter
+        elif "supporter" in candidates and "healer" in candidates:
+            if pow_val > int_val:
+                return "supporter"
+            else:
+                return "healer"
+        # armorer vs fencer: STRとDEXの差が2以上ならarmorer
+        elif "armorer" in candidates and "fencer" in candidates:
+            if (str_val - dex_val) >= 2:
+                return "armorer"
+            else:
+                return "fencer"
+    
+    return best_match
 
 def create_enemy_index(enemies: List[Dict]) -> Dict[str, Dict]:
-    """エネミーIDでインデックスを作成"""
+    """エネミーIDでインデックスを作成（type推定を含む）"""
     index = {}
+    estimated_count = 0
+    missing_stats_count = 0
+    
     for enemy in enemies:
         enemy_id = str(enemy.get("id", ""))
         if enemy_id:
             estimated_type = estimate_enemy_type(enemy)
+            
+            if estimated_type:
+                estimated_count += 1
+            else:
+                missing_stats_count += 1
+            
             index[enemy_id] = {
                 "name": enemy.get("name", ""),
                 "ruby": enemy.get("ruby", ""),
                 "cr": enemy.get("character_rank", 0),
-                "type": estimated_type,
+                "type": estimated_type,  # Noneの場合もあり
                 "throne": enemy.get("rank", ""),
                 "tags": enemy.get("tags", []) if isinstance(enemy.get("tags"), list) else [],
-                "url": f"https://lhrpg.com/lhz/i?id={enemy_id}"
+                "url": f"https://lhrpg.com/lhz/i?id={enemy_id}",
+                # デバッグ用に元のステータスも保存
+                "str": enemy.get("strength", enemy.get("str")),
+                "dex": enemy.get("dexterity", enemy.get("dex")),
+                "pow": enemy.get("power", enemy.get("pow")),
+                "int": enemy.get("intelligence", enemy.get("int")),
+                "avoid": enemy.get("avoid"),
+                "resist": enemy.get("resist")
             }
+    
+    print(f"  Type推定成功: {estimated_count}件")
+    print(f"  ステータス不足: {missing_stats_count}件")
+    
     return index
 
 def optimize_skill_data(skills: List[Dict], enemy_index: Dict[str, Dict]) -> List[Dict]:
