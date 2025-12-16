@@ -19,9 +19,92 @@ def load_json(filepath: Path) -> any:
 
 def save_json(data: any, filepath: Path):
     """JSONファイルを保存"""
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
+    with open(filepath, "w", encoding="utf-8-sig") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"✓ 保存完了: {filepath}")
+
+def estimate_enemy_type(enemy: Dict) -> str:
+    """
+    エネミーのステータスからtypeを推定
+    
+    判定基準:
+    - armorer/fencer/grappler: 物理防御が高い、回避系、2D
+    - supporter: 魔法攻撃、抵抗が高い、2D
+    - healer: 回復系、抵抗が高い、2D
+    - spear: 白兵攻撃、高火力、3D相当(avoid_dice判定)
+    - archer: 射撃攻撃、回避系、3D相当
+    - shooter: 魔法攻撃、抵抗系、3D相当
+    - bomber: 魔法攻撃、範囲、抵抗系、3D相当
+    """
+    str_val = enemy.get("strength", 0) or 0
+    dex_val = enemy.get("dexterity", 0) or 0
+    pow_val = enemy.get("power", 0) or 0
+    int_val = enemy.get("intelligence", 0) or 0
+    avoid = enemy.get("avoid", 0) or 0
+    avoid_dice = enemy.get("avoid_dice", 0) or 0
+    resist = enemy.get("resist", 0) or 0
+    resist_dice = enemy.get("resist_dice", 0) or 0
+    physical_def = enemy.get("physical_defense", 0) or 0
+    magic_def = enemy.get("magic_defense", 0) or 0
+    
+    # 最大能力値
+    max_stat = max(str_val, dex_val, pow_val, int_val)
+    
+    # 回避と抵抗の比較（ダイス含む平均値）
+    avoid_total = avoid + (avoid_dice * 3.5)
+    resist_total = resist + (resist_dice * 3.5)
+    
+    # 物理と魔法の防御比較
+    is_physical_oriented = physical_def >= magic_def
+    is_magical_oriented = magic_def > physical_def
+    
+    # 回避型か抵抗型か
+    is_avoid_type = avoid_total >= resist_total
+    is_resist_type = resist_total > avoid_total
+    
+    # 3D相当の判定（avoid_dice >= 2 または resist_dice >= 2）
+    is_3d_type = avoid_dice >= 2 or resist_dice >= 2
+    
+    # 高火力型の判定（能力値が高い）
+    is_high_power = max_stat >= 5
+    
+    # タイプ推定ロジック
+    if is_3d_type:
+        # 3D系（spear, archer, shooter, bomber）
+        if is_avoid_type:
+            if is_physical_oriented:
+                # 物理防御寄り → spear or archer
+                if str_val >= dex_val:
+                    return "spear"  # 筋力が高い → 槍使い
+                else:
+                    return "archer"  # 器用が高い → 弓使い
+            else:
+                return "archer"  # 魔法防御寄りでも回避型なら弓
+        else:
+            # 抵抗型
+            if is_high_power:
+                return "bomber"  # 高能力値 → 範囲攻撃型
+            else:
+                return "shooter"  # 通常 → 単体魔法型
+    else:
+        # 2D系（armorer, fencer, grappler, supporter, healer）
+        if is_resist_type:
+            # 抵抗型 → supporter or healer
+            if int_val >= pow_val:
+                return "supporter"  # 知力が高い → サポート型
+            else:
+                return "healer"  # 魔力が高い → ヒーラー型
+        else:
+            # 回避型 → armorer, fencer, grappler
+            if physical_def >= 8:
+                return "armorer"  # 物理防御が非常に高い → 重装甲
+            elif dex_val >= max_stat:
+                return "fencer"  # 器用が最高 → フェンサー
+            else:
+                return "grappler"  # その他 → グラップラー
+    
+    # デフォルト
+    return "fencer"
 
 def create_enemy_index(enemies: List[Dict]) -> Dict[str, Dict]:
     """エネミーIDでインデックスを作成"""
@@ -29,10 +112,11 @@ def create_enemy_index(enemies: List[Dict]) -> Dict[str, Dict]:
     for enemy in enemies:
         enemy_id = str(enemy.get("id", ""))
         if enemy_id:
+            estimated_type = estimate_enemy_type(enemy)
             index[enemy_id] = {
                 "name": enemy.get("name", ""),
                 "cr": enemy.get("character_rank", 0),
-                "type": enemy.get("type", ""),
+                "type": estimated_type,
                 "throne": enemy.get("rank", ""),
                 "tags": enemy.get("tags", []) if isinstance(enemy.get("tags"), list) else [],
                 "url": f"https://lhrpg.com/lhz/i?id={enemy_id}"
@@ -68,6 +152,7 @@ def optimize_skill_data(skills: List[Dict], enemy_index: Dict[str, Dict]) -> Lis
                 "name": enemy_info.get("name", ""),
                 "id": source_id,
                 "cr": enemy_info.get("cr", ""),
+                "type": enemy_info.get("type", ""),
                 "throne": enemy_info.get("throne", ""),
                 "tags": enemy_info.get("tags", []),
                 "url": enemy_info.get("url", "")

@@ -72,17 +72,27 @@ function updateRollList() {
 	if (!rollList) return;
 
 	const type = document.getElementById("enemy-type").value;
+	const throne = document.getElementById("enemy-throne").value;
 	const [str, dex, pow, int] = [parseInt(document.getElementById("enemy-str").value) || 0, parseInt(document.getElementById("enemy-dex").value) || 0, parseInt(document.getElementById("enemy-pow").value) || 0, parseInt(document.getElementById("enemy-int").value) || 0];
 
 	const hitDice = ["spear", "archer", "shooter", "bomber"].includes(type) ? 3 : 2;
 	const hitMod = Math.max(str, dex, pow, int) + (["archer", "shooter", "bomber"].includes(type) ? 0 : ["spear"].includes(type) ? 1 : 2);
 
-	rollList.innerHTML = `
+	if (throne != "mob") {
+		rollList.innerHTML = `
 		<option value="対決 (${hitMod}+${hitDice}D / 回避)"></option>
 		<option value="対決 (${hitMod}+${hitDice}D / 抵抗)"></option>
 		<option value="判定なし"></option>
 		<option value="自動成功"></option>
 	`;
+	} else {
+		rollList.innerHTML = `
+		<option value="対決 (${hitMod + hitDice * 3}[固定] / 回避)"></option>
+		<option value="対決 (${hitMod + hitDice * 3}[固定] / 抵抗)"></option>
+		<option value="判定なし"></option>
+		<option value="自動成功"></option>
+	`;
+	}
 }
 
 // ユーティリティ関数
@@ -210,12 +220,14 @@ let masterSkills = [];
 // ページ読み込み時の初期化
 window.addEventListener("DOMContentLoaded", () => {
 	loadTheme();
-	initializeSkills();
 	updateIdentificationDifficulty();
 	loadMasterSkills();
 
 	document.getElementById("enemy-rank").addEventListener("change", updateIdentificationDifficulty);
 	document.getElementById("enemy-popularity").addEventListener("change", updateIdentificationDifficulty);
+
+	calculateStatus();
+	initializeSkills();
 });
 
 // 識別難易度を自動計算
@@ -298,8 +310,9 @@ function initializeSkills(initialCount = 1) {
 		addSkill();
 	}
 	// 初期化時に能力値が設定されていれば基本攻撃手段も生成
-	const rank = parseInt(document.getElementById("enemy-rank").value) || 1;
 	const type = document.getElementById("enemy-type").value;
+	const rank = parseInt(document.getElementById("enemy-rank").value) || 1;
+	const throne = document.getElementById("enemy-throne").value;
 	const str = parseInt(document.getElementById("enemy-str").value) || 0;
 	const dex = parseInt(document.getElementById("enemy-dex").value) || 0;
 	const pow = parseInt(document.getElementById("enemy-pow").value) || 0;
@@ -307,7 +320,7 @@ function initializeSkills(initialCount = 1) {
 	const hate = parseInt(document.getElementById("enemy-hate").value) || 1;
 
 	if (type && str > 0) {
-		generateBasicSkill(type, rank, str, dex, pow, int, hate);
+		generateBasicSkill(type, rank, throne, str, dex, pow, int, hate);
 	}
 }
 
@@ -721,7 +734,7 @@ function calculateStatus() {
 	}
 
 	// 基本攻撃手段を生成（最初の特技スロットに設定）
-	generateBasicSkill(type, rank, str, dex, pow, int, hate);
+	generateBasicSkill(type, rank, throne, str, dex, pow, int, hate);
 
 	// roll-listを更新
 	updateRollList();
@@ -730,72 +743,87 @@ function calculateStatus() {
 }
 
 // 基本攻撃手段を生成
-function generateBasicSkill(type, rank, str, dex, pow, int, hate) {
-	let hit, damage, tag, roll, target, range, effect, command, diceCount;
+function generateBasicSkill(type, rank, throne, str, dex, pow, int, hate) {
+	let hit, damage, tag, roll, target, range, effect, command, diceCount, rollcommand;
+	const isMob = throne === "mob";
 
 	if (type === "armorer" || type === "fencer" || type === "grappler") {
 		hit = Math.max(str, dex, pow, int) + 2;
+		diceCount = 2;
 		damage = 9 + Math.floor(rank * 3.5);
 		tag = "白兵攻撃";
-		roll = `対決 (${hit}+2D / 回避)`;
+		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
 		target = "単体";
 		range = type === "grappler" ? "至近" : "至近";
 		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
+		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
+		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
 	} else if (type === "supporter") {
 		hit = Math.max(str, dex, pow, int) + 2;
+		diceCount = 2;
 		damage = 1 + Math.floor(rank * 3.5);
 		tag = "魔法攻撃";
-		roll = `対決 (${hit}+2D / 抵抗)`;
+		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 抵抗)` : `対決 (${hit}+${diceCount}D / 抵抗)`;
 		target = "単体";
 		range = "4Sq";
 		effect = `対象に[${damage}+2D]の魔法ダメージを与える。`;
-		command = `2LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
+		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
+		command = `${rollcommand} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
 	} else if (type === "healer") {
 		hit = Math.max(str, dex, pow, int) + 2;
+		diceCount = 2;
 		damage = 9 + Math.floor(rank * 3.5);
 		tag = "白兵攻撃";
-		roll = `対決 (${hit}+2D / 回避)`;
+		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
 		target = "単体";
 		range = "2Sq";
 		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		command = `2LH+${hit} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
+		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
+		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
 	} else if (type === "spear") {
 		hit = Math.max(str, dex, pow, int) + 1;
+		diceCount = 3;
 		damage = 19 + Math.floor(rank * 6);
 		tag = "白兵攻撃";
-		roll = `対決 (${hit}+3D / 回避)`;
+		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
 		target = "単体";
 		range = "至近";
 		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		command = `3LH+${hit} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
+		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
+		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
 	} else if (type === "archer") {
 		hit = Math.max(str, dex, pow, int);
+		diceCount = 3;
 		damage = 19 + Math.floor(rank * 6);
 		tag = "射撃攻撃";
-		roll = `対決 (${hit}+3D / 回避)`;
+		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
 		target = "単体";
 		range = "3Sq";
 		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		command = `3LH+${hit} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
+		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
+		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
 	} else if (type === "shooter") {
 		hit = Math.max(str, dex, pow, int);
+		diceCount = 3;
 		damage = 11 + Math.floor(rank * 6);
 		tag = "魔法攻撃";
-		roll = `対決 (${hit}+3D / 抵抗)`;
+		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 抵抗)` : `対決 (${hit}+${diceCount}D / 抵抗)`;
 		target = "単体";
 		range = "4Sq";
 		effect = `対象に[${damage}+2D]の魔法ダメージを与える。`;
-		command = `3LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
+		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
+		command = `${rollcommand} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
 	} else if (type === "bomber") {
 		hit = Math.max(str, dex, pow, int);
+		diceCount = 3;
 		damage = 11 + Math.floor(rank * 6);
 		tag = "魔法攻撃";
-		roll = `対決 (${hit}+3D / 抵抗)`;
+		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 抵抗)` : `対決 (${hit}+${diceCount}D / 抵抗)`;
 		target = "範囲(選択)";
 		range = "4Sq";
 		effect = `対象に[${damage}+2D]の魔法ダメージを与える。`;
-		command = `3LH+${hit} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
+		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
+		command = `${rollcommand} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
 	}
 
 	// 最初の特技スロットに基本攻撃手段を設定
@@ -1100,7 +1128,7 @@ function exportCcfolia() {
 			command += `\n${result[2]}LH+${result[1]} 回避値`;
 		}
 	} else {
-		command += `\n${parseInt(data.avoid) || 0}[固定] 回避値`;
+		command += `\nc${parseInt(data.avoid) || 0} [固定] 回避値`;
 	}
 
 	const resistStr = String(data.resist || "");
@@ -1110,13 +1138,13 @@ function exportCcfolia() {
 			command += `\n${result[2]}LH+${result[1]} 抵抗値`;
 		}
 	} else {
-		command += `\n${parseInt(data.resist) || 0}[固定] 抵抗値`;
+		command += `\nc${parseInt(data.resist) || 0} [固定] 抵抗値`;
 	}
 
 	if (data.throne !== "mob") {
 		command += `\n2LH+${data.str || 0} 運動値`;
 	} else {
-		command += `\n${(parseInt(data.str) || 0) + 6}[固定] 運動値`;
+		command += `\nc${(parseInt(data.str) || 0) + 6} [固定] 運動値`;
 	}
 
 	command += `\n\n▼特技`;
@@ -1639,11 +1667,94 @@ function importSkillFromCatalog(skill) {
 	addSkill();
 	const newSkillId = skillCounter - 1;
 
+	// トグル設定を取得
+	const autoReplaceRoll = document.getElementById("auto-replace-roll")?.checked ?? true;
+	const autoReplaceHate = document.getElementById("auto-replace-hate")?.checked ?? true;
+	const optimizeDamage = document.getElementById("optimize-damage")?.checked ?? false;
+	console.log(`特技「${skill.name}」をインポートします。命中ロール自動置き換え: ${autoReplaceRoll ? "ON" : "OFF"}, ヘイト倍率自動置き換え: ${autoReplaceHate ? "ON" : "OFF"}, ダメージ最適化: ${optimizeDamage ? "ON" : "OFF"}`);
+
+	// 現在のエネミーデータを取得
+	const enemyType = document.getElementById("enemy-type").value;
+	const enemyThrone = document.getElementById("enemy-throne").value;
+	const enemyRank = parseInt(document.getElementById("enemy-rank").value) || 1;
+	const enemyStr = parseInt(document.getElementById("enemy-str").value) || 0;
+	const enemyDex = parseInt(document.getElementById("enemy-dex").value) || 0;
+	const enemyPow = parseInt(document.getElementById("enemy-pow").value) || 0;
+	const enemyInt = parseInt(document.getElementById("enemy-int").value) || 0;
+	const enemyHate = parseFloat(document.getElementById("enemy-hate").value) || 1;
+
+	// 命中値を計算
+	const hitDice = ["spear", "archer", "shooter", "bomber"].includes(enemyType) ? 3 : 2;
+	const hitMod = Math.max(enemyStr, enemyDex, enemyPow, enemyInt) + (["archer", "shooter", "bomber"].includes(enemyType) ? 0 : ["spear"].includes(enemyType) ? 1 : 2);
+
+	// 全角文字を半角に正規化（前処理）
+	const normalizeText = (text) => {
+		if (!text) return text;
+		return text.replace(/［/g, "[").replace(/］/g, "]").replace(/（/g, "(").replace(/）/g, ")").replace(/／/g, " / ").replace(/＋/g, "+").replace(/－/g, "-");
+	};
+
+	// ダメージ最適化関数
+	const optimizeDamageValue = (damageBase, fromRank) => {
+		if (!optimizeDamage) return damageBase;
+
+		// 特技元のtype（推定されたtype）を使用
+		const sourceType = skill.from?.type || enemyType;
+
+		// 基本攻撃手段のダメージ計算式に基づいて適切なダメージ値を計算
+		let calculatedDamage;
+		let fromBaseCalculatedDamage;
+		if (sourceType === "armorer" || sourceType === "fencer" || sourceType === "grappler" || sourceType === "healer") {
+			// 2D物理系: 9 + rank * 3.5
+			calculatedDamage = 9 + Math.floor(enemyRank * 3.5);
+			fromBaseCalculatedDamage = 9 + Math.floor(fromRank * 3.5);
+		} else if (sourceType === "supporter") {
+			// 2D魔法系: 1 + rank * 3.5
+			calculatedDamage = 1 + Math.floor(enemyRank * 3.5);
+			fromBaseCalculatedDamage = 1 + Math.floor(fromRank * 3.5);
+		} else if (sourceType === "spear" || sourceType === "archer") {
+			// 3D物理系: 19 + rank * 6
+			calculatedDamage = 19 + Math.floor(enemyRank * 6);
+			fromBaseCalculatedDamage = 19 + Math.floor(fromRank * 6);
+		} else if (sourceType === "shooter" || sourceType === "bomber") {
+			// 3D魔法系: 11 + rank * 6
+			calculatedDamage = 11 + Math.floor(enemyRank * 6);
+			fromBaseCalculatedDamage = 11 + Math.floor(fromRank * 6);
+		} else {
+			// デフォルト（変更なし）
+			return damageBase;
+		}
+		const baseDamageRatio = damageBase / fromBaseCalculatedDamage;
+		const optimizedDamage = Math.min(19 + Math.floor(enemyRank * 6), Math.floor(calculatedDamage * baseDamageRatio));
+
+		console.log(`ダメージ最適化: ${damageBase} -> ${optimizedDamage} (type: ${sourceType}, rank: ${enemyRank})`);
+		return optimizedDamage;
+	};
+
+	// rollとeffectを正規化
+	let normalizedRoll = normalizeText(skill.roll || "");
+	let normalizedEffect = normalizeText(skill.effect || "");
+
 	// 特技データを設定
 	if (document.getElementById(`skill-name-${newSkillId}`)) {
 		document.getElementById(`skill-name-${newSkillId}`).value = skill.name;
 		document.getElementById(`skill-timing-${newSkillId}`).value = skill.timing || "";
-		document.getElementById(`skill-roll-${newSkillId}`).value = skill.roll || "";
+
+		if (autoReplaceRoll) {
+			if (normalizedRoll.match(/対決\s*\(.*?\+.*?D.*?\//)) {
+				normalizedRoll = normalizedRoll.replace(/対決\s*\((\d+)\+(\d+)D \/ (.+?)\)/g, (match, mod, dice, target) => {
+					if (enemyThrone !== "mob") return `対決 (${hitMod}+${hitDice}D / ${target})`;
+					else return `対決 (${hitMod + hitDice * 3}[固定] / ${target})`;
+				});
+			}
+			if (normalizedRoll.match(/対決\s*\(.*?\[固定\].*?\//)) {
+				normalizedRoll = normalizedRoll.replace(/対決\s*\((\d+)\[固定\] \/ (.+?)\)/g, (match, mod, target) => {
+					if (enemyThrone !== "mob") return `対決 (${hitMod}+${hitDice}D / ${target})`;
+					else return `対決 (${hitMod + hitDice * 3}[固定] / ${target})`;
+				});
+			}
+		}
+		document.getElementById(`skill-roll-${newSkillId}`).value = normalizedRoll || "";
+
 		document.getElementById(`skill-target-${newSkillId}`).value = skill.target || "";
 		document.getElementById(`skill-range-${newSkillId}`).value = skill.range || "";
 		document.getElementById(`skill-cost-${newSkillId}`).value = skill.cost || "";
@@ -1657,24 +1768,44 @@ function importSkillFromCatalog(skill) {
 			}
 		}
 
-		document.getElementById(`skill-effect-${newSkillId}`).value = skill.effect || "";
+		// ダメージ最適化処理
+		if (optimizeDamage && normalizedEffect) {
+			normalizedEffect = normalizedEffect.replace(/\[(\d+?)\+(\d+?)D\]の(.+?)ダメージ/g, (match, base, dice, type) => {
+				const optimizedBase = optimizeDamageValue(parseInt(base), skill.from?.cr || enemyRank);
+				return `[${optimizedBase}+${dice}D]の${type}ダメージ`;
+			});
+		}
+
+		document.getElementById(`skill-effect-${newSkillId}`).value = normalizedEffect || "";
+
+		// コマンド生成
 		const commandTexts = [];
-		if (skill.roll && skill.roll.match(/.*?対決.*?/)) {
-			const confrontation = skill.roll.match(/.*?対決.*?\（(\d+?)\＋(.+?)D\／(.+?)\）/);
+		if (normalizedRoll.match(/.*?対決.*?/)) {
+			const confrontation = normalizedRoll.match(/.*?対決.*?\((\d+?)\+(.+?)D ?\/ ?(.+?)\)/);
 			if (confrontation != null) {
 				commandTexts.push(`${confrontation[2]}LH+${confrontation[1]} ${skill.name} 命中/${confrontation[3]}`);
 			} else {
-				const confrontation2 = skill.roll.match(/.*?対決.*?\（(.+?)\／(.+?)\）/);
+				const confrontation2 = normalizedRoll.match(/.*?対決.*?\((.+?)\/(.+?)\)/);
 				if (confrontation2 != null) {
-					commandTexts.push(`c${confrontation2[1].replace("［", "[").replace("］", "]")} ${skill.name} 命中/${confrontation2[2]}`);
+					commandTexts.push(`c${confrontation2[1]} ${skill.name} 命中/${confrontation2[2]}`);
 				}
 			}
-			const damageMatch = skill.effect.match(/\［(\d+?)\＋(\d+?)D\］の(.+?)ダメージを与/);
+			const damageMatch = normalizedEffect.match(/\[(\d+?)\+(\d+?)D\]の(.+?)ダメージを与/);
 			if (damageMatch != null) {
-				commandTexts.push(`${damageMatch[2]}D+${damageMatch[1]} ${skill.name} ダメージ/${damageMatch[3]} ヘイト倍率:×1`);
+				// ヘイト倍率の自動置き換え
+				const hateValue = autoReplaceHate ? enemyHate : 1;
+				commandTexts.push(`${damageMatch[2]}D+${damageMatch[1]} ${skill.name} ダメージ/${damageMatch[3]} ヘイト倍率:×${hateValue}`);
 			}
 		}
-		document.getElementById(`skill-command-${newSkillId}`).value = commandTexts.join("\n") || "";
+
+		let commandValue = commandTexts.join("\n") || "";
+
+		// ヘイト倍率の自動置き換え（既存のコマンドテキストに対しても適用）
+		if (autoReplaceHate && commandValue.includes("ヘイト倍率:×")) {
+			commandValue = commandValue.replace(/ヘイト倍率:×[\d.]+/g, `ヘイト倍率:×${enemyHate}`);
+		}
+
+		document.getElementById(`skill-command-${newSkillId}`).value = commandValue;
 
 		updateSkillDisplay(newSkillId);
 	}
