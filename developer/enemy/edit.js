@@ -1,3 +1,33 @@
+// ========================================
+// 定数定義
+// ========================================
+
+const CONSTANTS = {
+	// ドロップ関連
+	DROP_MULTIPLIER: {
+		MOB: 0.5,
+		BOSS: 1.5,
+		RAID: 2.0,
+	},
+	BASE_DROP_VALUE: 10, // ランク × 10G
+
+	// ダイス数
+	NORMAL_DICE_MAX: 6,
+	RAID_DICE_MAX: 10,
+
+	// テーマ
+	THEME_KEY: "enemy-editor-theme",
+	THEME_LIGHT: "light-mode",
+
+	// データパス
+	DROPS_DB_PATH: "json/drops_database.json",
+	SKILLS_DB_PATH: "json/enemy_skills_optimized.json",
+};
+
+// ========================================
+// Ccfoliaクラス
+// ========================================
+
 class Ccforia {
 	constructor() {
 		this.clipboardData = new Object();
@@ -47,9 +77,18 @@ class Ccforia {
 	}
 }
 
+// ========================================
+// グローバル変数
+// ========================================
+
 let skillCounter = 0;
 let dropsDatabase = null;
 let draggedElement = null;
+let masterSkills = [];
+
+// ========================================
+// テーマ管理
+// ========================================
 
 // テーマ切り替え
 function toggleTheme() {
@@ -215,8 +254,9 @@ async function showAlert(content, color = "green") {
 	card.remove();
 }
 
-// マスターデータ（後で外部ファイルから読み込む予定）
-let masterSkills = [];
+// ========================================
+// 初期化
+// ========================================
 
 // ページ読み込み時の初期化
 window.addEventListener("DOMContentLoaded", () => {
@@ -1392,27 +1432,27 @@ async function resetForm() {
 		location.reload();
 	}
 }
-
+// ========================================
+// ドロップ生成ヘルパー関数
+// ========================================
 // ランクに基づく推奨ドロップ期待値を計算
 function getRecommendedDropValue() {
 	const rank = parseInt(document.getElementById("enemy-rank").value) || 1;
 	const throne = document.getElementById("enemy-throne").value;
 
-	// 基本値: ランク × 10G
-	let baseValue = rank * 10;
+	let baseValue = rank * CONSTANTS.BASE_DROP_VALUE;
 
 	// ランク種別による補正
 	if (throne === "mob") {
-		baseValue = Math.round(baseValue * 0.5); // モブは半額
+		baseValue = Math.round(baseValue * CONSTANTS.DROP_MULTIPLIER.MOB);
 	} else if (throne.includes("boss") && !throne.includes("raid")) {
-		baseValue = Math.round(baseValue * 1.5); // ボスは1.5倍
+		baseValue = Math.round(baseValue * CONSTANTS.DROP_MULTIPLIER.BOSS);
 	} else if (throne.includes("raid")) {
-		baseValue = Math.round(baseValue * 2.0); // レイドボスは2倍
+		baseValue = Math.round(baseValue * CONSTANTS.DROP_MULTIPLIER.RAID);
 	}
 
 	return baseValue;
 }
-
 // ドロップ品期待値計算
 function calculateDropExpectedValue() {
 	// 推奨値を更新
@@ -1459,6 +1499,26 @@ function calculateDropExpectedValue() {
 	document.getElementById("drop-expected-value").textContent = expectedValue;
 }
 
+// ランダムアイテム選択（使用済みアイテムを除外）
+function selectRandomItem(diceDrops, usedItems, rankDrops, dice) {
+	if (diceDrops.length === 0) {
+		const fallbackDrop = findFallbackDrop(rankDrops, dice);
+		return fallbackDrop ? fallbackDrop.item : null;
+	}
+
+	const availableDrops = diceDrops.filter((d) => !usedItems.has(d.item));
+	if (availableDrops.length > 0) {
+		return availableDrops[Math.floor(Math.random() * availableDrops.length)].item;
+	}
+
+	// 使用可能なアイテムがない場合は全体から選択
+	return diceDrops[Math.floor(Math.random() * diceDrops.length)].item;
+}
+
+// ========================================
+// ドロップ生成メイン関数
+// ========================================
+
 // ドロップ品ランダム生成
 function generateRandomDrops() {
 	if (!dropsDatabase) {
@@ -1486,70 +1546,18 @@ function generateRandomDrops() {
 			const randomDrop = fixedDrops[Math.floor(Math.random() * fixedDrops.length)];
 			drops.push(`固定：${randomDrop.item}`);
 		}
-	} else if (enemyThrone.includes("raid")) {
-		// レイド: 1～10の出目
-		const selectedDrops = {};
-		const usedItems = new Set();
-
-		for (let dice = 1; dice <= 10; dice++) {
-			let item;
-
-			// 出目1との重複確率判定
-			if (dice === 2 && selectedDrops[1] && Math.random() < 0.5) {
-				item = selectedDrops[1];
-			} else if (dice === 3 && selectedDrops[1] && Math.random() < 0.7) {
-				item = selectedDrops[1];
-			} else if (dice === 4 && selectedDrops[1] && Math.random() < 0.4) {
-				item = selectedDrops[1];
-			} else if (dice === 5 && selectedDrops[1] && Math.random() < 0.1) {
-				item = selectedDrops[1];
-			} else {
-				// 新規アイテムを選択（既に使用されたものを除く）
-				const diceDrops = rankDrops[dice.toString()] || [];
-				if (diceDrops.length > 0) {
-					// 使用済みでないアイテムをフィルタ
-					const availableDrops = diceDrops.filter((d) => !usedItems.has(d.item));
-					if (availableDrops.length > 0) {
-						item = availableDrops[Math.floor(Math.random() * availableDrops.length)].item;
-					} else {
-						// 使用可能なアイテムがない場合は全体から選択
-						item = diceDrops[Math.floor(Math.random() * diceDrops.length)].item;
-					}
-				} else {
-					const fallbackDrop = findFallbackDrop(rankDrops, dice);
-					if (fallbackDrop) {
-						item = fallbackDrop.item;
-					}
-				}
-			}
-
-			if (item) {
-				selectedDrops[dice] = item;
-				drops.push(`${dice}：${item}`);
-				// 前の出目と異なる場合は使用済みリストに追加
-				if (dice === 1 || selectedDrops[dice - 1] !== item) {
-					usedItems.add(item);
-				}
-			}
-		}
-
-		// 固定があれば追加
-		const fixedDrops = rankDrops["fixed"] || [];
-		if (fixedDrops.length > 0) {
-			const randomDrop = fixedDrops[Math.floor(Math.random() * fixedDrops.length)];
-			drops.push(`固定：${randomDrop.item}`);
-		}
 	} else {
-		// ノーマル・ボス: 1～6の出目
 		const selectedDrops = {};
 		const usedItems = new Set();
+		const diceCount = enemyThrone.includes("raid") ? 10 : 6;
+		let continueCount = 0;
 
-		for (let dice = 1; dice <= 6; dice++) {
+		for (let dice = 1; dice <= diceCount; dice++) {
 			let item;
 
-			// 直前の出目の重複確率判定
-			if (dice > 1 && selectedDrops[dice - 1] && Math.random() < 0.5) {
+			if (dice > 1 && selectedDrops[dice - 1] && Math.random() < Math.pow(0.7, continueCount)) {
 				item = selectedDrops[dice - 1];
+				continueCount++;
 			} else {
 				// 新規アイテムを選択（既に使用されたものを除く）
 				const diceDrops = rankDrops[dice.toString()] || [];
@@ -1568,6 +1576,7 @@ function generateRandomDrops() {
 						item = fallbackDrop.item;
 					}
 				}
+				continueCount = 0;
 			}
 
 			if (item) {
@@ -2076,7 +2085,6 @@ function importSkillFromCatalog(skill) {
 				return `[${optimizedBase}+${dice}D]の${type}ダメージ`;
 			});
 		}
-
 		document.getElementById(`skill-effect-${newSkillId}`).value = normalizedEffect || "";
 
 		// コマンド生成
