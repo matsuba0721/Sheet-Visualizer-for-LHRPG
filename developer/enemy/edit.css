@@ -626,6 +626,7 @@
 .modal-footer {
 	padding: 10px 20px;
 	border-top: 1px solid var(--border-secondary);
+	border-radius: 0px 0px 8px 8px;
 	background: var(--bg-tertiary);
 	flex-shrink: 0;
 }
@@ -667,7 +668,6 @@
 }
 
 .filter-actions {
-	margin-top: 10px;
 	text-align: right;
 }
 
@@ -704,7 +704,13 @@
 	font-size: 11px;
 	font-weight: bold;
 	color: var(--text-primary);
-	margin-bottom: 8px;
+}
+
+.import-settings-content {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 15px;
 }
 
 .remark-button-wrapper {
@@ -848,7 +854,7 @@
 	background: var(--bg-tertiary);
 	border: 1px solid var(--border-secondary);
 	border-radius: 3px;
-	padding: 8px 10px;
+	padding: 5px 10px;
 	cursor: pointer;
 	transition: all 0.15s;
 	position: relative;

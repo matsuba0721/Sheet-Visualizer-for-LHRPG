@@ -19,8 +19,8 @@ def load_json(filepath: Path) -> any:
 
 def save_json(data: any, filepath: Path):
     """JSONファイルを保存"""
-    with open(filepath, "w", encoding="utf-8-sig") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
     print(f"✓ 保存完了: {filepath}")
 
 def estimate_enemy_type(enemy: Dict) -> str:

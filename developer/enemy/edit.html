@@ -366,40 +366,42 @@
 							<input type="number" id="filter-cr-min" placeholder="CR最小" min="1" max="30" class="filter-input" oninput="filterSkillCatalog()" />
 							<input type="number" id="filter-cr-max" placeholder="CR最大" min="1" max="30" class="filter-input" oninput="filterSkillCatalog()" />
 						</div>
-						<div class="filter-actions">
-							<button onclick="clearSkillFilters()" class="filter-clear-btn">フィルタークリア</button>
-						</div>
 						<div class="import-settings">
 							<div class="import-settings-title">引用時の設定</div>
-							<div class="toggle-switches">
-								<label class="toggle-switch">
-									<input type="checkbox" id="auto-replace-roll" checked />
-									<span class="toggle-slider"></span>
-									<span class="toggle-label-text">対決判定置き換え</span>
-								</label>
-								<label class="toggle-switch">
-									<input type="checkbox" id="auto-replace-hate" checked />
-									<span class="toggle-slider"></span>
-									<span class="toggle-label-text">ヘイト倍率置き換え</span>
-								</label>
-								<label class="toggle-switch">
-									<input type="checkbox" id="optimize-damage" />
-									<span class="toggle-slider"></span>
-									<span class="toggle-label-text">ダメージ最適化</span>
-									<span class="remark-button-wrapper">
-										<button type="button" class="remark-button">ℹ️</button>
-										<div class="remark-popup">
-											<strong>ダメージ最適化について</strong>
-											エネミーのEタイプに基づいた計算式を使用し、元のダメージ比率を維持しながら適切な値に変換します。<br />
-											ダメージの最大値はスピアタイプの計算式に基づき、19 + (エネミーランク × 6)までとなります。
-										</div>
-									</span>
-								</label>
+							<div class="import-settings-content">
+								<div class="toggle-switches">
+									<label class="toggle-switch">
+										<input type="checkbox" id="auto-replace-roll" checked />
+										<span class="toggle-slider"></span>
+										<span class="toggle-label-text">対決判定置き換え</span>
+									</label>
+									<label class="toggle-switch">
+										<input type="checkbox" id="auto-replace-hate" checked />
+										<span class="toggle-slider"></span>
+										<span class="toggle-label-text">ヘイト倍率置き換え</span>
+									</label>
+									<label class="toggle-switch">
+										<input type="checkbox" id="optimize-damage" />
+										<span class="toggle-slider"></span>
+										<span class="toggle-label-text">ダメージ最適化</span>
+										<span class="remark-button-wrapper">
+											<button type="button" class="remark-button">ℹ️</button>
+											<div class="remark-popup">
+												<strong>ダメージ最適化について</strong>
+												エネミーのEタイプに基づいた計算式を使用し、元のダメージ比率を維持しながら適切な値に変換します。<br />
+												ダメージの最大値はスピアタイプの計算式に基づき、19 + (エネミーランク × 6)までとなります。
+											</div>
+										</span>
+									</label>
+								</div>
+								<div class="filter-actions">
+									<button onclick="clearSkillFilters()" class="filter-clear-btn">フィルタークリア</button>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<div id="skill-catalog-list" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1; min-height: 0">
+					<div id="skill-catalog-list" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex: 1; min-height: 0">
 						<!-- 特技一覧がここに表示されます -->
 					</div>
 				</div>
