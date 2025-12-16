@@ -1453,6 +1453,32 @@ function getRecommendedDropValue() {
 
 	return baseValue;
 }
+// 出目範囲を解析して確率を計算
+function parseDiceRange(line) {
+	// 固定アイテム
+	if (line.includes("固定")) {
+		return { probability: 1.0, diceCount: 0 };
+	}
+
+	// 範囲指定: "1～3：" または "1~3："
+	const rangeMatch = line.match(/^(\d+)[～~](\d+)[:：]/);
+	if (rangeMatch) {
+		const start = parseInt(rangeMatch[1]);
+		const end = parseInt(rangeMatch[2]);
+		const diceCount = end - start + 1;
+		return { probability: diceCount / 6, diceCount: diceCount };
+	}
+
+	// 単一の出目: "1：" または "1:"
+	const singleMatch = line.match(/^(\d+)[:：]/);
+	if (singleMatch) {
+		return { probability: 1 / 6, diceCount: 1 };
+	}
+
+	// デフォルト（形式不明の場合）
+	return { probability: 0, diceCount: 0 };
+}
+
 // ドロップ品期待値計算
 function calculateDropExpectedValue() {
 	// 推奨値を更新
@@ -1466,37 +1492,26 @@ function calculateDropExpectedValue() {
 		return;
 	}
 
-	let totalGold = 0;
-	const lines = dropText.split("\n");
+	let expectedValue = 0;
+	const lines = dropText.split("\n").filter((line) => line.trim());
 
 	for (const line of lines) {
 		// 金額を抽出 (10G, 15G×2 など)
 		const goldMatch = line.match(/（(\d+)G）(?:×(\d+))?/);
-		if (goldMatch) {
-			const gold = parseInt(goldMatch[1]);
-			const count = goldMatch[2] ? parseInt(goldMatch[2]) : 1;
-			totalGold += gold * count;
-		}
+		if (!goldMatch) continue;
+
+		const gold = parseInt(goldMatch[1]);
+		const count = goldMatch[2] ? parseInt(goldMatch[2]) : 1;
+		const totalGold = gold * count;
+
+		// 出目の確率を取得
+		const { probability } = parseDiceRange(line);
+
+		// 期待値に加算
+		expectedValue += totalGold * probability;
 	}
 
-	// 固定以外のアイテムは1/6の確率として計算
-	const fixedLines = lines.filter((line) => line.includes("固定"));
-	const normalLines = lines.length - fixedLines.length;
-
-	const fixedGold = fixedLines.reduce((sum, line) => {
-		const match = line.match(/（(\d+)G）(?:×(\d+))?/);
-		if (match) {
-			const gold = parseInt(match[1]);
-			const count = match[2] ? parseInt(match[2]) : 1;
-			return sum + gold * count;
-		}
-		return sum;
-	}, 0);
-
-	const normalGold = (totalGold - fixedGold) / Math.max(normalLines, 1);
-	const expectedValue = Math.round(fixedGold + normalGold);
-
-	document.getElementById("drop-expected-value").textContent = expectedValue;
+	document.getElementById("drop-expected-value").textContent = Math.round(expectedValue);
 }
 
 // ランダムアイテム選択（使用済みアイテムを除外）
