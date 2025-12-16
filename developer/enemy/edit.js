@@ -1444,27 +1444,25 @@ function renderSkillCatalog(skills) {
 	if (countEl) countEl.textContent = skills.length;
 
 	if (skills.length === 0) {
-		list.innerHTML = '<div style="color: #b0b0b0; text-align: center; padding: 20px;">特技が見つかりませんでした</div>';
+		list.innerHTML = '<div class="catalog-no-result">特技が見つかりませんでした</div>';
 		return;
 	}
 
 	skills.forEach((skill, index) => {
 		const item = document.createElement("div");
-		item.style.cssText = "background: #2a2a2a; border: 1px solid #505050; border-radius: 3px; padding: 8px 10px; cursor: pointer; transition: all 0.15s; position: relative;";
-		item.onmouseover = () => (item.style.backgroundColor = "#353535");
-		item.onmouseout = () => (item.style.backgroundColor = "#2a2a2a");
+		item.className = "catalog-skill-item";
 		item.onclick = () => importSkillFromCatalog(skill);
 
 		// 出典情報を右上に配置
 		if (skill.from) {
 			const fromInfo = document.createElement("div");
-			fromInfo.style.cssText = "position: absolute; top: 8px; right: 10px; font-size: 10px; color: #90caf9; text-align: right; line-height: 1.2;";
+			fromInfo.className = "catalog-from-info";
 
 			const crText = skill.from.cr ? `CR${skill.from.cr}` : "CR?";
 			fromInfo.innerHTML = `${skill.from.name}<br>${crText} ${skill.from.throne}`;
 
 			if (skill.from.url) {
-				fromInfo.style.cursor = "help";
+				fromInfo.classList.add("clickable");
 				fromInfo.title = `クリックで公式データを開く\n${skill.from.url}`;
 				fromInfo.onclick = (e) => {
 					e.stopPropagation();
@@ -1477,11 +1475,11 @@ function renderSkillCatalog(skills) {
 
 		// 特技名、タグ、情報を横並びに
 		const headerRow = document.createElement("div");
-		headerRow.style.cssText = "display: flex; align-items: center; gap: 8px; margin-bottom: 3px; padding-right: 100px; flex-wrap: wrap;";
+		headerRow.className = "catalog-header-row";
 
 		// 特技名
 		const titleSpan = document.createElement("span");
-		titleSpan.style.cssText = "font-weight: 500; color: #1e88e5; font-size: 15px;";
+		titleSpan.className = "catalog-title";
 		titleSpan.textContent = skill.name;
 		headerRow.appendChild(titleSpan);
 
@@ -1489,7 +1487,7 @@ function renderSkillCatalog(skills) {
 		const tagsText = Array.isArray(skill.tags) ? skill.tags.map((tag) => `[${tag}]`).join(" ") : skill.tags || "";
 		if (tagsText) {
 			const tagsSpan = document.createElement("span");
-			tagsSpan.style.cssText = "font-size: 12px; color: #ffa726;";
+			tagsSpan.className = "catalog-tags";
 			tagsSpan.textContent = `${tagsText}`;
 			headerRow.appendChild(tagsSpan);
 		}
@@ -1503,7 +1501,7 @@ function renderSkillCatalog(skills) {
 
 		if (infoItems.length > 0) {
 			const infoSpan = document.createElement("span");
-			infoSpan.style.cssText = "font-size: 12px; color: #b0b0b0;";
+			infoSpan.className = "catalog-info";
 			infoSpan.textContent = infoItems.join(" / ");
 			headerRow.appendChild(infoSpan);
 		}
@@ -1513,7 +1511,7 @@ function renderSkillCatalog(skills) {
 		// 効果
 		if (skill.effect) {
 			const effect = document.createElement("div");
-			effect.style.cssText = "font-size: 13px; color: #e0e0e0; line-height: 1.3; margin-top: 4px;";
+			effect.className = "catalog-effect";
 			effect.textContent = skill.effect;
 			item.appendChild(effect);
 		}

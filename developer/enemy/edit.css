@@ -586,7 +586,7 @@
 }
 
 .modal-header {
-	padding: 20px;
+	padding: 10px 20px;
 	border-bottom: 1px solid var(--border-secondary);
 	display: flex;
 	justify-content: space-between;
@@ -621,6 +621,13 @@
 	flex-direction: column;
 	flex: 1;
 	min-height: 0;
+}
+
+.modal-footer {
+	padding: 10px 20px;
+	border-top: 1px solid var(--border-secondary);
+	background: var(--bg-tertiary);
+	flex-shrink: 0;
 }
 
 .filter-container {
@@ -683,31 +690,27 @@
 .search-result-count {
 	color: var(--text-secondary);
 	font-size: 12px;
-	margin-bottom: 10px;
-	text-align: right;
-	flex-shrink: 0;
+	text-align: center;
 }
 
 .import-settings {
-	background: var(--bg-tertiary);
-	border: 1px solid var(--border-secondary);
-	border-radius: 4px;
-	padding: 12px 15px;
-	margin-bottom: 15px;
+	border-top: 1px solid var(--border-secondary);
+	padding: 10px 0 0 0;
+	margin-top: 10px;
 	flex-shrink: 0;
 }
 
 .import-settings-title {
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: bold;
 	color: var(--text-primary);
-	margin-bottom: 12px;
+	margin-bottom: 8px;
 }
 
 .remark-button-wrapper {
 	position: relative;
 	display: inline-block;
-	margin-left: 6px;
+	margin-left: 4px;
 }
 
 .remark-button {
@@ -716,7 +719,7 @@
 	padding: 0;
 	margin: 0;
 	cursor: pointer;
-	font-size: 16px;
+	font-size: 14px;
 	line-height: 1;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -773,17 +776,18 @@
 
 .toggle-switches {
 	display: flex;
-	gap: 30px;
+	gap: 15px;
 	flex-wrap: wrap;
 }
 
 .toggle-switch {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 6px;
 	cursor: pointer;
 	user-select: none;
 	position: relative;
+	font-size: 12px;
 }
 
 .toggle-switch input[type="checkbox"] {
@@ -796,10 +800,10 @@
 .toggle-slider {
 	position: relative;
 	display: inline-block;
-	width: 42px;
-	height: 22px;
+	width: 36px;
+	height: 18px;
 	background: var(--border-secondary);
-	border-radius: 22px;
+	border-radius: 18px;
 	transition: background 0.3s;
 	flex-shrink: 0;
 }
@@ -809,8 +813,8 @@
 	position: absolute;
 	top: 2px;
 	left: 2px;
-	width: 18px;
-	height: 18px;
+	width: 14px;
+	height: 14px;
 	background: white;
 	border-radius: 50%;
 	transition: transform 0.3s;
@@ -822,7 +826,7 @@
 }
 
 .toggle-switch input[type="checkbox"]:checked + .toggle-slider::before {
-	transform: translateX(20px);
+	transform: translateX(18px);
 }
 
 .toggle-switch input[type="checkbox"]:disabled + .toggle-slider {
@@ -837,6 +841,74 @@
 
 .toggle-switch:has(input[type="checkbox"]:disabled) {
 	cursor: not-allowed;
+}
+
+/* 特技カタログアイテム */
+.catalog-skill-item {
+	background: var(--bg-tertiary);
+	border: 1px solid var(--border-secondary);
+	border-radius: 3px;
+	padding: 8px 10px;
+	cursor: pointer;
+	transition: all 0.15s;
+	position: relative;
+}
+
+.catalog-skill-item:hover {
+	background: var(--bg-secondary);
+	border-color: var(--border-primary);
+}
+
+.catalog-from-info {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	font-size: 10px;
+	color: var(--accent-color);
+	text-align: right;
+	line-height: 1.2;
+}
+
+.catalog-from-info.clickable {
+	cursor: help;
+}
+
+.catalog-header-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 3px;
+	padding-right: 100px;
+	flex-wrap: wrap;
+}
+
+.catalog-title {
+	font-weight: 500;
+	color: var(--accent-color);
+	font-size: 15px;
+}
+
+.catalog-tags {
+	font-size: 12px;
+	color: #ffa726;
+}
+
+.catalog-info {
+	font-size: 12px;
+	color: var(--text-secondary);
+}
+
+.catalog-effect {
+	font-size: 13px;
+	color: var(--text-primary);
+	line-height: 1.3;
+	margin-top: 4px;
+}
+
+.catalog-no-result {
+	color: var(--text-secondary);
+	text-align: center;
+	padding: 20px;
 }
 
 .toggle-switch input[type="checkbox"]:disabled ~ .toggle-label-text {
