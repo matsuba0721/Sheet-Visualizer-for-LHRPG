@@ -240,10 +240,14 @@
 				<div class="section">
 					<div class="section-header">
 						<span>ドロップ品</span>
-						<span style="font-size: 12px; font-weight: normal">期待値: <span id="drop-expected-value">0</span>G</span>
+						<div style="display: flex; align-items: center; gap: 10px">
+							<span style="font-size: 12px; font-weight: normal">推奨: <span id="drop-recommended-value">0</span>G</span>
+							<span style="font-size: 12px; font-weight: normal">現在: <span id="drop-expected-value">0</span>G</span>
+							<button class="btn btn-small" onclick="generateRandomDrops()">🎲 ランダム生成</button>
+						</div>
 					</div>
 					<div class="section-body">
-						<textarea id="enemy-drop" placeholder="ドロップアイテムを入力"></textarea>
+						<textarea id="enemy-drop" placeholder="ドロップアイテムを入力" oninput="calculateDropExpectedValue()"></textarea>
 					</div>
 				</div>
 
@@ -403,5 +407,8 @@
 					<div class="search-result-count">検索結果: <span id="skill-result-count">0</span>件</div>
 				</div>
 			</div>
-			</body>
-		</html>
+		</div>
+
+		<script src="edit.js"></script>
+	</body>
+</html>

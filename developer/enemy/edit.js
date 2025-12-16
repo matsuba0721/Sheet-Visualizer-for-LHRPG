@@ -48,6 +48,7 @@ class Ccforia {
 }
 
 let skillCounter = 0;
+let dropsDatabase = null;
 let draggedElement = null;
 
 // テーマ切り替え
@@ -222,12 +223,18 @@ window.addEventListener("DOMContentLoaded", () => {
 	loadTheme();
 	updateIdentificationDifficulty();
 	loadMasterSkills();
+	loadDropsDatabase();
 
-	document.getElementById("enemy-rank").addEventListener("change", updateIdentificationDifficulty);
+	document.getElementById("enemy-rank").addEventListener("change", () => {
+		updateIdentificationDifficulty();
+		calculateDropExpectedValue();
+	});
 	document.getElementById("enemy-popularity").addEventListener("change", updateIdentificationDifficulty);
+	document.getElementById("enemy-throne").addEventListener("change", calculateDropExpectedValue);
 
 	calculateStatus();
 	initializeSkills();
+	calculateDropExpectedValue();
 });
 
 // 識別難易度を自動計算
@@ -1386,6 +1393,285 @@ async function resetForm() {
 	}
 }
 
+// ランクに基づく推奨ドロップ期待値を計算
+function getRecommendedDropValue() {
+	const rank = parseInt(document.getElementById("enemy-rank").value) || 1;
+	const throne = document.getElementById("enemy-throne").value;
+
+	// 基本値: ランク × 10G
+	let baseValue = rank * 10;
+
+	// ランク種別による補正
+	if (throne === "mob") {
+		baseValue = Math.round(baseValue * 0.5); // モブは半額
+	} else if (throne.includes("boss") && !throne.includes("raid")) {
+		baseValue = Math.round(baseValue * 1.5); // ボスは1.5倍
+	} else if (throne.includes("raid")) {
+		baseValue = Math.round(baseValue * 2.0); // レイドボスは2倍
+	}
+
+	return baseValue;
+}
+
+// ドロップ品期待値計算
+function calculateDropExpectedValue() {
+	// 推奨値を更新
+	const recommendedValue = getRecommendedDropValue();
+	document.getElementById("drop-recommended-value").textContent = recommendedValue;
+
+	// 現在値を計算
+	const dropText = document.getElementById("enemy-drop").value;
+	if (!dropText) {
+		document.getElementById("drop-expected-value").textContent = "0";
+		return;
+	}
+
+	let totalGold = 0;
+	const lines = dropText.split("\n");
+
+	for (const line of lines) {
+		// 金額を抽出 (10G, 15G×2 など)
+		const goldMatch = line.match(/（(\d+)G）(?:×(\d+))?/);
+		if (goldMatch) {
+			const gold = parseInt(goldMatch[1]);
+			const count = goldMatch[2] ? parseInt(goldMatch[2]) : 1;
+			totalGold += gold * count;
+		}
+	}
+
+	// 固定以外のアイテムは1/6の確率として計算
+	const fixedLines = lines.filter((line) => line.includes("固定"));
+	const normalLines = lines.length - fixedLines.length;
+
+	const fixedGold = fixedLines.reduce((sum, line) => {
+		const match = line.match(/（(\d+)G）(?:×(\d+))?/);
+		if (match) {
+			const gold = parseInt(match[1]);
+			const count = match[2] ? parseInt(match[2]) : 1;
+			return sum + gold * count;
+		}
+		return sum;
+	}, 0);
+
+	const normalGold = (totalGold - fixedGold) / Math.max(normalLines, 1);
+	const expectedValue = Math.round(fixedGold + normalGold);
+
+	document.getElementById("drop-expected-value").textContent = expectedValue;
+}
+
+// ドロップ品ランダム生成
+function generateRandomDrops() {
+	if (!dropsDatabase) {
+		showAlert("ドロップ品データが読み込まれていません", "red");
+		return;
+	}
+
+	const enemyRank = parseInt(document.getElementById("enemy-rank").value) || 1;
+	const enemyThrone = document.getElementById("enemy-throne").value;
+
+	// ランク別のドロップデータを取得
+	const rankDrops = dropsDatabase.drops[enemyRank.toString()];
+	if (!rankDrops) {
+		showAlert(`ランク${enemyRank}のドロップデータが見つかりません`, "red");
+		return;
+	}
+
+	const drops = [];
+
+	// ランク種別によって生成方法を変える
+	if (enemyThrone === "mob") {
+		// モブ: 固定のみ1つ
+		const fixedDrops = rankDrops["fixed"] || [];
+		if (fixedDrops.length > 0) {
+			const randomDrop = fixedDrops[Math.floor(Math.random() * fixedDrops.length)];
+			drops.push(`固定：${randomDrop.item}`);
+		}
+	} else if (enemyThrone.includes("raid")) {
+		// レイド: 1～10の出目
+		const selectedDrops = {};
+		const usedItems = new Set();
+
+		for (let dice = 1; dice <= 10; dice++) {
+			let item;
+
+			// 出目1との重複確率判定
+			if (dice === 2 && selectedDrops[1] && Math.random() < 0.5) {
+				item = selectedDrops[1];
+			} else if (dice === 3 && selectedDrops[1] && Math.random() < 0.7) {
+				item = selectedDrops[1];
+			} else if (dice === 4 && selectedDrops[1] && Math.random() < 0.4) {
+				item = selectedDrops[1];
+			} else if (dice === 5 && selectedDrops[1] && Math.random() < 0.1) {
+				item = selectedDrops[1];
+			} else {
+				// 新規アイテムを選択（既に使用されたものを除く）
+				const diceDrops = rankDrops[dice.toString()] || [];
+				if (diceDrops.length > 0) {
+					// 使用済みでないアイテムをフィルタ
+					const availableDrops = diceDrops.filter((d) => !usedItems.has(d.item));
+					if (availableDrops.length > 0) {
+						item = availableDrops[Math.floor(Math.random() * availableDrops.length)].item;
+					} else {
+						// 使用可能なアイテムがない場合は全体から選択
+						item = diceDrops[Math.floor(Math.random() * diceDrops.length)].item;
+					}
+				} else {
+					const fallbackDrop = findFallbackDrop(rankDrops, dice);
+					if (fallbackDrop) {
+						item = fallbackDrop.item;
+					}
+				}
+			}
+
+			if (item) {
+				selectedDrops[dice] = item;
+				drops.push(`${dice}：${item}`);
+				// 前の出目と異なる場合は使用済みリストに追加
+				if (dice === 1 || selectedDrops[dice - 1] !== item) {
+					usedItems.add(item);
+				}
+			}
+		}
+
+		// 固定があれば追加
+		const fixedDrops = rankDrops["fixed"] || [];
+		if (fixedDrops.length > 0) {
+			const randomDrop = fixedDrops[Math.floor(Math.random() * fixedDrops.length)];
+			drops.push(`固定：${randomDrop.item}`);
+		}
+	} else {
+		// ノーマル・ボス: 1～6の出目
+		const selectedDrops = {};
+		const usedItems = new Set();
+
+		for (let dice = 1; dice <= 6; dice++) {
+			let item;
+
+			// 直前の出目の重複確率判定
+			if (dice > 1 && selectedDrops[dice - 1] && Math.random() < 0.5) {
+				item = selectedDrops[dice - 1];
+			} else {
+				// 新規アイテムを選択（既に使用されたものを除く）
+				const diceDrops = rankDrops[dice.toString()] || [];
+				if (diceDrops.length > 0) {
+					// 使用済みでないアイテムをフィルタ
+					const availableDrops = diceDrops.filter((d) => !usedItems.has(d.item));
+					if (availableDrops.length > 0) {
+						item = availableDrops[Math.floor(Math.random() * availableDrops.length)].item;
+					} else {
+						// 使用可能なアイテムがない場合は全体から選択
+						item = diceDrops[Math.floor(Math.random() * diceDrops.length)].item;
+					}
+				} else {
+					const fallbackDrop = findFallbackDrop(rankDrops, dice);
+					if (fallbackDrop) {
+						item = fallbackDrop.item;
+					}
+				}
+			}
+
+			if (item) {
+				selectedDrops[dice] = item;
+				drops.push(`${dice}：${item}`);
+				// 前の出目と異なる場合は使用済みリストに追加
+				if (dice === 1 || selectedDrops[dice - 1] !== item) {
+					usedItems.add(item);
+				}
+			}
+		}
+
+		// 固定があれば追加
+		const fixedDrops = rankDrops["fixed"] || [];
+		if (fixedDrops.length > 0) {
+			const randomDrop = fixedDrops[Math.floor(Math.random() * fixedDrops.length)];
+			drops.push(`固定：${randomDrop.item}`);
+		}
+	}
+
+	// 連続する同じアイテムをまとめる
+	const mergedDrops = mergeConsecutiveDrops(drops);
+
+	// テキストエリアに設定
+	document.getElementById("enemy-drop").value = mergedDrops.join("\n");
+	calculateDropExpectedValue();
+	showAlert("ドロップ品を生成しました", "green");
+}
+
+// 連続する同じアイテムをまとめる
+function mergeConsecutiveDrops(drops) {
+	if (drops.length === 0) return drops;
+
+	const merged = [];
+	let currentRange = null;
+
+	for (let i = 0; i < drops.length; i++) {
+		const match = drops[i].match(/^(\d+|固定)：(.+)$/);
+		if (!match) {
+			merged.push(drops[i]);
+			continue;
+		}
+
+		const [, diceStr, item] = match;
+
+		// 固定の場合はそのまま追加
+		if (diceStr === "固定") {
+			if (currentRange) {
+				merged.push(formatRange(currentRange));
+				currentRange = null;
+			}
+			merged.push(drops[i]);
+			continue;
+		}
+
+		const dice = parseInt(diceStr);
+
+		if (!currentRange) {
+			// 新しい範囲を開始
+			currentRange = { start: dice, end: dice, item: item };
+		} else if (currentRange.item === item && dice === currentRange.end + 1) {
+			// 範囲を拡張
+			currentRange.end = dice;
+		} else {
+			// 前の範囲を確定して新しい範囲を開始
+			merged.push(formatRange(currentRange));
+			currentRange = { start: dice, end: dice, item: item };
+		}
+	}
+
+	// 最後の範囲を追加
+	if (currentRange) {
+		merged.push(formatRange(currentRange));
+	}
+
+	return merged;
+}
+
+// 範囲をフォーマット
+function formatRange(range) {
+	if (range.start === range.end) {
+		return `${range.start}：${range.item}`;
+	} else {
+		return `${range.start}～${range.end}：${range.item}`;
+	}
+}
+
+// フォールバックドロップを探す
+function findFallbackDrop(rankDrops, targetDice) {
+	// 近い出目のドロップを探す
+	for (let offset = 1; offset <= 3; offset++) {
+		const lowerDice = (targetDice - offset).toString();
+		const upperDice = (targetDice + offset).toString();
+
+		if (rankDrops[lowerDice] && rankDrops[lowerDice].length > 0) {
+			return rankDrops[lowerDice][Math.floor(Math.random() * rankDrops[lowerDice].length)];
+		}
+		if (rankDrops[upperDice] && rankDrops[upperDice].length > 0) {
+			return rankDrops[upperDice][Math.floor(Math.random() * rankDrops[upperDice].length)];
+		}
+	}
+	return null;
+}
+
 // マスターデータ読み込み
 async function loadMasterSkills() {
 	try {
@@ -1418,6 +1704,23 @@ async function loadMasterSkills() {
 	} catch (error) {
 		console.error("マスターデータ読み込みエラー:", error);
 		masterSkills = [];
+	}
+}
+
+// ドロップ品データベース読み込み
+async function loadDropsDatabase() {
+	try {
+		const response = await fetch("json/drops_database.json");
+		if (response.ok) {
+			dropsDatabase = await response.json();
+			console.log(`ドロップ品データ読み込み成功: ${dropsDatabase.statistics.total_drop_entries}エントリ`);
+		} else {
+			console.warn("ドロップ品データが見つかりません。");
+			dropsDatabase = null;
+		}
+	} catch (error) {
+		console.error("ドロップ品データ読み込みエラー:", error);
+		dropsDatabase = null;
 	}
 }
 
