@@ -1097,7 +1097,7 @@ function toSkillPlainText(skill) {
 		return "";
 	}
 	let result = `《${skill.name}》`;
-	if (skill.tag && skill.tags.filter((t) => t.length > 0).length > 0) {
+	if (skill.tags && skill.tags.filter((t) => t.length > 0).length > 0) {
 		result +=
 			"_" +
 			skill.tags
@@ -1123,7 +1123,7 @@ function toSkillPlainText(skill) {
 	if (skill.effect.length > 0) {
 		result += "_" + skill.effect;
 	}
-	return result;
+	return result.replace("》_", "》");
 }
 
 // ココフォリア出力
