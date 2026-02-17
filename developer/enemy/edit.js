@@ -1158,7 +1158,7 @@ function exportCcfolia() {
 			.join("");
 	}
 
-	ccforia.setMemo(`${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank || "?"}\nタグ:${tags}\n識別難易度:${data.identification || "?"} 【行動力】${data.initiative || "?"}`);
+	ccforia.setMemo(`${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags}\n識別難易度:${data.identification} 【行動力】${data.initiative}`);
 	ccforia.setInitiative(parseInt(data.initiative) || 0);
 
 	ccforia.appendStatus("HP", parseInt(data.hitpoint) || 0, parseInt(data.hitpoint) || 0);
@@ -1168,7 +1168,7 @@ function exportCcfolia() {
 	const magDef = parseInt(data.magicalDefense) || 0;
 	const defense = physDef > magDef ? "物理＞魔法" : physDef < magDef ? "物理＜魔法" : "物理＝魔法";
 
-	let identifyData = `${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank || "?"}\nタグ:${tags} 防御:${defense} ヘイト倍率:×${data.hate || "?"} 識別難易度:${data.identification || "?"} \n【行動力】${data.initiative || "?"}【移動力】${data.move || "?"}\n`;
+	let identifyData = `${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags} 防御:${defense} ヘイト倍率:×${data.hate} 識別難易度:${data.identification} \n【行動力】${data.initiative}【移動力】${data.move}\n`;
 	identifyData += `[特技]\n${data.skills
 		.filter((skill) => skill.name && skill.name.length > 0)
 		.map((skill) => toSkillPlainText(skill))
@@ -1221,9 +1221,9 @@ function exportCcfolia() {
 	}
 
 	command += `\n\n▼ステータス`;
-	command += `\n【STR】${data.str || "?"} 【DEX】${data.dex || "?"} 【POW】${data.pow || "?"} 【INT】${data.int || "?"}`;
-	command += `\n【回避】${data.avoid || "?"} 【抵抗】${data.resist || "?"} 【物理防御力】${data.physicalDefense || "?"} 【魔法防御力】${data.magicalDefense || "?"}`;
-	command += `\n【最大HP】${data.hitpoint || "?"} 【ヘイト倍率】×${data.hate || "?"} 【行動力】${data.initiative || "?"} 【移動力】${data.move || "?"} 【因果力】${data.fate || "?"}`;
+	command += `\n【STR】${data.str} 【DEX】${data.dex} 【POW】${data.pow} 【INT】${data.int}`;
+	command += `\n【回避】${data.avoid} 【抵抗】${data.resist} 【物理防御力】${data.physicalDefense} 【魔法防御力】${data.magicalDefense}`;
+	command += `\n【最大HP】${data.hitpoint} 【ヘイト倍率】×${data.hate} 【行動力】${data.initiative} 【移動力】${data.move} 【因果力】${data.fate}`;
 
 	command += `\n\n▼その他\n{識別後データ}\n{解説}`;
 
