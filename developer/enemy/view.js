@@ -100,6 +100,12 @@ function create(enemy) {
 	const intItem = document.createElement("li");
 	intItem.textContent = `ＩＮＴ：${enemy.int}`;
 	propList2.appendChild(intItem);
+	const avoidItem = document.createElement("li");
+	avoidItem.textContent = `回避：${enemy.avoid}`;
+	propList2.appendChild(avoidItem);
+	const resistItem = document.createElement("li");
+	resistItem.textContent = `抵抗：${enemy.resist}`;
+	propList2.appendChild(resistItem);
 
 	const propList3 = document.createElement("ul");
 	propList3.classList.add("abilities");
