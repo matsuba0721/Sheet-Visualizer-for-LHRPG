@@ -1,0 +1,3541 @@
+﻿{
+	"generated_at": "2026-03-31 14:04:02",
+	"spec": "rank*11 + 2D6",
+	"rank_range": "1-32",
+	"rule": "no duplicated roll values by formula; if empty slot remains, assign rank-2 core with same-rank magic catalyst, lower 2D6 first",
+	"counts": {
+		"total_slots": 352,
+		"recipe_materials": 176,
+		"non_recipe_candidates": 34,
+		"non_recipe_assigned_once": 34,
+		"assigned_recipe_unique": 176,
+		"unassigned_recipe_materials": 0,
+		"fallback_rank_minus_2_applied": 142,
+		"unresolved_no_recipe_names": 5,
+		"empty_slots": 0,
+		"rank_diff_violation": 0,
+		"roll_inconsistency": 0
+	},
+	"items": [
+		{
+			"rank": 1,
+			"dice": 2,
+			"roll": 13,
+			"core_material": "新緑の若芽",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": 1,
+			"magic_catalyst": "[magic_catalyst_rank_1]"
+		},
+		{
+			"rank": 1,
+			"dice": 3,
+			"roll": 14,
+			"core_material": "小さな黒メノウ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": 1,
+			"magic_catalyst": "[magic_catalyst_rank_1]"
+		},
+		{
+			"rank": 1,
+			"dice": 4,
+			"roll": 15,
+			"core_material": "滑らかな皮膜",
+			"assign_source": "no_recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 5,
+			"roll": 16,
+			"core_material": "新緑の若芽",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 6,
+			"roll": 17,
+			"core_material": "小さな黒メノウ",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 7,
+			"roll": 18,
+			"core_material": "七色染粉",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 8,
+			"roll": 19,
+			"core_material": "思い出のカケラ",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 9,
+			"roll": 20,
+			"core_material": "古びた髑髏",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 10,
+			"roll": 21,
+			"core_material": "滑らかな皮膜",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 11,
+			"roll": 22,
+			"core_material": "怪しい丸薬",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 1,
+			"dice": 12,
+			"roll": 23,
+			"core_material": "リグリアの霊石",
+			"assign_source": "recipe",
+			"assigned_rank": 1,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 2,
+			"roll": 24,
+			"core_material": "腐銀の小片",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 3,
+			"roll": 25,
+			"core_material": "反魔水銀",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 4,
+			"roll": 26,
+			"core_material": "薄墨色の翅",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 5,
+			"roll": 27,
+			"core_material": "呪法シリンダー",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 6,
+			"roll": 28,
+			"core_material": "古代の鉄棒",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 7,
+			"roll": 29,
+			"core_material": "血塗られた刃",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 8,
+			"roll": 30,
+			"core_material": "寄り添う夫婦樹",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 9,
+			"roll": 31,
+			"core_material": "壊れた魔笛",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 10,
+			"roll": 32,
+			"core_material": "鋭い牙",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 11,
+			"roll": 33,
+			"core_material": "つややかな毛皮",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 2,
+			"dice": 12,
+			"roll": 34,
+			"core_material": "アルヴの霊石",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 2,
+			"roll": 35,
+			"core_material": "真紅の爪",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 3,
+			"roll": 36,
+			"core_material": "純白の羽根",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 4,
+			"roll": 37,
+			"core_material": "守護騎士の願い",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 5,
+			"roll": 38,
+			"core_material": "自戒の茨",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 6,
+			"roll": 39,
+			"core_material": "黒睡蓮の花弁",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 7,
+			"roll": 40,
+			"core_material": "紅蓮の魔石",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 8,
+			"roll": 41,
+			"core_material": "狂熊の毛皮",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 9,
+			"roll": 42,
+			"core_material": "闇色の蜘蛛糸",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 10,
+			"roll": 43,
+			"core_material": "とがった爪",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 11,
+			"roll": 44,
+			"core_material": "絆の勲章",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 3,
+			"dice": 12,
+			"roll": 45,
+			"core_material": "命の葉",
+			"assign_source": "recipe",
+			"assigned_rank": 2,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 2,
+			"roll": 46,
+			"core_material": "藍色の爪",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 3,
+			"roll": 47,
+			"core_material": "淡い花びら",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 4,
+			"roll": 48,
+			"core_material": "鮮紅の花弁",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 5,
+			"roll": 49,
+			"core_material": "折れたシャフト",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 6,
+			"roll": 50,
+			"core_material": "聖なる繊維",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 7,
+			"roll": 51,
+			"core_material": "光輝の結晶",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 8,
+			"roll": 52,
+			"core_material": "巨人の髭",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 9,
+			"roll": 53,
+			"core_material": "影色の護符",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 10,
+			"roll": 54,
+			"core_material": "赤熱の小爪",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 11,
+			"roll": 55,
+			"core_material": "瑞々しい球根",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 4,
+			"dice": 12,
+			"roll": 56,
+			"core_material": "翠玉の眼",
+			"assign_source": "recipe",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 2,
+			"roll": 57,
+			"core_material": "真紅の爪",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 3,
+			"magic_catalyst_rank": 3,
+			"magic_catalyst": "[magic_catalyst_rank_3]"
+		},
+		{
+			"rank": 5,
+			"dice": 3,
+			"roll": 58,
+			"core_material": "小型錬成陣",
+			"assign_source": "no_recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 4,
+			"roll": 59,
+			"core_material": "謎めいた毛皮",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 5,
+			"roll": 60,
+			"core_material": "精密な歯車",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 6,
+			"roll": 61,
+			"core_material": "触媒のフラスコ",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 7,
+			"roll": 62,
+			"core_material": "錆びた月鋼",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 8,
+			"roll": 63,
+			"core_material": "魂断ちのハサミ",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 9,
+			"roll": 64,
+			"core_material": "硬い骨",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 10,
+			"roll": 65,
+			"core_material": "月光水晶",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 11,
+			"roll": 66,
+			"core_material": "液化魔晶",
+			"assign_source": "recipe",
+			"assigned_rank": 5,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 5,
+			"dice": 12,
+			"roll": 67,
+			"core_material": "流星のかけら",
+			"assign_source": "recipe",
+			"assigned_rank": 4,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 2,
+			"roll": 68,
+			"core_material": "風鳴りの鈴",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 3,
+			"roll": 69,
+			"core_material": "白い鰐皮",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 4,
+			"roll": 70,
+			"core_material": "波涛の旋律",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 5,
+			"roll": 71,
+			"core_material": "鉄の陣笠",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 6,
+			"roll": 72,
+			"core_material": "常若の小枝",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 7,
+			"roll": 73,
+			"core_material": "小型練成陣",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 8,
+			"roll": 74,
+			"core_material": "蛇目石",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 9,
+			"roll": 75,
+			"core_material": "頑丈なヒレ",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 10,
+			"roll": 76,
+			"core_material": "霞の絣",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 11,
+			"roll": 77,
+			"core_material": "やわらかい石",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 6,
+			"dice": 12,
+			"roll": 78,
+			"core_material": "つややかな繭",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 2,
+			"roll": 79,
+			"core_material": "呪紋の種",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 3,
+			"roll": 80,
+			"core_material": "古びた霊核",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 4,
+			"roll": 81,
+			"core_material": "幻想の黒真珠",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 5,
+			"roll": 82,
+			"core_material": "銀の円環",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 6,
+			"roll": 83,
+			"core_material": "極彩色の鱗",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 7,
+			"roll": 84,
+			"core_material": "黄金の鱗",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 8,
+			"roll": 85,
+			"core_material": "ねじくれた角",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 9,
+			"roll": 86,
+			"core_material": "髑髏の紋章",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 10,
+			"roll": 87,
+			"core_material": "螺旋の吸引機",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 11,
+			"roll": 88,
+			"core_material": "雄々しい角",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 7,
+			"dice": 12,
+			"roll": 89,
+			"core_material": "未精錬魔鋼",
+			"assign_source": "recipe",
+			"assigned_rank": 6,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 2,
+			"roll": 90,
+			"core_material": "石化した人参",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 3,
+			"roll": 91,
+			"core_material": "祝福の寄生木",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 4,
+			"roll": 92,
+			"core_material": "紫炎の水晶",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 5,
+			"roll": 93,
+			"core_material": "拳士の魄片",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 6,
+			"roll": 94,
+			"core_material": "怨念の鍔",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 7,
+			"roll": 95,
+			"core_material": "茨のトゲ",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 8,
+			"roll": 96,
+			"core_material": "なにかの化石",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 9,
+			"roll": 97,
+			"core_material": "雷鳴の鮮血",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 10,
+			"roll": 98,
+			"core_material": "鈍色の甲殻",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 11,
+			"roll": 99,
+			"core_material": "仙桃果",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 8,
+			"dice": 12,
+			"roll": 100,
+			"core_material": "常眠りの種子",
+			"assign_source": "recipe",
+			"assigned_rank": 7,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 2,
+			"roll": 101,
+			"core_material": "鋼の竜殻",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 3,
+			"roll": 102,
+			"core_material": "月光の金鱗",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 4,
+			"roll": 103,
+			"core_material": "苦い肝",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 5,
+			"roll": 104,
+			"core_material": "巨大な風切り羽",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 6,
+			"roll": 105,
+			"core_material": "ひび割れた鏡板",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 7,
+			"roll": 106,
+			"core_material": "流星歯車",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 8,
+			"roll": 107,
+			"core_material": "暴君の乱杭歯",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 9,
+			"roll": 108,
+			"core_material": "動力ケーブル",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 10,
+			"roll": 109,
+			"core_material": "大きな魔力結晶",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 11,
+			"roll": 110,
+			"core_material": "対徹魔導装甲",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 9,
+			"dice": 12,
+			"roll": 111,
+			"core_material": "捉われぬ魂",
+			"assign_source": "recipe",
+			"assigned_rank": 8,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 2,
+			"roll": 112,
+			"core_material": "真鉄の刀身",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 3,
+			"roll": 113,
+			"core_material": "漆黒の破片",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 4,
+			"roll": 114,
+			"core_material": "七色の透明捻子",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 5,
+			"roll": 115,
+			"core_material": "紫電の鋭棘",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 6,
+			"roll": 116,
+			"core_material": "妖夢の残滓",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 7,
+			"roll": 117,
+			"core_material": "勇猛な毛皮",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 8,
+			"roll": 118,
+			"core_material": "法理回路",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 9,
+			"roll": 119,
+			"core_material": "蒼い鉱石",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 10,
+			"roll": 120,
+			"core_material": "絶えない火種",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 11,
+			"roll": 121,
+			"core_material": "吹雪の結晶",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 10,
+			"dice": 12,
+			"roll": 122,
+			"core_material": "砕けた剛剣",
+			"assign_source": "recipe",
+			"assigned_rank": 9,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 2,
+			"roll": 123,
+			"core_material": "錆びた聖印",
+			"assign_source": "recipe",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 3,
+			"roll": 124,
+			"core_material": "金色の毛玉",
+			"assign_source": "recipe",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 4,
+			"roll": 125,
+			"core_material": "魔導錠",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 5,
+			"roll": 126,
+			"core_material": "偏属性魔法結晶",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 6,
+			"roll": 127,
+			"core_material": "不思議な銅板",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 7,
+			"roll": 128,
+			"core_material": "破軍の戦帯",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 8,
+			"roll": 129,
+			"core_material": "透明な血",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 9,
+			"roll": 130,
+			"core_material": "鮮血の宝玉",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 10,
+			"roll": 131,
+			"core_material": "戦王の角",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 11,
+			"roll": 132,
+			"core_material": "積層結晶体",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 11,
+			"dice": 12,
+			"roll": 133,
+			"core_material": "青ざめた盾鱗",
+			"assign_source": "recipe",
+			"assigned_rank": 10,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 2,
+			"roll": 134,
+			"core_material": "謎めいたフラスコ",
+			"assign_source": "no_recipe",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 3,
+			"roll": 135,
+			"core_material": "竜眼石",
+			"assign_source": "recipe",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 4,
+			"roll": 136,
+			"core_material": "未熟な竜玉",
+			"assign_source": "recipe",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 5,
+			"roll": 137,
+			"core_material": "魔道書の断片",
+			"assign_source": "recipe",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 6,
+			"roll": 138,
+			"core_material": "水晶の小箱",
+			"assign_source": "recipe",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 7,
+			"roll": 139,
+			"core_material": "神鉄の組紐",
+			"assign_source": "recipe",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 8,
+			"roll": 140,
+			"core_material": "呪紋水晶",
+			"assign_source": "recipe",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 9,
+			"roll": 141,
+			"core_material": "命奪の刃金",
+			"assign_source": "recipe",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 10,
+			"roll": 142,
+			"core_material": "派手な羽根飾り",
+			"assign_source": "recipe",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 11,
+			"roll": 143,
+			"core_material": "潮騒の貝殻",
+			"assign_source": "recipe",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 12,
+			"dice": 12,
+			"roll": 144,
+			"core_material": "神隠しの古枝",
+			"assign_source": "recipe",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 13,
+			"dice": 2,
+			"roll": 145,
+			"core_material": "錆びた聖印",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": 11,
+			"magic_catalyst": "[magic_catalyst_rank_11]"
+		},
+		{
+			"rank": 13,
+			"dice": 3,
+			"roll": 146,
+			"core_material": "金色の毛玉",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": 11,
+			"magic_catalyst": "[magic_catalyst_rank_11]"
+		},
+		{
+			"rank": 13,
+			"dice": 4,
+			"roll": 147,
+			"core_material": "命奪の刃金",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": 11,
+			"magic_catalyst": "[magic_catalyst_rank_11]"
+		},
+		{
+			"rank": 13,
+			"dice": 5,
+			"roll": 148,
+			"core_material": "派手な羽根飾り",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 11,
+			"magic_catalyst_rank": 11,
+			"magic_catalyst": "[magic_catalyst_rank_11]"
+		},
+		{
+			"rank": 13,
+			"dice": 6,
+			"roll": 149,
+			"core_material": "夢幻の占い札",
+			"assign_source": "recipe",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 13,
+			"dice": 7,
+			"roll": 150,
+			"core_material": "万能溶解液",
+			"assign_source": "recipe",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 13,
+			"dice": 8,
+			"roll": 151,
+			"core_material": "多重連鎖回路",
+			"assign_source": "recipe",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 13,
+			"dice": 9,
+			"roll": 152,
+			"core_material": "雪豹の毛皮",
+			"assign_source": "recipe",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 13,
+			"dice": 10,
+			"roll": 153,
+			"core_material": "刻印の銀板",
+			"assign_source": "recipe",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 13,
+			"dice": 11,
+			"roll": 154,
+			"core_material": "金剛骨",
+			"assign_source": "recipe",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 13,
+			"dice": 12,
+			"roll": 155,
+			"core_material": "陰陽の水銀",
+			"assign_source": "recipe",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 14,
+			"dice": 2,
+			"roll": 156,
+			"core_material": "謎めいたフラスコ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": 12,
+			"magic_catalyst": "[magic_catalyst_rank_12]"
+		},
+		{
+			"rank": 14,
+			"dice": 3,
+			"roll": 157,
+			"core_material": "竜眼石",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": 12,
+			"magic_catalyst": "[magic_catalyst_rank_12]"
+		},
+		{
+			"rank": 14,
+			"dice": 4,
+			"roll": 158,
+			"core_material": "未熟な竜玉",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": 12,
+			"magic_catalyst": "[magic_catalyst_rank_12]"
+		},
+		{
+			"rank": 14,
+			"dice": 5,
+			"roll": 159,
+			"core_material": "魔道書の断片",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 12,
+			"magic_catalyst_rank": 12,
+			"magic_catalyst": "[magic_catalyst_rank_12]"
+		},
+		{
+			"rank": 14,
+			"dice": 6,
+			"roll": 160,
+			"core_material": "緑小鬼の大軍旗",
+			"assign_source": "recipe",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 14,
+			"dice": 7,
+			"roll": 161,
+			"core_material": "暴君の頭蓋骨",
+			"assign_source": "recipe",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 14,
+			"dice": 8,
+			"roll": 162,
+			"core_material": "不死王の心臓",
+			"assign_source": "recipe",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 14,
+			"dice": 9,
+			"roll": 163,
+			"core_material": "銀色の円盤",
+			"assign_source": "recipe",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 14,
+			"dice": 10,
+			"roll": 164,
+			"core_material": "奇妙な化石",
+			"assign_source": "recipe",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 14,
+			"dice": 11,
+			"roll": 165,
+			"core_material": "うごめく花弁",
+			"assign_source": "recipe",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 14,
+			"dice": 12,
+			"roll": 166,
+			"core_material": "アルヴの研磨剤",
+			"assign_source": "recipe",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 15,
+			"dice": 2,
+			"roll": 167,
+			"core_material": "夢幻の占い札",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": 13,
+			"magic_catalyst": "[magic_catalyst_rank_13]"
+		},
+		{
+			"rank": 15,
+			"dice": 3,
+			"roll": 168,
+			"core_material": "万能溶解液",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": 13,
+			"magic_catalyst": "[magic_catalyst_rank_13]"
+		},
+		{
+			"rank": 15,
+			"dice": 4,
+			"roll": 169,
+			"core_material": "多重連鎖回路",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": 13,
+			"magic_catalyst": "[magic_catalyst_rank_13]"
+		},
+		{
+			"rank": 15,
+			"dice": 5,
+			"roll": 170,
+			"core_material": "雪豹の毛皮",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": 13,
+			"magic_catalyst": "[magic_catalyst_rank_13]"
+		},
+		{
+			"rank": 15,
+			"dice": 6,
+			"roll": 171,
+			"core_material": "刻印の銀板",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": 13,
+			"magic_catalyst": "[magic_catalyst_rank_13]"
+		},
+		{
+			"rank": 15,
+			"dice": 7,
+			"roll": 172,
+			"core_material": "金剛骨",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": 13,
+			"magic_catalyst": "[magic_catalyst_rank_13]"
+		},
+		{
+			"rank": 15,
+			"dice": 8,
+			"roll": 173,
+			"core_material": "陰陽の水銀",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 13,
+			"magic_catalyst_rank": 13,
+			"magic_catalyst": "[magic_catalyst_rank_13]"
+		},
+		{
+			"rank": 15,
+			"dice": 9,
+			"roll": 174,
+			"core_material": "神馬の柔革",
+			"assign_source": "recipe",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 15,
+			"dice": 10,
+			"roll": 175,
+			"core_material": "深層アダマン鉱石",
+			"assign_source": "recipe",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 15,
+			"dice": 11,
+			"roll": 176,
+			"core_material": "漆黒の眼球",
+			"assign_source": "recipe",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 15,
+			"dice": 12,
+			"roll": 177,
+			"core_material": "永久回転円盤",
+			"assign_source": "recipe",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 2,
+			"roll": 178,
+			"core_material": "緑小鬼の大軍旗",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": 14,
+			"magic_catalyst": "[magic_catalyst_rank_14]"
+		},
+		{
+			"rank": 16,
+			"dice": 3,
+			"roll": 179,
+			"core_material": "暴君の頭蓋骨",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": 14,
+			"magic_catalyst": "[magic_catalyst_rank_14]"
+		},
+		{
+			"rank": 16,
+			"dice": 4,
+			"roll": 180,
+			"core_material": "不死王の心臓",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 14,
+			"magic_catalyst_rank": 14,
+			"magic_catalyst": "[magic_catalyst_rank_14]"
+		},
+		{
+			"rank": 16,
+			"dice": 5,
+			"roll": 181,
+			"core_material": "四つ葉のアンク",
+			"assign_source": "no_recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 6,
+			"roll": 182,
+			"core_material": "雪桃の実",
+			"assign_source": "recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 7,
+			"roll": 183,
+			"core_material": "真鋼のワイヤー",
+			"assign_source": "recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 8,
+			"roll": 184,
+			"core_material": "真なる硫黄",
+			"assign_source": "recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 9,
+			"roll": 185,
+			"core_material": "魂迷の炎",
+			"assign_source": "recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 10,
+			"roll": 186,
+			"core_material": "金色のたてがみ",
+			"assign_source": "recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 11,
+			"roll": 187,
+			"core_material": "玉鋼の塊",
+			"assign_source": "recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 16,
+			"dice": 12,
+			"roll": 188,
+			"core_material": "強靭な筋",
+			"assign_source": "recipe",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 17,
+			"dice": 2,
+			"roll": 189,
+			"core_material": "神馬の柔革",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": 15,
+			"magic_catalyst": "[magic_catalyst_rank_15]"
+		},
+		{
+			"rank": 17,
+			"dice": 3,
+			"roll": 190,
+			"core_material": "深層アダマン鉱石",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": 15,
+			"magic_catalyst": "[magic_catalyst_rank_15]"
+		},
+		{
+			"rank": 17,
+			"dice": 4,
+			"roll": 191,
+			"core_material": "漆黒の眼球",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": 15,
+			"magic_catalyst": "[magic_catalyst_rank_15]"
+		},
+		{
+			"rank": 17,
+			"dice": 5,
+			"roll": 192,
+			"core_material": "永久回転円盤",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 15,
+			"magic_catalyst_rank": 15,
+			"magic_catalyst": "[magic_catalyst_rank_15]"
+		},
+		{
+			"rank": 17,
+			"dice": 6,
+			"roll": 193,
+			"core_material": "琥珀の宝珠",
+			"assign_source": "recipe",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 17,
+			"dice": 7,
+			"roll": 194,
+			"core_material": "封緑樹の堅枝",
+			"assign_source": "recipe",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 17,
+			"dice": 8,
+			"roll": 195,
+			"core_material": "丹塗りの矢",
+			"assign_source": "recipe",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 17,
+			"dice": 9,
+			"roll": 196,
+			"core_material": "星イタチの尻尾",
+			"assign_source": "recipe",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 17,
+			"dice": 10,
+			"roll": 197,
+			"core_material": "黒曜の矢じり",
+			"assign_source": "recipe",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 17,
+			"dice": 11,
+			"roll": 198,
+			"core_material": "銀の車輪",
+			"assign_source": "recipe",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 17,
+			"dice": 12,
+			"roll": 199,
+			"core_material": "輝く鉱石",
+			"assign_source": "recipe",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 18,
+			"dice": 2,
+			"roll": 200,
+			"core_material": "四つ葉のアンク",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": 16,
+			"magic_catalyst": "[magic_catalyst_rank_16]"
+		},
+		{
+			"rank": 18,
+			"dice": 3,
+			"roll": 201,
+			"core_material": "雪桃の実",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": 16,
+			"magic_catalyst": "[magic_catalyst_rank_16]"
+		},
+		{
+			"rank": 18,
+			"dice": 4,
+			"roll": 202,
+			"core_material": "真鋼のワイヤー",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": 16,
+			"magic_catalyst": "[magic_catalyst_rank_16]"
+		},
+		{
+			"rank": 18,
+			"dice": 5,
+			"roll": 203,
+			"core_material": "真なる硫黄",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 16,
+			"magic_catalyst_rank": 16,
+			"magic_catalyst": "[magic_catalyst_rank_16]"
+		},
+		{
+			"rank": 18,
+			"dice": 6,
+			"roll": 204,
+			"core_material": "巨鳥の鎖骨",
+			"assign_source": "no_recipe",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 18,
+			"dice": 7,
+			"roll": 205,
+			"core_material": "無尽の吸引筒",
+			"assign_source": "recipe",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 18,
+			"dice": 8,
+			"roll": 206,
+			"core_material": "千年王樹の種子",
+			"assign_source": "recipe",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 18,
+			"dice": 9,
+			"roll": 207,
+			"core_material": "水棲緑鬼の王卵",
+			"assign_source": "recipe",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 18,
+			"dice": 10,
+			"roll": 208,
+			"core_material": "時雨の霊鏡",
+			"assign_source": "recipe",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 18,
+			"dice": 11,
+			"roll": 209,
+			"core_material": "鋼裂く牙",
+			"assign_source": "recipe",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 18,
+			"dice": 12,
+			"roll": 210,
+			"core_material": "賢者の石",
+			"assign_source": "recipe",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 19,
+			"dice": 2,
+			"roll": 211,
+			"core_material": "琥珀の宝珠",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": 17,
+			"magic_catalyst": "[magic_catalyst_rank_17]"
+		},
+		{
+			"rank": 19,
+			"dice": 3,
+			"roll": 212,
+			"core_material": "封緑樹の堅枝",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": 17,
+			"magic_catalyst": "[magic_catalyst_rank_17]"
+		},
+		{
+			"rank": 19,
+			"dice": 4,
+			"roll": 213,
+			"core_material": "丹塗りの矢",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": 17,
+			"magic_catalyst": "[magic_catalyst_rank_17]"
+		},
+		{
+			"rank": 19,
+			"dice": 5,
+			"roll": 214,
+			"core_material": "星イタチの尻尾",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": 17,
+			"magic_catalyst": "[magic_catalyst_rank_17]"
+		},
+		{
+			"rank": 19,
+			"dice": 6,
+			"roll": 215,
+			"core_material": "黒曜の矢じり",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 17,
+			"magic_catalyst_rank": 17,
+			"magic_catalyst": "[magic_catalyst_rank_17]"
+		},
+		{
+			"rank": 19,
+			"dice": 7,
+			"roll": 216,
+			"core_material": "翡翠の大牙",
+			"assign_source": "recipe",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 19,
+			"dice": 8,
+			"roll": 217,
+			"core_material": "霊樹の根",
+			"assign_source": "recipe",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 19,
+			"dice": 9,
+			"roll": 218,
+			"core_material": "夜明け色の軟玉",
+			"assign_source": "recipe",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 19,
+			"dice": 10,
+			"roll": 219,
+			"core_material": "太陽の飾り鋲",
+			"assign_source": "recipe",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 19,
+			"dice": 11,
+			"roll": 220,
+			"core_material": "精緻な紋章板",
+			"assign_source": "recipe",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 19,
+			"dice": 12,
+			"roll": 221,
+			"core_material": "火精霊の心核",
+			"assign_source": "recipe",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 20,
+			"dice": 2,
+			"roll": 222,
+			"core_material": "巨鳥の鎖骨",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": 18,
+			"magic_catalyst": "[magic_catalyst_rank_18]"
+		},
+		{
+			"rank": 20,
+			"dice": 3,
+			"roll": 223,
+			"core_material": "無尽の吸引筒",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": 18,
+			"magic_catalyst": "[magic_catalyst_rank_18]"
+		},
+		{
+			"rank": 20,
+			"dice": 4,
+			"roll": 224,
+			"core_material": "千年王樹の種子",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": 18,
+			"magic_catalyst": "[magic_catalyst_rank_18]"
+		},
+		{
+			"rank": 20,
+			"dice": 5,
+			"roll": 225,
+			"core_material": "水棲緑鬼の王卵",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 18,
+			"magic_catalyst_rank": 18,
+			"magic_catalyst": "[magic_catalyst_rank_18]"
+		},
+		{
+			"rank": 20,
+			"dice": 6,
+			"roll": 226,
+			"core_material": "原初の炎",
+			"assign_source": "no_recipe",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 20,
+			"dice": 7,
+			"roll": 227,
+			"core_material": "島クジラの巨骨",
+			"assign_source": "recipe",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 20,
+			"dice": 8,
+			"roll": 228,
+			"core_material": "人面鳥の羽根",
+			"assign_source": "recipe",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 20,
+			"dice": 9,
+			"roll": 229,
+			"core_material": "獄炎狼の房毛",
+			"assign_source": "recipe",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 20,
+			"dice": 10,
+			"roll": 230,
+			"core_material": "古呪符の破片",
+			"assign_source": "recipe",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 20,
+			"dice": 11,
+			"roll": 231,
+			"core_material": "金剛石の粉末",
+			"assign_source": "recipe",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 20,
+			"dice": 12,
+			"roll": 232,
+			"core_material": "強靭な組織膜",
+			"assign_source": "recipe",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 21,
+			"dice": 2,
+			"roll": 233,
+			"core_material": "翡翠の大牙",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 3,
+			"roll": 234,
+			"core_material": "霊樹の根",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 4,
+			"roll": 235,
+			"core_material": "夜明け色の軟玉",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 5,
+			"roll": 236,
+			"core_material": "太陽の飾り鋲",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 6,
+			"roll": 237,
+			"core_material": "精緻な紋章板",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 7,
+			"roll": 238,
+			"core_material": "火精霊の心核",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 8,
+			"roll": 239,
+			"core_material": "翡翠の大牙",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 9,
+			"roll": 240,
+			"core_material": "霊樹の根",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 10,
+			"roll": 241,
+			"core_material": "夜明け色の軟玉",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 19,
+			"magic_catalyst_rank": 19,
+			"magic_catalyst": "[magic_catalyst_rank_19]"
+		},
+		{
+			"rank": 21,
+			"dice": 11,
+			"roll": 242,
+			"core_material": "稠密立方魔晶",
+			"assign_source": "no_recipe",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 21,
+			"dice": 12,
+			"roll": 243,
+			"core_material": "魔石草の種",
+			"assign_source": "no_recipe",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 22,
+			"dice": 2,
+			"roll": 244,
+			"core_material": "原初の炎",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 3,
+			"roll": 245,
+			"core_material": "島クジラの巨骨",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 4,
+			"roll": 246,
+			"core_material": "人面鳥の羽根",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 5,
+			"roll": 247,
+			"core_material": "獄炎狼の房毛",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 6,
+			"roll": 248,
+			"core_material": "古呪符の破片",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 7,
+			"roll": 249,
+			"core_material": "金剛石の粉末",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 8,
+			"roll": 250,
+			"core_material": "強靭な組織膜",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 9,
+			"roll": 251,
+			"core_material": "原初の炎",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 20,
+			"magic_catalyst_rank": 20,
+			"magic_catalyst": "[magic_catalyst_rank_20]"
+		},
+		{
+			"rank": 22,
+			"dice": 10,
+			"roll": 252,
+			"core_material": "飛びイルカの心臓",
+			"assign_source": "no_recipe",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 22,
+			"dice": 11,
+			"roll": 253,
+			"core_material": "奈落皇蛇の額鱗",
+			"assign_source": "no_recipe",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 22,
+			"dice": 12,
+			"roll": 254,
+			"core_material": "清掃用女中人形九号",
+			"assign_source": "no_recipe",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 23,
+			"dice": 2,
+			"roll": 255,
+			"core_material": "稠密立方魔晶",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 3,
+			"roll": 256,
+			"core_material": "魔石草の種",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 4,
+			"roll": 257,
+			"core_material": "稠密立方魔晶",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 5,
+			"roll": 258,
+			"core_material": "魔石草の種",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 6,
+			"roll": 259,
+			"core_material": "稠密立方魔晶",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 7,
+			"roll": 260,
+			"core_material": "魔石草の種",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 8,
+			"roll": 261,
+			"core_material": "稠密立方魔晶",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 9,
+			"roll": 262,
+			"core_material": "魔石草の種",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 10,
+			"roll": 263,
+			"core_material": "稠密立方魔晶",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 21,
+			"magic_catalyst_rank": 21,
+			"magic_catalyst": "[magic_catalyst_rank_21]"
+		},
+		{
+			"rank": 23,
+			"dice": 11,
+			"roll": 264,
+			"core_material": "火炎向日葵の花びら",
+			"assign_source": "no_recipe",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 23,
+			"dice": 12,
+			"roll": 265,
+			"core_material": "ブリザードダイヤ",
+			"assign_source": "no_recipe",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 24,
+			"dice": 2,
+			"roll": 266,
+			"core_material": "飛びイルカの心臓",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 3,
+			"roll": 267,
+			"core_material": "奈落皇蛇の額鱗",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 4,
+			"roll": 268,
+			"core_material": "清掃用女中人形九号",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 5,
+			"roll": 269,
+			"core_material": "飛びイルカの心臓",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 6,
+			"roll": 270,
+			"core_material": "奈落皇蛇の額鱗",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 7,
+			"roll": 271,
+			"core_material": "清掃用女中人形九号",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 8,
+			"roll": 272,
+			"core_material": "飛びイルカの心臓",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 9,
+			"roll": 273,
+			"core_material": "奈落皇蛇の額鱗",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 22,
+			"magic_catalyst_rank": 22,
+			"magic_catalyst": "[magic_catalyst_rank_22]"
+		},
+		{
+			"rank": 24,
+			"dice": 10,
+			"roll": 274,
+			"core_material": "落日祈祷書",
+			"assign_source": "no_recipe",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 24,
+			"dice": 11,
+			"roll": 275,
+			"core_material": "辰砂の組紐",
+			"assign_source": "no_recipe",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 24,
+			"dice": 12,
+			"roll": 276,
+			"core_material": "紅蓮蝙蝠の鮮血",
+			"assign_source": "no_recipe",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 25,
+			"dice": 2,
+			"roll": 277,
+			"core_material": "火炎向日葵の花びら",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 3,
+			"roll": 278,
+			"core_material": "ブリザードダイヤ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 4,
+			"roll": 279,
+			"core_material": "火炎向日葵の花びら",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 5,
+			"roll": 280,
+			"core_material": "ブリザードダイヤ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 6,
+			"roll": 281,
+			"core_material": "火炎向日葵の花びら",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 7,
+			"roll": 282,
+			"core_material": "ブリザードダイヤ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 8,
+			"roll": 283,
+			"core_material": "火炎向日葵の花びら",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 9,
+			"roll": 284,
+			"core_material": "ブリザードダイヤ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 10,
+			"roll": 285,
+			"core_material": "火炎向日葵の花びら",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 23,
+			"magic_catalyst_rank": 23,
+			"magic_catalyst": "[magic_catalyst_rank_23]"
+		},
+		{
+			"rank": 25,
+			"dice": 11,
+			"roll": 286,
+			"core_material": "黴臭い皮の剣帯",
+			"assign_source": "no_recipe",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 25,
+			"dice": 12,
+			"roll": 287,
+			"core_material": "玻璃蜥蜴の抜け殻",
+			"assign_source": "no_recipe",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 26,
+			"dice": 2,
+			"roll": 288,
+			"core_material": "落日祈祷書",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 3,
+			"roll": 289,
+			"core_material": "辰砂の組紐",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 4,
+			"roll": 290,
+			"core_material": "紅蓮蝙蝠の鮮血",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 5,
+			"roll": 291,
+			"core_material": "落日祈祷書",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 6,
+			"roll": 292,
+			"core_material": "辰砂の組紐",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 7,
+			"roll": 293,
+			"core_material": "紅蓮蝙蝠の鮮血",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 8,
+			"roll": 294,
+			"core_material": "落日祈祷書",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 9,
+			"roll": 295,
+			"core_material": "辰砂の組紐",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 24,
+			"magic_catalyst_rank": 24,
+			"magic_catalyst": "[magic_catalyst_rank_24]"
+		},
+		{
+			"rank": 26,
+			"dice": 10,
+			"roll": 296,
+			"core_material": "高熱練炭",
+			"assign_source": "no_recipe",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 26,
+			"dice": 11,
+			"roll": 297,
+			"core_material": "火炎巨人の尺骨",
+			"assign_source": "no_recipe",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 26,
+			"dice": 12,
+			"roll": 298,
+			"core_material": "すり切れた羽衣",
+			"assign_source": "no_recipe",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 27,
+			"dice": 2,
+			"roll": 299,
+			"core_material": "黴臭い皮の剣帯",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 3,
+			"roll": 300,
+			"core_material": "玻璃蜥蜴の抜け殻",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 4,
+			"roll": 301,
+			"core_material": "黴臭い皮の剣帯",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 5,
+			"roll": 302,
+			"core_material": "玻璃蜥蜴の抜け殻",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 6,
+			"roll": 303,
+			"core_material": "黴臭い皮の剣帯",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 7,
+			"roll": 304,
+			"core_material": "玻璃蜥蜴の抜け殻",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 8,
+			"roll": 305,
+			"core_material": "黴臭い皮の剣帯",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 9,
+			"roll": 306,
+			"core_material": "玻璃蜥蜴の抜け殻",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 10,
+			"roll": 307,
+			"core_material": "黴臭い皮の剣帯",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 25,
+			"magic_catalyst_rank": 25,
+			"magic_catalyst": "[magic_catalyst_rank_25]"
+		},
+		{
+			"rank": 27,
+			"dice": 11,
+			"roll": 308,
+			"core_material": "亡霊のため息",
+			"assign_source": "no_recipe",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 27,
+			"dice": 12,
+			"roll": 309,
+			"core_material": "宵闇色のヒゲ",
+			"assign_source": "no_recipe",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 28,
+			"dice": 2,
+			"roll": 310,
+			"core_material": "高熱練炭",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 3,
+			"roll": 311,
+			"core_material": "火炎巨人の尺骨",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 4,
+			"roll": 312,
+			"core_material": "すり切れた羽衣",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 5,
+			"roll": 313,
+			"core_material": "高熱練炭",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 6,
+			"roll": 314,
+			"core_material": "火炎巨人の尺骨",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 7,
+			"roll": 315,
+			"core_material": "すり切れた羽衣",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 8,
+			"roll": 316,
+			"core_material": "高熱練炭",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 9,
+			"roll": 317,
+			"core_material": "火炎巨人の尺骨",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 26,
+			"magic_catalyst_rank": 26,
+			"magic_catalyst": "[magic_catalyst_rank_26]"
+		},
+		{
+			"rank": 28,
+			"dice": 10,
+			"roll": 318,
+			"core_material": "山大鹿の角",
+			"assign_source": "no_recipe",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 28,
+			"dice": 11,
+			"roll": 319,
+			"core_material": "玄亀の甲羅",
+			"assign_source": "no_recipe",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 28,
+			"dice": 12,
+			"roll": 320,
+			"core_material": "コアトルの毒腺",
+			"assign_source": "no_recipe",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 29,
+			"dice": 2,
+			"roll": 321,
+			"core_material": "亡霊のため息",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 3,
+			"roll": 322,
+			"core_material": "宵闇色のヒゲ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 4,
+			"roll": 323,
+			"core_material": "亡霊のため息",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 5,
+			"roll": 324,
+			"core_material": "宵闇色のヒゲ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 6,
+			"roll": 325,
+			"core_material": "亡霊のため息",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 7,
+			"roll": 326,
+			"core_material": "宵闇色のヒゲ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 8,
+			"roll": 327,
+			"core_material": "亡霊のため息",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 9,
+			"roll": 328,
+			"core_material": "宵闇色のヒゲ",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 10,
+			"roll": 329,
+			"core_material": "亡霊のため息",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 27,
+			"magic_catalyst_rank": 27,
+			"magic_catalyst": "[magic_catalyst_rank_27]"
+		},
+		{
+			"rank": 29,
+			"dice": 11,
+			"roll": 330,
+			"core_material": "煉獄クモの燃糸",
+			"assign_source": "no_recipe",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 29,
+			"dice": 12,
+			"roll": 331,
+			"core_material": "碧氷晶の単眼球",
+			"assign_source": "no_recipe",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 30,
+			"dice": 2,
+			"roll": 332,
+			"core_material": "山大鹿の角",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 3,
+			"roll": 333,
+			"core_material": "玄亀の甲羅",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 4,
+			"roll": 334,
+			"core_material": "コアトルの毒腺",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 5,
+			"roll": 335,
+			"core_material": "山大鹿の角",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 6,
+			"roll": 336,
+			"core_material": "玄亀の甲羅",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 7,
+			"roll": 337,
+			"core_material": "コアトルの毒腺",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 8,
+			"roll": 338,
+			"core_material": "山大鹿の角",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 9,
+			"roll": 339,
+			"core_material": "玄亀の甲羅",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 28,
+			"magic_catalyst_rank": 28,
+			"magic_catalyst": "[magic_catalyst_rank_28]"
+		},
+		{
+			"rank": 30,
+			"dice": 10,
+			"roll": 340,
+			"core_material": "鉄鼠の自在尾",
+			"assign_source": "no_recipe",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 30,
+			"dice": 11,
+			"roll": 341,
+			"core_material": "人工生命の素",
+			"assign_source": "no_recipe",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 30,
+			"dice": 12,
+			"roll": 342,
+			"core_material": "衝撃竜の牙",
+			"assign_source": "no_recipe",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 31,
+			"dice": 2,
+			"roll": 343,
+			"core_material": "煉獄クモの燃糸",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 3,
+			"roll": 344,
+			"core_material": "碧氷晶の単眼球",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 4,
+			"roll": 345,
+			"core_material": "煉獄クモの燃糸",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 5,
+			"roll": 346,
+			"core_material": "碧氷晶の単眼球",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 6,
+			"roll": 347,
+			"core_material": "煉獄クモの燃糸",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 7,
+			"roll": 348,
+			"core_material": "碧氷晶の単眼球",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 8,
+			"roll": 349,
+			"core_material": "煉獄クモの燃糸",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 9,
+			"roll": 350,
+			"core_material": "碧氷晶の単眼球",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 10,
+			"roll": 351,
+			"core_material": "煉獄クモの燃糸",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 29,
+			"magic_catalyst_rank": 29,
+			"magic_catalyst": "[magic_catalyst_rank_29]"
+		},
+		{
+			"rank": 31,
+			"dice": 11,
+			"roll": 352,
+			"core_material": "翡翠甲虫の刃翅",
+			"assign_source": "no_recipe",
+			"assigned_rank": 31,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 31,
+			"dice": 12,
+			"roll": 353,
+			"core_material": "無限渦流の煤",
+			"assign_source": "no_recipe",
+			"assigned_rank": 31,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		},
+		{
+			"rank": 32,
+			"dice": 2,
+			"roll": 354,
+			"core_material": "鉄鼠の自在尾",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 3,
+			"roll": 355,
+			"core_material": "人工生命の素",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 4,
+			"roll": 356,
+			"core_material": "衝撃竜の牙",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 5,
+			"roll": 357,
+			"core_material": "鉄鼠の自在尾",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 6,
+			"roll": 358,
+			"core_material": "人工生命の素",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 7,
+			"roll": 359,
+			"core_material": "衝撃竜の牙",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 8,
+			"roll": 360,
+			"core_material": "鉄鼠の自在尾",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 9,
+			"roll": 361,
+			"core_material": "人工生命の素",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 10,
+			"roll": 362,
+			"core_material": "衝撃竜の牙",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 11,
+			"roll": 363,
+			"core_material": "鉄鼠の自在尾",
+			"assign_source": "fallback_rank_minus_2",
+			"assigned_rank": 30,
+			"magic_catalyst_rank": 30,
+			"magic_catalyst": "[magic_catalyst_rank_30]"
+		},
+		{
+			"rank": 32,
+			"dice": 12,
+			"roll": 364,
+			"core_material": "陽喰い鳥の嘴",
+			"assign_source": "no_recipe",
+			"assigned_rank": 32,
+			"magic_catalyst_rank": null,
+			"magic_catalyst": ""
+		}
+	]
+}

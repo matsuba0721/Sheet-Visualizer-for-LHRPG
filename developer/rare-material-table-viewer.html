@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>希少素材財宝表ビューア</title>
+		<style>
+			:root {
+				--bg-a: #f3efe5;
+				--bg-b: #dfe8f4;
+				--ink: #17212b;
+				--ink-soft: #425466;
+				--accent: #c04a17;
+				--accent-2: #0f6a66;
+				--panel: rgba(255, 255, 255, 0.82);
+				--line: #d5d9df;
+				--chip: #eef3f9;
+				--shadow: 0 10px 30px rgba(23, 33, 43, 0.14);
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				color: var(--ink);
+				font-family: "BIZ UDPGothic", "Yu Gothic UI", "Hiragino Kaku Gothic ProN", sans-serif;
+				background: radial-gradient(1200px 500px at -10% -10%, #f9d9c2 0%, transparent 50%), radial-gradient(900px 450px at 110% 5%, #c8e6de 0%, transparent 50%), linear-gradient(135deg, var(--bg-a), var(--bg-b));
+				min-height: 100vh;
+			}
+
+			.wrap {
+				width: min(1200px, 96vw);
+				margin: 24px auto 36px;
+			}
+
+			.hero {
+				background: linear-gradient(120deg, rgba(23, 33, 43, 0.9), rgba(15, 106, 102, 0.9));
+				color: #fff;
+				border-radius: 16px;
+				padding: 18px 20px;
+				box-shadow: var(--shadow);
+			}
+
+			.hero h1 {
+				margin: 0;
+				font-size: clamp(1.2rem, 2.3vw, 1.8rem);
+				letter-spacing: 0.02em;
+			}
+
+			.hero p {
+				margin: 8px 0 0;
+				color: rgba(255, 255, 255, 0.86);
+				font-size: 0.95rem;
+			}
+
+			.panel {
+				margin-top: 16px;
+				background: var(--panel);
+				backdrop-filter: blur(4px);
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-radius: 14px;
+				padding: 14px;
+				box-shadow: var(--shadow);
+			}
+
+			.controls {
+				display: grid;
+				gap: 10px;
+				grid-template-columns: 180px 1fr;
+				align-items: end;
+			}
+
+			.field label {
+				display: block;
+				margin-bottom: 6px;
+				font-size: 0.84rem;
+				color: var(--ink-soft);
+			}
+
+			select,
+			input {
+				width: 100%;
+				border: 1px solid var(--line);
+				border-radius: 10px;
+				padding: 8px 10px;
+				font-size: 0.95rem;
+				background: #fff;
+				color: var(--ink);
+			}
+
+			.meta {
+				margin-top: 10px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+			}
+
+			.chip {
+				border: 1px solid #d6dde6;
+				border-radius: 999px;
+				padding: 4px 10px;
+				background: var(--chip);
+				color: var(--ink-soft);
+				font-size: 0.82rem;
+			}
+
+			.table-wrap {
+				margin-top: 12px;
+				overflow: auto;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: #fff;
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				min-width: 920px;
+			}
+
+			th,
+			td {
+				border-bottom: 1px solid #edf1f5;
+				padding: 9px 10px;
+				text-align: left;
+				vertical-align: top;
+				font-size: 0.92rem;
+			}
+
+			th {
+				position: sticky;
+				top: 0;
+				z-index: 2;
+				background: #f5f8fc;
+				color: #2e3e4f;
+				font-weight: 700;
+			}
+
+			tbody tr:hover {
+				background: #fafcff;
+			}
+
+			.num {
+				text-align: right;
+				white-space: nowrap;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.material {
+				font-weight: 700;
+				color: #1f2e3d;
+			}
+
+			.source {
+				display: inline-block;
+				margin-left: 6px;
+				font-size: 0.75rem;
+				color: #fff;
+				border-radius: 999px;
+				padding: 2px 7px;
+				background: #6a7a8b;
+			}
+
+			.source-recipe {
+				background: var(--accent-2);
+			}
+
+			.source-no-recipe {
+				background: var(--accent);
+			}
+
+			.items-list {
+				display: flex;
+				gap: 6px;
+				flex-wrap: wrap;
+			}
+
+			.item-btn {
+				border: 1px solid #cfd8e2;
+				border-radius: 999px;
+				background: #f7fafc;
+				color: #29445d;
+				font-size: 0.8rem;
+				padding: 3px 9px;
+				cursor: pointer;
+			}
+
+			.item-btn:hover {
+				background: #eaf2fb;
+			}
+
+			.empty {
+				color: #7a8794;
+				font-size: 0.85rem;
+			}
+
+			.overlay {
+				position: fixed;
+				inset: 0;
+				background: rgba(9, 16, 23, 0.5);
+				display: none;
+				align-items: center;
+				justify-content: center;
+				padding: 14px;
+				z-index: 20;
+			}
+
+			.dialog {
+				width: min(860px, 96vw);
+				max-height: 90vh;
+				overflow: auto;
+				background: #fff;
+				border-radius: 14px;
+				box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+				border: 1px solid #d4dce6;
+			}
+
+			.dialog-head {
+				position: sticky;
+				top: 0;
+				z-index: 1;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 12px 14px;
+				background: #f6f9fc;
+				border-bottom: 1px solid #e4eaf1;
+			}
+
+			.dialog-head h2 {
+				margin: 0;
+				font-size: 1.05rem;
+			}
+
+			.close-btn {
+				border: 0;
+				background: #1f2e3d;
+				color: #fff;
+				border-radius: 10px;
+				padding: 6px 10px;
+				cursor: pointer;
+			}
+
+			.dialog-body {
+				padding: 12px 14px 14px;
+			}
+
+			.item-detail {
+				display: grid;
+				gap: 12px;
+			}
+
+			.item-head {
+				padding: 12px;
+				border: 1px solid #dde6f0;
+				border-radius: 12px;
+				background: linear-gradient(135deg, #f7fbff, #f2f7ff);
+			}
+
+			.item-head-title {
+				margin: 0;
+				font-size: 1.1rem;
+				color: #1e3348;
+			}
+
+			.item-head-sub {
+				margin-top: 8px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+
+			.tag-chip {
+				display: inline-block;
+				border: 1px solid #cfdbee;
+				background: #ffffff;
+				color: #37506a;
+				border-radius: 999px;
+				font-size: 0.78rem;
+				padding: 3px 9px;
+			}
+
+			.rank-chip {
+				border-color: #d9d0bf;
+				background: #fff7ea;
+				color: #7a4b19;
+				font-weight: 700;
+			}
+
+			.stat-grid {
+				display: grid;
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+				gap: 8px;
+			}
+
+			.stat-card {
+				border: 1px solid #e2e9f2;
+				border-radius: 10px;
+				background: #fcfdff;
+				padding: 8px;
+			}
+
+			.stat-label {
+				color: #65788d;
+				font-size: 0.76rem;
+			}
+
+			.stat-value {
+				margin-top: 2px;
+				font-size: 1rem;
+				font-weight: 700;
+				color: #1f3348;
+			}
+
+			.section-title {
+				margin: 0 0 6px;
+				font-size: 0.86rem;
+				letter-spacing: 0.02em;
+				color: #3a5066;
+			}
+
+			.block {
+				border: 1px solid #e4ecf5;
+				border-radius: 10px;
+				padding: 10px;
+				background: #fbfdff;
+			}
+
+			.kv {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 10px;
+			}
+
+			.kv th,
+			.kv td {
+				border: 1px solid #e8edf3;
+				padding: 7px 8px;
+				font-size: 0.9rem;
+			}
+
+			.kv th {
+				width: 180px;
+				background: #f8fbff;
+				position: static;
+			}
+
+			pre {
+				margin: 0;
+				border: 1px solid #e7edf4;
+				background: #f8fbff;
+				border-radius: 10px;
+				padding: 10px;
+				font-size: 0.8rem;
+				line-height: 1.45;
+				white-space: pre-wrap;
+				word-break: break-word;
+			}
+
+			.loading,
+			.error {
+				margin-top: 12px;
+				padding: 10px 12px;
+				border-radius: 10px;
+				font-size: 0.9rem;
+			}
+
+			.loading {
+				background: #edf6ff;
+				color: #24507a;
+				border: 1px solid #cfe1f4;
+			}
+
+			.error {
+				background: #fff0ef;
+				color: #8a2e25;
+				border: 1px solid #f2cec9;
+			}
+
+			@media (max-width: 900px) {
+				.controls {
+					grid-template-columns: 1fr;
+				}
+
+				.hero p {
+					font-size: 0.88rem;
+				}
+
+				th,
+				td {
+					font-size: 0.86rem;
+				}
+
+				.stat-grid {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<header class="hero">
+				<h1>希少素材財宝表ビューア</h1>
+				<p>ランク指定で、出目・コア素材・金額・作成可能アイテムを絞り込み表示します。</p>
+			</header>
+
+			<section class="panel">
+				<div class="controls">
+					<div class="field">
+						<label for="rankFilter">ランク</label>
+						<select id="rankFilter">
+							<option value="all">すべて</option>
+						</select>
+					</div>
+					<div class="field">
+						<label for="keywordFilter">キーワード</label>
+						<input id="keywordFilter" type="text" placeholder="コア素材名・アイテム名で検索" />
+					</div>
+				</div>
+
+				<div class="meta" id="meta"></div>
+
+				<div id="status" class="loading">データ読み込み中...</div>
+
+				<div class="table-wrap" id="tableWrap" style="display: none">
+					<table>
+						<thead>
+							<tr>
+								<th class="num">ランク</th>
+								<th class="num">2D6</th>
+								<th class="num">出目</th>
+								<th>コア素材</th>
+								<th class="num">金額</th>
+								<th>作成可能なアイテム</th>
+							</tr>
+						</thead>
+						<tbody id="rows"></tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+
+		<div class="overlay" id="overlay">
+			<div class="dialog">
+				<div class="dialog-head">
+					<h2 id="dialogTitle">アイテム詳細</h2>
+					<button class="close-btn" id="closeDialog">閉じる</button>
+				</div>
+				<div class="dialog-body" id="dialogBody"></div>
+			</div>
+		</div>
+
+		<script>
+			const state = {
+				tableData: null,
+				materialMap: new Map(),
+				filtered: [],
+			};
+
+			const el = {
+				rankFilter: document.getElementById("rankFilter"),
+				keywordFilter: document.getElementById("keywordFilter"),
+				rows: document.getElementById("rows"),
+				meta: document.getElementById("meta"),
+				status: document.getElementById("status"),
+				tableWrap: document.getElementById("tableWrap"),
+				overlay: document.getElementById("overlay"),
+				closeDialog: document.getElementById("closeDialog"),
+				dialogTitle: document.getElementById("dialogTitle"),
+				dialogBody: document.getElementById("dialogBody"),
+			};
+
+			function normalizeName(name) {
+				if (!name) return "";
+				return String(name).replace(/被膜/g, "皮膜").replace(/錬成/g, "練成").trim();
+			}
+
+			function moneyText(value) {
+				if (typeof value !== "number" || Number.isNaN(value)) return "-";
+				return value.toLocaleString("ja-JP") + "G";
+			}
+
+			function listify(value) {
+				if (Array.isArray(value)) return value;
+				if (!value) return [];
+				return [value];
+			}
+
+			function makeMaterialMap(detailJson) {
+				const all = [...listify(detailJson.overlap_core_materials), ...listify(detailJson.recipe_only_core_materials)];
+
+				const map = new Map();
+				for (const row of all) {
+					const key = normalizeName(row.core_material_name);
+					const craftable = listify(row.craftable_items);
+					map.set(key, {
+						materialName: row.core_material_name,
+						rank: row.core_material_rank,
+						price: typeof row.core_material_price === "number" ? row.core_material_price : null,
+						craftable,
+					});
+				}
+				return map;
+			}
+
+			function renderMeta() {
+				const t = state.tableData;
+				const total = state.filtered.length;
+				const slots = t.items.length;
+
+				el.meta.innerHTML = "";
+				const chips = [`仕様: ${t.spec}`, `ランク範囲: ${t.rank_range}`, `表示件数: ${total} / ${slots}`];
+				for (const text of chips) {
+					const span = document.createElement("span");
+					span.className = "chip";
+					span.textContent = text;
+					el.meta.appendChild(span);
+				}
+			}
+
+			function itemButton(item) {
+				const btn = document.createElement("button");
+				btn.className = "item-btn";
+				btn.type = "button";
+				btn.textContent = item.name || item.item_name || "名称不明";
+				btn.addEventListener("click", () => openItemDialog(item));
+				return btn;
+			}
+
+			function sourceBadgeText(source) {
+				if (!source) return "";
+				if (source === "recipe") return "recipe";
+				if (source.startsWith("no_recipe")) return "no_recipe";
+				return source;
+			}
+
+			function sourceBadgeClass(source) {
+				if (source === "recipe") return "source source-recipe";
+				if (source && source.startsWith("no_recipe")) return "source source-no-recipe";
+				return "source";
+			}
+
+			function renderRows() {
+				el.rows.innerHTML = "";
+
+				for (const slot of state.filtered) {
+					const tr = document.createElement("tr");
+					const info = state.materialMap.get(normalizeName(slot.core_material)) || null;
+					const craftable = info ? listify(info.craftable) : [];
+
+					const tdRank = document.createElement("td");
+					tdRank.className = "num";
+					tdRank.textContent = slot.rank;
+
+					const tdDice = document.createElement("td");
+					tdDice.className = "num";
+					tdDice.textContent = slot.dice;
+
+					const tdRoll = document.createElement("td");
+					tdRoll.className = "num";
+					tdRoll.textContent = slot.roll;
+
+					const tdMaterial = document.createElement("td");
+					const m = document.createElement("span");
+					m.className = "material";
+					m.textContent = slot.core_material;
+					tdMaterial.appendChild(m);
+
+					const tdPrice = document.createElement("td");
+					tdPrice.className = "num";
+					tdPrice.textContent = moneyText(info ? info.price : null);
+
+					const tdItems = document.createElement("td");
+					if (craftable.length === 0) {
+						const empty = document.createElement("span");
+						empty.className = "empty";
+						empty.textContent = "作成可能アイテムなし";
+						tdItems.appendChild(empty);
+					} else {
+						const wrap = document.createElement("div");
+						wrap.className = "items-list";
+						for (const item of craftable) {
+							wrap.appendChild(itemButton(item));
+						}
+						tdItems.appendChild(wrap);
+					}
+
+					tr.append(tdRank, tdDice, tdRoll, tdMaterial, tdPrice, tdItems);
+					el.rows.appendChild(tr);
+				}
+
+				renderMeta();
+			}
+
+			function applyFilters() {
+				const rankVal = el.rankFilter.value;
+				const kw = el.keywordFilter.value.trim().toLowerCase();
+
+				state.filtered = state.tableData.items.filter((slot) => {
+					if (rankVal !== "all" && slot.rank !== Number(rankVal)) return false;
+
+					if (kw) {
+						const info = state.materialMap.get(normalizeName(slot.core_material));
+						const itemNames = info
+							? listify(info.craftable)
+									.map((x) => x.name || x.item_name || "")
+									.join(" ")
+							: "";
+						const hay = `${slot.core_material} ${itemNames}`.toLowerCase();
+						if (!hay.includes(kw)) return false;
+					}
+
+					return true;
+				});
+
+				renderRows();
+			}
+
+			function fillRankOptions(rankRange) {
+				const m = String(rankRange || "").match(/(\d+)\s*-\s*(\d+)/);
+				const min = m ? Number(m[1]) : 1;
+				const max = m ? Number(m[2]) : 32;
+				for (let r = min; r <= max; r += 1) {
+					const op = document.createElement("option");
+					op.value = String(r);
+					op.textContent = `Rank ${r}`;
+					el.rankFilter.appendChild(op);
+				}
+			}
+
+			function escapeHtml(s) {
+				return String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+			}
+
+			function openItemDialog(item) {
+				el.dialogTitle.textContent = item.name || item.item_name || "アイテム詳細";
+
+				const tags = Array.isArray(item.tags) ? item.tags : [];
+				const tagHtml = tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("");
+				const rankText = item.item_rank != null ? `ランク${escapeHtml(item.item_rank)}` : "ランク-";
+
+				const stats = [
+					["価格", typeof item.price === "number" ? moneyText(item.price) : "-"],
+					["攻撃力", item.physical_attack ?? "-"],
+					["魔力", item.magic_attack ?? "-"],
+					["命中", item.hit ?? "-"],
+					["行動", item.action ?? "-"],
+					["物防", item.physical_defense ?? "-"],
+					["魔防", item.magic_defense ?? "-"],
+					["射程", item.range ?? "-"],
+					["対象", item.target ?? "-"],
+					["判定", item.roll ?? "-"],
+					["タイミング", item.timing ?? "-"],
+					["ID", item.id ?? item.item_id ?? "-"],
+				];
+
+				const statHtml = stats
+					.map(
+						([label, value]) => `
+          <div class="stat-card">
+            <div class="stat-label">${escapeHtml(label)}</div>
+            <div class="stat-value">${escapeHtml(value)}</div>
+          </div>`,
+					)
+					.join("");
+
+				const effectBlock = item.function ? `<div class="block"><h3 class="section-title">効果</h3><pre>${escapeHtml(item.function)}</pre></div>` : "";
+				const recipeBlock = item.recipe ? `<div class="block"><h3 class="section-title">レシピ</h3><pre>${escapeHtml(item.recipe)}</pre></div>` : "";
+
+				el.dialogBody.innerHTML = `
+        <div class="item-detail">
+          <div class="item-head">
+            <h3 class="item-head-title">${escapeHtml(item.name ?? item.item_name ?? "名称不明")}</h3>
+            <div class="item-head-sub">
+              <span class="tag-chip rank-chip">${rankText}</span>
+              <span class="tag-chip">${escapeHtml(item.type ?? "種別不明")}</span>
+              ${tagHtml}
+            </div>
+          </div>
+          <div class="stat-grid">${statHtml}</div>
+          ${effectBlock}
+          ${recipeBlock}
+        </div>
+      `;
+				el.overlay.style.display = "flex";
+			}
+
+			function closeDialog() {
+				el.overlay.style.display = "none";
+			}
+
+			async function loadData() {
+				try {
+					const [tableRes, detailRes] = await Promise.all([fetch("rare-material-table-r10-2d6.json"), fetch("core-material-presence-lists-detailed.json")]);
+
+					if (!tableRes.ok) throw new Error("rare-material-table-r10-2d6.json の読み込みに失敗しました");
+					if (!detailRes.ok) throw new Error("core-material-presence-lists-detailed.json の読み込みに失敗しました");
+
+					const tableJson = await tableRes.json();
+					const detailJson = await detailRes.json();
+
+					state.tableData = tableJson;
+					state.materialMap = makeMaterialMap(detailJson);
+
+					fillRankOptions(tableJson.rank_range);
+
+					el.status.style.display = "none";
+					el.tableWrap.style.display = "block";
+
+					applyFilters();
+				} catch (err) {
+					el.status.className = "error";
+					el.status.textContent = `読み込みエラー: ${err.message}`;
+				}
+			}
+
+			el.rankFilter.addEventListener("change", applyFilters);
+			el.keywordFilter.addEventListener("input", applyFilters);
+			el.closeDialog.addEventListener("click", closeDialog);
+			el.overlay.addEventListener("click", (e) => {
+				if (e.target === el.overlay) closeDialog();
+			});
+
+			loadData();
+		</script>
+	</body>
+</html>
