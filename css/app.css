@@ -72,6 +72,12 @@ li.commonItem {
 	padding: 0 5px;
 	vertical-align: middle;
 }
+li.tertiaryItem {
+	border: solid 1px #FFF;
+	color: #FFF;
+	padding: 0 5px;
+	vertical-align: middle;
+}
 li.secondaryItemDisable {
 	border: solid 1px #666;
 	color: #666;

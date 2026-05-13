@@ -148,6 +148,71 @@ function copy(dest, source) {
 		}
 	});
 }
+
+function showLoadingPanel() {
+	// ローディングパネルを作成して表示
+	const loadingPanel = document.createElement("div");
+	loadingPanel.id = "loading-panel";
+	loadingPanel.style.position = "fixed";
+	loadingPanel.style.top = "0";
+	loadingPanel.style.left = "0";
+	loadingPanel.style.width = "100%";
+	loadingPanel.style.height = "100%";
+	loadingPanel.style.zIndex = "9999";
+	loadingPanel.style.display = "flex";
+	loadingPanel.style.justifyContent = "center";
+	loadingPanel.style.alignItems = "center";
+
+	const messageBox = document.createElement("div");
+	messageBox.style.backgroundColor = "white";
+	messageBox.style.padding = "2rem";
+	messageBox.style.borderRadius = "8px";
+	messageBox.style.textAlign = "center";
+	messageBox.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.3)";
+
+	const spinner = document.createElement("div");
+	spinner.style.border = "4px solid #f3f3f3";
+	spinner.style.borderTop = "4px solid #1779ba";
+	spinner.style.borderRadius = "50%";
+	spinner.style.width = "40px";
+	spinner.style.height = "40px";
+	spinner.style.animation = "spin 1s linear infinite";
+	spinner.style.margin = "0 auto 1rem";
+
+	const message = document.createElement("p");
+	message.textContent = "キャラクターシートを読み込んでいます...";
+	message.style.margin = "0";
+	message.style.fontSize = "1.1rem";
+	message.style.fontWeight = "bold";
+
+	messageBox.appendChild(spinner);
+	messageBox.appendChild(message);
+	loadingPanel.appendChild(messageBox);
+
+	// スピナーのアニメーション用CSS
+	if (!document.getElementById("loading-panel-style")) {
+		const style = document.createElement("style");
+		style.id = "loading-panel-style";
+		style.textContent = `
+			@keyframes spin {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+		`;
+		document.head.appendChild(style);
+	}
+
+	document.body.appendChild(loadingPanel);
+}
+
+function hideLoadingPanel() {
+	// ローディングパネルを削除
+	const loadingPanel = document.getElementById("loading-panel");
+	if (loadingPanel) {
+		loadingPanel.remove();
+	}
+}
+
 function init() {
 	const loadButton = document.getElementById("load");
 	loadButton.disabled = true;
@@ -296,7 +361,7 @@ function init() {
 		}
 	});
 
-	getJson("../json/master.json").then((master) => {
+	getJson("../json/master.json").then(async (master) => {
 		Object.keys(master).forEach((key) => (_master[key] = master[key]));
 		loadButton.disabled = false;
 		document.getElementById("link").addEventListener("keydown", (event) => {
@@ -309,6 +374,42 @@ function init() {
 				searchElissaQA();
 			}
 		});
+
+		// 前回表示していたキャラクター群を自動読み込み（順番に）
+		const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
+		if (Array.isArray(lastViewedCharacters) && lastViewedCharacters.length > 0) {
+			// ローディングパネルを表示
+			showLoadingPanel();
+
+			let activeCharacterId = null;
+
+			for (const characterInfo of lastViewedCharacters) {
+				// 後方互換性：文字列の場合は従来形式
+				const url = typeof characterInfo === "string" ? characterInfo : characterInfo.url;
+				const isActive = typeof characterInfo === "object" ? characterInfo.isActive : false;
+				const activePanel = typeof characterInfo === "object" ? characterInfo.activePanel : "skill";
+
+				if (url) {
+					await loadCharactorFrom(url, activePanel);
+					if (isActive) {
+						activeCharacterId = getCharactorId(url);
+					}
+				}
+			}
+
+			// アクティブなキャラクターのタブをクリック
+			if (activeCharacterId !== null) {
+				setTimeout(() => {
+					const tabs = document.querySelectorAll(`[data-characte-id="${activeCharacterId}"]`);
+					if (tabs.length > 0) {
+						tabs[0].click();
+					}
+				}, 100);
+			}
+
+			// ローディングパネルを非表示
+			hideLoadingPanel();
+		}
 	});
 
 	$("#elissa-qa").on("closed.zf.reveal", (e) => {
@@ -333,11 +434,27 @@ async function loadScrollTop() {
 function loadCharactor() {
 	loadCharactorFrom(document.getElementById("link").value);
 }
-function loadCharactorFrom(url) {
+function loadCharactorFrom(url, initialPanel = "skill") {
 	const id = getCharactorId(url);
 	if (id < 0 || id in _characters) return;
 
-	getJson(`https://lhrpg.com/lhz/api/${id}.json`).then((character) => {
+	// 読み込んだキャラクターの情報をオブジェクト配列に追加
+	const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
+	const existingIndex = lastViewedCharacters.findIndex((char) => {
+		const charUrl = typeof char === "string" ? char : char.url;
+		return charUrl === url;
+	});
+
+	if (existingIndex === -1) {
+		lastViewedCharacters.push({
+			url: url,
+			isActive: Object.keys(_characters).length === 0,
+			activePanel: initialPanel,
+		});
+		_localStorage.Write("lastViewedCharacterUrls", lastViewedCharacters);
+	}
+
+	return getJson(`https://lhrpg.com/lhz/api/${id}.json`).then((character) => {
 		character.id = id;
 		const addtionalSkills = [];
 		character.skills.forEach((skill) => {
@@ -369,6 +486,10 @@ function loadCharactorFrom(url) {
 		});
 		character.skills = character.skills.concat(addtionalSkills);
 
+		// 初期パネルを設定（loadCharactorFromから渡される）
+		character.initialPanel = initialPanel;
+		character.activePanel = initialPanel; // 初期状態のアクティブパネルも設定
+
 		const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag];
 		equipments
 			.filter((equipment) => equipment)
@@ -398,6 +519,9 @@ function loadCharactorFrom(url) {
 			Object.values(_characters).forEach((character) => {
 				character.isDisplay = character.id == id;
 			});
+
+			// アクティブなキャラクターを保存
+			saveCharacterStates();
 		});
 		tabTitle.appendChild(characterTablink);
 
@@ -412,12 +536,36 @@ function loadCharactorFrom(url) {
 		Foundation.reInit("tabs");
 		characterTablink.click();
 
+		// 初期パネルを設定
+		if (character.initialPanel && character.initialPanel !== "skill") {
+			setTimeout(() => {
+				const panelButtons = tabPanel.querySelectorAll(".button-group .button");
+				panelButtons.forEach((button) => {
+					const gridId = button.getAttribute("element-grid-id");
+					if (gridId && gridId.startsWith(character.initialPanel + "-")) {
+						button.click();
+					}
+				});
+			}, 50);
+		}
+
 		appendHistory(character);
 		refreshHistoryTable();
 	});
 }
 function releaseCharacter(id) {
 	if (!(id in _characters)) return;
+
+	// 削除するキャラクターの情報を配列から削除
+	const removedCharacter = _characters[id];
+	if (removedCharacter && removedCharacter.sheet_url) {
+		const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
+		const filteredCharacters = lastViewedCharacters.filter((char) => {
+			const charUrl = typeof char === "string" ? char : char.url;
+			return charUrl !== removedCharacter.sheet_url;
+		});
+		_localStorage.Write("lastViewedCharacterUrls", filteredCharacters);
+	}
 
 	const tab = document.getElementById("character-tabs").getElementsByClassName("is-active")[0];
 	const content = document.getElementById("panel" + id);
@@ -505,6 +653,15 @@ function getCharactorId(url) {
 	if (result) return parseInt(result[1]);
 	return -1;
 }
+function saveCharacterStates() {
+	// 現在の全キャラクター状態を保存
+	const characterStates = Object.values(_characters).map((character) => ({
+		url: character.sheet_url,
+		isActive: character.isDisplay || false,
+		activePanel: character.activePanel || "skill",
+	}));
+	_localStorage.Write("lastViewedCharacterUrls", characterStates);
+}
 function getSkillChatpalettes(skill) {
 	const name = `character-${skill.characterId}`;
 	return _master.skillChatpalettes[skill.id];
@@ -533,16 +690,28 @@ function displayCharacter(panel, character) {
 	otherPanelGrid.style.display = "none";
 	const changePanel = (event) => {
 		const buttons = Object.values(event.target.parentNode.getElementsByClassName("button"));
+		let activePanelName = "skill";
 		buttons.forEach((button) => {
 			const gridId = button.getAttribute("element-grid-id");
 			if (button == event.target) {
 				button.classList.remove("hollow");
 				document.getElementById(gridId).style.display = "";
+				// アクティブなパネル名を取得
+				if (gridId.startsWith("skill-")) activePanelName = "skill";
+				else if (gridId.startsWith("item-")) activePanelName = "item";
+				else if (gridId.startsWith("other-")) activePanelName = "other";
 			} else {
 				button.classList.add("hollow");
 				document.getElementById(gridId).style.display = "none";
 			}
 		});
+
+		// 現在のキャラクターのアクティブパネルを保存
+		const currentCharacter = getCurrentCharacter();
+		if (currentCharacter) {
+			currentCharacter.activePanel = activePanelName;
+			saveCharacterStates();
+		}
 	};
 	const skillTabButton = document.createElement("a");
 	skillTabButton.classList.add("button", "secondary");
@@ -862,6 +1031,17 @@ function createSkillPanelGrid(character) {
 	const tags = ["準備", "速攻", "移動", "構え", "援護歌", "支援"];
 	tags.forEach((timing) => createFilterButton(filterTagButtonGroup, "tag", timing, "secondary"));
 
+	// style_skill_nameで指定された特技を最上段に移動
+	if (character.style_skill_name) {
+		const styleSkillIndex = character.skills.findIndex((skill) => skill.name === character.style_skill_name);
+		if (styleSkillIndex > 0) {
+			// 見つかった特技を配列の先頭に移動
+			const styleSkill = character.skills.splice(styleSkillIndex, 1)[0];
+			character.skills.unshift(styleSkill);
+			styleSkill.isStyleSkill = true;
+		}
+	}
+
 	character.skills.forEach((skill) => {
 		const cell = createSkillCell(skill);
 		grid.appendChild(cell);
@@ -906,6 +1086,9 @@ function createSkillTitleRow(skill) {
 	}
 	if (skill.isExtra) {
 		skillTableHeadRowData.style.background = "#663355";
+	}
+	if (skill.isStyleSkill) {
+		skillTableHeadRowData.style.background = "#ED6E35";
 	}
 	const skillTableHeadRowTitle = document.createElement("ul");
 	skillTableHeadRowTitle.style.margin = 0;
@@ -962,7 +1145,7 @@ function createSkillTitleRow(skill) {
 	const skillTableHeadRowDeclareCommand = document.createElement("li");
 	skillTableHeadRowDeclareCommand.textContent = "宣言";
 	skillTableHeadRowDeclareCommand.setAttribute("data-skill-id", skill.id);
-	skillTableHeadRowDeclareCommand.classList.add(!skill.isCommon ? "secondaryItem" : "commonItem");
+	skillTableHeadRowDeclareCommand.classList.add(skill.isCommon ? "commonItem" : skill.isStyleSkill ? "tertiaryItem" : "secondaryItem");
 	skillTableHeadRowDeclareCommand.style.cursor = "pointer";
 	skillTableHeadRowDeclareCommand.onclick = (event) => {
 		const character = getCurrentCharacter();
@@ -982,7 +1165,7 @@ function createSkillTitleRow(skill) {
 	const skillTableHeadRowDetailCommand = document.createElement("li");
 	skillTableHeadRowDetailCommand.textContent = "説明";
 	skillTableHeadRowDetailCommand.setAttribute("data-skill-id", skill.id);
-	skillTableHeadRowDetailCommand.classList.add(!skill.isCommon ? "secondaryItem" : "commonItem");
+	skillTableHeadRowDetailCommand.classList.add(skill.isCommon ? "commonItem" : skill.isStyleSkill ? "tertiaryItem" : "secondaryItem");
 	skillTableHeadRowDetailCommand.style.cursor = "pointer";
 	skillTableHeadRowDetailCommand.onclick = (event) => {
 		const character = getCurrentCharacter();
@@ -1009,7 +1192,7 @@ function createSkillTitleRow(skill) {
 	const skillTableHeadRowQACommand = document.createElement("li");
 	skillTableHeadRowQACommand.textContent = "QA";
 	skillTableHeadRowQACommand.setAttribute("data-skill-id", skill.id);
-	skillTableHeadRowQACommand.classList.add(!skill.isCommon ? "secondaryItem" + isDisable : "commonItem" + isDisable);
+	skillTableHeadRowQACommand.classList.add(skill.isCommon ? "commonItem" : skill.isStyleSkill ? "tertiaryItem" : "secondaryItem");
 	skillTableHeadRowQACommand.style.cursor = hasQA ? "pointer" : "default";
 	if (hasQA) {
 		skillTableHeadRowQACommand.onclick = (event) => {
@@ -1172,7 +1355,27 @@ function createEquipmentTitleDataList(item) {
 		itemNameItem.textContent = (item.alias != item.name ? `${item.alias}(${item.name})` : item.name) + "　";
 		if (item.alias.includes(item.name)) itemNameItem.textContent = item.alias + "　";
 		itemNameItem.style.fontWeight = "bold";
+		itemNameItem.style.cursor = "pointer";
+		itemNameItem.onclick = (event) => {
+			if (navigator.clipboard) {
+				try {
+					navigator.clipboard.writeText(item.alias != "" ? item.alias : item.name);
+					showAlert("アイテム名をコピーしました。", "green");
+				} catch (err) {
+					console.log(err);
+					showAlert("アイテム名のコピーに失敗しました。", "red");
+				}
+			}
+		};
 		itemNameList.appendChild(itemNameItem);
+
+		const itemRankItem = document.createElement("li");
+		itemRankItem.textContent = item.item_rank ? `IR${item.item_rank}` : "";
+		itemRankItem.style.fontWeight = "bold";
+		itemRankItem.style.padding = "0 2px";
+		itemRankItem.style.fontSize = "90%";
+		itemRankItem.style.verticalAlign = "middle";
+		itemNameList.appendChild(itemRankItem);
 
 		const itemTypeItem = document.createElement("li");
 		itemTypeItem.textContent = item.type;
@@ -1286,7 +1489,7 @@ function createBelongingsCell(character) {
 		[character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag].filter((item) => {
 			if (item) return item.slot_size > 0;
 			return false;
-		})
+		}),
 	);
 	for (let index = 0, start = 0; index < bags.length; index++) {
 		const bag = bags[index];
@@ -1320,7 +1523,27 @@ function createBelongingsTitleDataList(item) {
 		itemNameItem.textContent = (item.alias != item.name ? `${item.alias}(${item.name})` : item.name) + "　";
 		if (item.alias.includes(item.name)) itemNameItem.textContent = item.alias + "　";
 		itemNameItem.style.fontWeight = "bold";
+		itemNameItem.style.cursor = "pointer";
+		itemNameItem.onclick = (event) => {
+			if (navigator.clipboard) {
+				try {
+					navigator.clipboard.writeText(item.alias != "" ? item.alias : item.name);
+					showAlert("アイテム名をコピーしました。", "green");
+				} catch (err) {
+					console.log(err);
+					showAlert("アイテム名のコピーに失敗しました。", "red");
+				}
+			}
+		};
 		itemNameList.appendChild(itemNameItem);
+
+		const itemRankItem = document.createElement("li");
+		itemRankItem.textContent = item.item_rank ? `IR${item.item_rank}` : "";
+		itemRankItem.style.fontWeight = "bold";
+		itemRankItem.style.padding = "0 2px";
+		itemRankItem.style.fontSize = "90%";
+		itemRankItem.style.verticalAlign = "middle";
+		itemNameList.appendChild(itemRankItem);
 
 		const itemTypeItem = document.createElement("li");
 		itemTypeItem.textContent = item.type;
@@ -1657,7 +1880,7 @@ function createCcforiaJson(character) {
 		tags += `[${tag}]`;
 	});
 	ccforia.setMemo(
-		`PL:${character.player_name}\n防御:物理${character.physical_defense}/魔法${character.magic_defense}\nSTR${character.str_value}/DEX${character.dex_value}/POW${character.pow_value}/INT${character.int_value}\nLv:${character.level} タグ:${tags}\nマジックアイテムのグレード数合計:${character.totalMagicGrade}\n所持品の価格合計:${character.totalPrice}`
+		`PL:${character.player_name}\n防御:物理${character.physical_defense}/魔法${character.magic_defense}\nSTR${character.str_value}/DEX${character.dex_value}/POW${character.pow_value}/INT${character.int_value}\nLv:${character.level} タグ:${tags}\nマジックアイテムのグレード数合計:${character.totalMagicGrade}\n所持品の価格合計:${character.totalPrice}`,
 	);
 	ccforia.setInitiative(character.action);
 	ccforia.setExternalUrl(character.sheet_url);
