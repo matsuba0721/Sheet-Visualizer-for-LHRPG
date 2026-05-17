@@ -117,24 +117,35 @@ const _config = new Config();
 const _characters = new Object();
 const _localStorage = new LocalStorage();
 var __currentScrollTop = 0;
+var __historyCurrentPage = 1;
 
 init();
 
 function getJson(url) {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		try {
 			fetch(url, { cache: "no-store" })
-				.then(function (data) {
-					console.log(data);
-					return data.json(); // 読み込むデータをJSONに設定
+				.then(function (response) {
+					console.log(response);
+					if (!response.ok) {
+						// HTTPエラー（404など）をrejectで返す
+						return reject({ status: response.status, statusText: response.statusText });
+					}
+					return response.json(); // 読み込むデータをJSONに設定
 				})
 				.then(function (json) {
-					console.log(json);
-					resolve(json);
+					if (json) {
+						console.log(json);
+						resolve(json);
+					}
+				})
+				.catch(function (err) {
+					console.log(err);
+					reject(err);
 				});
 		} catch (err) {
 			console.log(err);
-			showAlert("JSONデータの取得に失敗しました。", "red");
+			reject(err);
 		}
 	});
 }
@@ -164,15 +175,16 @@ function showLoadingPanel() {
 	loadingPanel.style.alignItems = "center";
 
 	const messageBox = document.createElement("div");
-	messageBox.style.backgroundColor = "white";
+	messageBox.style.backgroundColor = "#f5f5f0";
 	messageBox.style.padding = "2rem";
 	messageBox.style.borderRadius = "8px";
 	messageBox.style.textAlign = "center";
-	messageBox.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.3)";
+	messageBox.style.boxShadow = "0 4px 12px rgba(212, 165, 116, 0.4)";
+	messageBox.style.border = "2px solid #d4a574";
 
 	const spinner = document.createElement("div");
-	spinner.style.border = "4px solid #f3f3f3";
-	spinner.style.borderTop = "4px solid #1779ba";
+	spinner.style.border = "4px solid #e8e8e0";
+	spinner.style.borderTop = "4px solid #d4a574";
 	spinner.style.borderRadius = "50%";
 	spinner.style.width = "40px";
 	spinner.style.height = "40px";
@@ -184,6 +196,7 @@ function showLoadingPanel() {
 	message.style.margin = "0";
 	message.style.fontSize = "1.1rem";
 	message.style.fontWeight = "bold";
+	message.style.color = "#2c2416";
 
 	messageBox.appendChild(spinner);
 	messageBox.appendChild(message);
@@ -310,14 +323,17 @@ function init() {
 		li.textContent = timing;
 		li.style.cursor = "pointer";
 		li.style.fontSize = "small";
-		li.style.backgroundColor = "#EEE";
+		li.style.backgroundColor = "#f5f5f0";
 		li.style.margin = "2px";
+		li.style.border = "1px solid #d4c4b4";
+		li.style.borderRadius = "4px";
+		li.style.padding = "4px 8px";
 		li.ondragstart = function (event) {
 			event.dataTransfer.setData("text/plain", event.target.id);
 		};
 		li.ondragover = function (event) {
 			event.preventDefault();
-			this.style.borderTop = "3px solid";
+			this.style.borderTop = "3px solid #d4a574";
 		};
 		li.ondragleave = function () {
 			this.style.borderTop = "";
@@ -364,10 +380,25 @@ function init() {
 	getJson("../json/master.json").then(async (master) => {
 		Object.keys(master).forEach((key) => (_master[key] = master[key]));
 		loadButton.disabled = false;
-		document.getElementById("link").addEventListener("keydown", (event) => {
+		const linkInput = document.getElementById("link");
+		linkInput.addEventListener("keydown", (event) => {
 			if (event.key === "Enter") {
 				loadCharactor();
+				hideHistoryPopup();
+			} else if (event.key === "Escape") {
+				hideHistoryPopup();
 			}
+		});
+		linkInput.addEventListener("focus", () => {
+			showHistoryPopup();
+		});
+		linkInput.addEventListener("input", () => {
+			// 入力時にリアルタイムでフィルタ
+			showHistoryPopup();
+		});
+		linkInput.addEventListener("blur", () => {
+			// 少し遅延させて、ポップアップ内のクリックを処理可能にする
+			setTimeout(() => hideHistoryPopup(), 200);
 		});
 		document.getElementById("elissa-qa-keyword").addEventListener("keydown", (event) => {
 			if (event.key === "Enter") {
@@ -416,8 +447,6 @@ function init() {
 		loadScrollTop();
 	});
 	document.documentElement.addEventListener("scroll", (event) => {});
-
-	refreshHistoryTable();
 }
 function saveScrollTop() {
 	__currentScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -431,6 +460,252 @@ async function loadScrollTop() {
 		}, 0);
 	});
 }
+function showHistoryPopup(page = 1) {
+	const linkInput = document.getElementById("link");
+	let existingPopup = document.getElementById("url-history-popup");
+
+	let historys = Object.values(_localStorage.Read("character-loadHistory", {}));
+	if (!Array.isArray(historys) || historys.length === 0) {
+		return; // 履歴がない場合は表示しない
+	}
+
+	// 入力値を取得してフィルタ
+	const filterText = linkInput.value.trim();
+	if (filterText) {
+		// URLかどうかを判定（IDが抽出できるか）
+		const filterId = getCharactorId(filterText);
+		if (filterId >= 0) {
+			// URLの場合：IDで照合
+			historys = historys.filter((history) => history.id === filterId);
+		} else {
+			// それ以外：フリーワード検索（PC名・PL名・タグ）
+			const searchText = filterText.toLowerCase();
+			historys = historys.filter((history) => {
+				console.log(history);
+				const characterName = (history.characterName || "").toLowerCase();
+				const playerName = (history.playerName || "").toLowerCase();
+				const tags = (history.tags || "").toLowerCase();
+				return characterName.includes(searchText) || playerName.includes(searchText) || tags.includes(searchText);
+			});
+		}
+	}
+
+	// フィルタ後に結果がない場合は非表示
+	if (historys.length === 0) {
+		hideHistoryPopup();
+		return;
+	}
+
+	// 日付降順でソート（新しい順）
+	historys.sort((a, b) => {
+		const dateA = a.date ? new Date(a.date).getTime() : 0;
+		const dateB = b.date ? new Date(b.date).getTime() : 0;
+		return dateB - dateA;
+	});
+
+	// ページング設定
+	const itemsPerPage = 5;
+	const totalPages = Math.ceil(historys.length / itemsPerPage);
+	__historyCurrentPage = Math.max(1, Math.min(page, totalPages));
+	const startIndex = (page - 1) * itemsPerPage;
+	const endIndex = startIndex + itemsPerPage;
+	const pageItems = historys.slice(startIndex, endIndex);
+
+	// 既存のポップアップがある場合はリスト内容のみ更新
+	if (existingPopup) {
+		// リスト部分をクリア
+		const existingList = existingPopup.querySelector(".url-history-list");
+		if (existingList) {
+			existingList.innerHTML = "";
+		}
+
+		// ページ情報を更新
+		const pageInfo = existingPopup.querySelector(".url-history-page-info");
+		if (pageInfo && totalPages > 1) {
+			pageInfo.textContent = `${page}/${totalPages}`;
+		}
+
+		// 既存のページネーションを削除
+		const existingPagination = existingPopup.querySelector(".url-history-pagination");
+		if (existingPagination) {
+			existingPagination.remove();
+		}
+
+		// リストアイテムを追加
+		pageItems.forEach((historyItem) => {
+			const item = createHistoryItem(historyItem, linkInput);
+			existingList.appendChild(item);
+		});
+
+		// 新しいページネーションを追加
+		if (totalPages > 1) {
+			const pagination = createPagination(page, totalPages);
+			existingPopup.appendChild(pagination);
+		}
+
+		return;
+	}
+
+	// 新規作成の場合
+	const popup = document.createElement("div");
+	popup.id = "url-history-popup";
+	popup.className = "url-history-popup";
+
+	// 位置を計算（input-group全体の真下）
+	const inputGroup = linkInput.closest(".input-group");
+	const rect = inputGroup ? inputGroup.getBoundingClientRect() : linkInput.getBoundingClientRect();
+	popup.style.position = "absolute";
+	popup.style.top = `${rect.bottom + window.scrollY}px`;
+	popup.style.left = `${rect.left + window.scrollX}px`;
+	popup.style.width = `${rect.width}px`;
+
+	// ヘッダー（タイトルとページ情報）
+	const header = document.createElement("div");
+	header.className = "url-history-header";
+
+	const title = document.createElement("div");
+	title.className = "url-history-title";
+	title.textContent = "読み込み履歴";
+	header.appendChild(title);
+
+	if (totalPages > 1) {
+		const pageInfo = document.createElement("div");
+		pageInfo.className = "url-history-page-info";
+		pageInfo.textContent = `${page}/${totalPages}`;
+		header.appendChild(pageInfo);
+	}
+
+	popup.appendChild(header);
+
+	// 履歴リスト
+	const list = document.createElement("div");
+	list.className = "url-history-list";
+
+	pageItems.forEach((historyItem) => {
+		const item = createHistoryItem(historyItem, linkInput);
+		list.appendChild(item);
+	});
+
+	popup.appendChild(list);
+
+	// ページネーション
+	if (totalPages > 1) {
+		const pagination = createPagination(page, totalPages);
+		popup.appendChild(pagination);
+	}
+
+	document.body.appendChild(popup);
+}
+
+function createHistoryItem(historyItem, linkInput) {
+	const item = document.createElement("div");
+	item.className = "url-history-item";
+
+	// 削除済みの場合は特別なクラスを追加
+	if (historyItem.isDeleted) {
+		item.classList.add("history-item-deleted");
+	}
+
+	// PC名・PL名・人物タグ・日付を表示
+	const infoLine = document.createElement("div");
+	infoLine.className = "history-item-info";
+
+	if (historyItem.characterName) {
+		const pcName = document.createElement("span");
+		pcName.className = "history-pc-name";
+		pcName.textContent = historyItem.characterName;
+		infoLine.appendChild(pcName);
+	}
+
+	if (historyItem.playerName) {
+		const plName = document.createElement("span");
+		plName.className = "history-pl-name";
+		plName.textContent = `PL: ${historyItem.playerName}`;
+		infoLine.appendChild(plName);
+	}
+
+	console.log(historyItem);
+	if (historyItem.tags) {
+		const tags = document.createElement("span");
+		tags.className = "history-tags";
+		tags.textContent = historyItem.tags;
+		infoLine.appendChild(tags);
+	}
+
+	if (historyItem.date) {
+		const date = document.createElement("span");
+		date.className = "history-date";
+		const dateObj = new Date(historyItem.date);
+		date.textContent = `${dateObj.getMonth() + 1}/${dateObj.getDate()} ${dateObj.getHours()}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
+		infoLine.appendChild(date);
+	}
+
+	item.appendChild(infoLine);
+
+	item.title = historyItem.url;
+
+	// 削除済みでない場合のみクリック可能
+	if (!historyItem.isDeleted) {
+		item.addEventListener("mousedown", (event) => {
+			event.preventDefault(); // blur イベントの前に処理
+			linkInput.value = historyItem.url;
+			loadCharactor();
+			hideHistoryPopup();
+			document.activeElement.blur();
+		});
+	} else {
+		item.style.cursor = "not-allowed";
+	}
+
+	return item;
+}
+
+function createPagination(page, totalPages) {
+	const pagination = document.createElement("div");
+	pagination.className = "url-history-pagination";
+
+	// 前へボタン
+	const prevButton = document.createElement("button");
+	prevButton.className = "history-page-button";
+	prevButton.textContent = "◀ 前へ";
+	prevButton.disabled = page === 1;
+	prevButton.addEventListener("mousedown", (event) => {
+		event.preventDefault();
+		if (page > 1) {
+			showHistoryPopup(page - 1);
+		}
+	});
+	pagination.appendChild(prevButton);
+
+	// ページ番号表示
+	const pageNumbers = document.createElement("span");
+	pageNumbers.className = "history-page-numbers";
+	pageNumbers.textContent = `${page} / ${totalPages}`;
+	pagination.appendChild(pageNumbers);
+
+	// 次へボタン
+	const nextButton = document.createElement("button");
+	nextButton.className = "history-page-button";
+	nextButton.textContent = "次へ ▶";
+	nextButton.disabled = page === totalPages;
+	nextButton.addEventListener("mousedown", (event) => {
+		event.preventDefault();
+		if (page < totalPages) {
+			showHistoryPopup(page + 1);
+		}
+	});
+	pagination.appendChild(nextButton);
+
+	return pagination;
+}
+
+function hideHistoryPopup() {
+	const popup = document.getElementById("url-history-popup");
+	if (popup) {
+		popup.remove();
+	}
+}
+
 function loadCharactor() {
 	loadCharactorFrom(document.getElementById("link").value);
 }
@@ -438,125 +713,156 @@ function loadCharactorFrom(url, initialPanel = "skill") {
 	const id = getCharactorId(url);
 	if (id < 0 || id in _characters) return;
 
-	// 読み込んだキャラクターの情報をオブジェクト配列に追加
-	const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
-	const existingIndex = lastViewedCharacters.findIndex((char) => {
-		const charUrl = typeof char === "string" ? char : char.url;
-		return charUrl === url;
-	});
-
-	if (existingIndex === -1) {
-		lastViewedCharacters.push({
-			url: url,
-			isActive: Object.keys(_characters).length === 0,
-			activePanel: initialPanel,
-		});
-		_localStorage.Write("lastViewedCharacterUrls", lastViewedCharacters);
-	}
-
-	return getJson(`https://lhrpg.com/lhz/api/${id}.json`).then((character) => {
-		character.id = id;
-		const addtionalSkills = [];
-		character.skills.forEach((skill) => {
-			if (skill.id == 148) {
-				addtionalSkills.push(_master.extraSkills[0]);
-				addtionalSkills.push(_master.extraSkills[1]);
-			} else if (skill.id == 150) {
-				if (character.character_rank >= 10) {
-					addtionalSkills.push(_master.extraSkills[2]);
-				} else {
+	return getJson(`https://lhrpg.com/lhz/api/${id}.json`)
+		.then((character) => {
+			character.id = id;
+			const addtionalSkills = [];
+			character.skills.forEach((skill) => {
+				if (skill.id == 148) {
+					addtionalSkills.push(_master.extraSkills[0]);
+					addtionalSkills.push(_master.extraSkills[1]);
+				} else if (skill.id == 150) {
+					if (character.character_rank >= 10) {
+						addtionalSkills.push(_master.extraSkills[2]);
+					} else {
+						addtionalSkills.push(_master.extraSkills[4]);
+					}
+					if (skill.skill_rank == 2) {
+						addtionalSkills.push(_master.extraSkills[3]);
+					}
+				} else if (skill.id == 3506) {
+					addtionalSkills.push(_master.extraSkills[5]);
+					addtionalSkills.push(_master.extraSkills[6]);
+				} else if (skill.id == 4706) {
 					addtionalSkills.push(_master.extraSkills[4]);
+					addtionalSkills.push(_master.extraSkills[7]);
+				} else if (skill.id == 4707) {
+					addtionalSkills.push(_master.extraSkills[8]);
+					addtionalSkills.push(_master.extraSkills[9]);
+				} else if (skill.id == 4708) {
+					addtionalSkills.push(_master.extraSkills[10]);
+					addtionalSkills.push(_master.extraSkills[11]);
 				}
-				if (skill.skill_rank == 2) {
-					addtionalSkills.push(_master.extraSkills[3]);
-				}
-			} else if (skill.id == 3506) {
-				addtionalSkills.push(_master.extraSkills[5]);
-				addtionalSkills.push(_master.extraSkills[6]);
-			} else if (skill.id == 4706) {
-				addtionalSkills.push(_master.extraSkills[4]);
-				addtionalSkills.push(_master.extraSkills[7]);
-			} else if (skill.id == 4707) {
-				addtionalSkills.push(_master.extraSkills[8]);
-				addtionalSkills.push(_master.extraSkills[9]);
-			} else if (skill.id == 4708) {
-				addtionalSkills.push(_master.extraSkills[10]);
-				addtionalSkills.push(_master.extraSkills[11]);
+			});
+			character.skills = character.skills.concat(addtionalSkills);
+
+			// 初期パネルを設定（loadCharactorFromから渡される）
+			character.initialPanel = initialPanel;
+			character.activePanel = initialPanel; // 初期状態のアクティブパネルも設定
+
+			const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag];
+			equipments
+				.filter((equipment) => equipment)
+				.forEach((equipment) => {
+					if (equipment.id == 719) equipment.slot_size = 6;
+					else if (equipment.id == 721) equipment.slot_size = 8;
+				});
+
+			initCharacter(character);
+
+			_characters[id] = character;
+			const panelId = "panel" + id;
+
+			const characterTabs = document.getElementById("character-tabs");
+
+			const tabTitle = document.createElement("li");
+			tabTitle.className = "tabs-title";
+			characterTabs.appendChild(tabTitle);
+
+			const characterTablink = document.createElement("a");
+			characterTablink.href = "#" + panelId;
+			characterTablink.setAttribute("data-tabs-target", panelId);
+			characterTablink.setAttribute("data-characte-id", id);
+			characterTablink.textContent = character.name;
+			characterTablink.addEventListener("click", (event) => {
+				const id = parseInt(event.target.getAttribute("data-characte-id"));
+				Object.values(_characters).forEach((character) => {
+					character.isDisplay = character.id == id;
+				});
+
+				// アクティブなキャラクターを保存
+				saveCharacterStates();
+			});
+			tabTitle.appendChild(characterTablink);
+
+			const characterContents = document.getElementById("character-contents");
+			characterContents.style.border = "none";
+			const tabPanel = document.createElement("div");
+			tabPanel.className = "callout tabs-panel";
+			tabPanel.id = panelId;
+			characterContents.appendChild(tabPanel);
+
+			displayCharacter(tabPanel, character);
+
+			Foundation.reInit("tabs");
+			characterTablink.click();
+
+			// 初期パネルを設定
+			if (character.initialPanel && character.initialPanel !== "skill") {
+				setTimeout(() => {
+					const panelButtons = tabPanel.querySelectorAll(".button-group .button");
+					panelButtons.forEach((button) => {
+						const gridId = button.getAttribute("element-grid-id");
+						if (gridId && gridId.startsWith(character.initialPanel + "-")) {
+							button.click();
+						}
+					});
+				}, 50);
+			}
+
+			// キャラクター詳細情報を含めてlocalStorageに保存（セッション状態）
+			const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
+			const existingIndex = lastViewedCharacters.findIndex((char) => {
+				const charUrl = typeof char === "string" ? char : char.url;
+				return charUrl === url;
+			});
+
+			const characterInfo = {
+				id: id,
+				characterName: character.name || "不明",
+				playerName: character.player_name || "不明",
+				tags: Array.from(character.tags, (tag) => `[${tag}]`).join(),
+				url: url,
+				date: new Date().toISOString(),
+				isActive: Object.keys(_characters).length === 1,
+				activePanel: initialPanel,
+			};
+
+			if (existingIndex === -1) {
+				lastViewedCharacters.push(characterInfo);
+			} else {
+				lastViewedCharacters[existingIndex] = characterInfo;
+			}
+
+			_localStorage.Write("lastViewedCharacterUrls", lastViewedCharacters);
+
+			// 履歴にも追加（過去のロード履歴として蓄積）
+			const loadHistory = _localStorage.Read("character-loadHistory", {});
+			loadHistory[id] = characterInfo;
+
+			_localStorage.Write("character-loadHistory", loadHistory);
+		})
+		.catch((error) => {
+			console.error("キャラクターデータの取得に失敗:", error);
+
+			// 404エラーの場合、履歴に削除済みとして記録
+			if (error.status === 404) {
+				const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
+				const filteredCharacters = lastViewedCharacters.filter((char) => {
+					const charUrl = typeof char === "string" ? char : char.url;
+					return charUrl !== url;
+				});
+				_localStorage.Write("lastViewedCharacterUrls", filteredCharacters);
+				showAlert("このキャラクターは削除されています（404エラー）", "red");
+			} else {
+				showAlert("JSONデータの取得に失敗しました。", "red");
 			}
 		});
-		character.skills = character.skills.concat(addtionalSkills);
-
-		// 初期パネルを設定（loadCharactorFromから渡される）
-		character.initialPanel = initialPanel;
-		character.activePanel = initialPanel; // 初期状態のアクティブパネルも設定
-
-		const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag];
-		equipments
-			.filter((equipment) => equipment)
-			.forEach((equipment) => {
-				if (equipment.id == 719) equipment.slot_size = 6;
-				else if (equipment.id == 721) equipment.slot_size = 8;
-			});
-
-		initCharacter(character);
-
-		_characters[id] = character;
-		const panelId = "panel" + id;
-
-		const characterTabs = document.getElementById("character-tabs");
-
-		const tabTitle = document.createElement("li");
-		tabTitle.className = "tabs-title";
-		characterTabs.appendChild(tabTitle);
-
-		const characterTablink = document.createElement("a");
-		characterTablink.href = "#" + panelId;
-		characterTablink.setAttribute("data-tabs-target", panelId);
-		characterTablink.setAttribute("data-characte-id", id);
-		characterTablink.textContent = character.name;
-		characterTablink.addEventListener("click", (event) => {
-			const id = parseInt(event.target.getAttribute("data-characte-id"));
-			Object.values(_characters).forEach((character) => {
-				character.isDisplay = character.id == id;
-			});
-
-			// アクティブなキャラクターを保存
-			saveCharacterStates();
-		});
-		tabTitle.appendChild(characterTablink);
-
-		const characterContents = document.getElementById("character-contents");
-		const tabPanel = document.createElement("div");
-		tabPanel.className = "callout tabs-panel";
-		tabPanel.id = panelId;
-		characterContents.appendChild(tabPanel);
-
-		displayCharacter(tabPanel, character);
-
-		Foundation.reInit("tabs");
-		characterTablink.click();
-
-		// 初期パネルを設定
-		if (character.initialPanel && character.initialPanel !== "skill") {
-			setTimeout(() => {
-				const panelButtons = tabPanel.querySelectorAll(".button-group .button");
-				panelButtons.forEach((button) => {
-					const gridId = button.getAttribute("element-grid-id");
-					if (gridId && gridId.startsWith(character.initialPanel + "-")) {
-						button.click();
-					}
-				});
-			}, 50);
-		}
-
-		appendHistory(character);
-		refreshHistoryTable();
-	});
 }
 function releaseCharacter(id) {
 	if (!(id in _characters)) return;
 
-	// 削除するキャラクターの情報を配列から削除
+	// 削除するキャラクターの情報をセッション状態から削除（履歴は残す）
 	const removedCharacter = _characters[id];
 	if (removedCharacter && removedCharacter.sheet_url) {
 		const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
@@ -654,9 +960,14 @@ function getCharactorId(url) {
 	return -1;
 }
 function saveCharacterStates() {
-	// 現在の全キャラクター状態を保存
+	// 現在の全キャラクター状態を保存（セッション復元用）
 	const characterStates = Object.values(_characters).map((character) => ({
+		id: character.id,
+		characterName: character.name || "不明",
+		playerName: character.player_name || "不明",
+		tags: character.characterTags || "",
 		url: character.sheet_url,
+		date: new Date().toISOString(),
 		isActive: character.isDisplay || false,
 		activePanel: character.activePanel || "skill",
 	}));
@@ -809,7 +1120,7 @@ function createProfileCell(character) {
 function createStatusGrid(character) {
 	const appendRow = function (array) {
 		const row = document.createElement("tr");
-		row.style.color = "#333";
+		row.style.color = "#3a2a1a";
 		array.forEach((element) => {
 			const data = document.createElement("td");
 			data.textContent = element;
@@ -833,8 +1144,9 @@ function createStatusGrid(character) {
 	const foundationTableHeadRowData = document.createElement("th");
 	foundationTableHeadRowData.colSpan = 6;
 	foundationTableHeadRowData.textContent = "FOUNDATION";
-	foundationTableHeadRow.style.background = "#ED6E37";
+	foundationTableHeadRow.style.background = "linear-gradient(180deg, #d4a574 0%, #c49564 100%)";
 	foundationTableHeadRow.style.color = "whitesmoke";
+	foundationTableHeadRow.style.fontWeight = "600";
 	foundationTable.appendChild(foundationTableHead);
 	foundationTableHead.appendChild(foundationTableHeadRow);
 	foundationTableHeadRow.appendChild(foundationTableHeadRowData);
@@ -862,8 +1174,9 @@ function createStatusGrid(character) {
 	const battleTableHeadRowData = document.createElement("th");
 	battleTableHeadRowData.colSpan = 6;
 	battleTableHeadRowData.textContent = "BATTLE";
-	battleTableHeadRow.style.background = "#ED6E37";
+	battleTableHeadRow.style.background = "linear-gradient(180deg, #d4a574 0%, #c49564 100%)";
 	battleTableHeadRow.style.color = "whitesmoke";
+	battleTableHeadRow.style.fontWeight = "600";
 	battleTable.appendChild(battleTableHead);
 	battleTableHead.appendChild(battleTableHeadRow);
 	battleTableHeadRow.appendChild(battleTableHeadRowData);
@@ -888,8 +1201,8 @@ function createSkillPanelGrid(character) {
 	const filterCell = createCellElement(12);
 	filterCell.style.position = "relative";
 	filterCell.style.marginBottom = "0.5em";
-	filterCell.style.backgroundClip = "content-box";
-	filterCell.style.backgroundColor = "#eaeaea";
+	filterCell.style.backgroundColor = "#f5f5f0";
+	filterCell.style.border = "2px solid #d4c4b4";
 	filterCell.setAttribute("data-is-multi-select", true);
 	grid.appendChild(filterCell);
 
@@ -897,7 +1210,8 @@ function createSkillPanelGrid(character) {
 	filterResetButton.className = "small secondary button";
 	filterResetButton.type = "button";
 	filterResetButton.innerHTML = "リセット";
-	filterResetButton.style.backgroundColor = "#999";
+	filterResetButton.style.backgroundColor = "#8a7a6a";
+	filterResetButton.style.color = "#f5f5f0";
 	filterResetButton.style.position = "absolute";
 	filterResetButton.style.padding = "0.2rem";
 	filterResetButton.style.top = "3.4rem";
@@ -1074,21 +1388,26 @@ function createSkillCell(skill) {
 }
 function createSkillTitleRow(skill) {
 	const skillTableHeadRow = document.createElement("tr");
-	skillTableHeadRow.style.color = "whitesmoke";
+	skillTableHeadRow.style.color = "#f5f5f0";
+	skillTableHeadRow.style.background = "linear-gradient(180deg, #5a4a3a 0%, #4a3a2a 100%)";
+	skillTableHeadRow.style.fontWeight = "600";
 
 	const skillTableHeadRowData = document.createElement("th");
 	skillTableHeadRowData.colSpan = 7;
 	skillTableHeadRowData.style.padding = "0.2em";
 	skillTableHeadRow.appendChild(skillTableHeadRowData);
 	if (skill.isCommon) {
-		skillTableHeadRowData.style.color = "#333";
-		skillTableHeadRowData.style.background = "#BBB";
+		skillTableHeadRowData.style.color = "#3a2a1a";
+		skillTableHeadRowData.style.background = "linear-gradient(180deg, #c4b4a4 0%, #b4a494 100%)";
 	}
 	if (skill.isExtra) {
-		skillTableHeadRowData.style.background = "#663355";
+		skillTableHeadRowData.style.background = "linear-gradient(180deg, #7a4a6a 0%, #663355 100%)";
 	}
 	if (skill.isStyleSkill) {
-		skillTableHeadRowData.style.background = "#ED6E35";
+		skillTableHeadRowData.style.background = "linear-gradient(180deg, #d4a574 0%, #c49564 100%)";
+		skillTableHeadRowData.style.color = "#2a1a0a";
+		skillTableHeadRowData.style.fontWeight = "700";
+		skillTableHeadRowData.style.textShadow = "0 1px 2px rgba(255, 255, 255, 0.5)";
 	}
 	const skillTableHeadRowTitle = document.createElement("ul");
 	skillTableHeadRowTitle.style.margin = 0;
@@ -1099,6 +1418,7 @@ function createSkillTitleRow(skill) {
 	const skillTableHeadRowName = document.createElement("li");
 	skillTableHeadRowName.textContent = skill.name;
 	skillTableHeadRowName.setAttribute("data-skill-id", skill.id);
+	skillTableHeadRowName.style.paddingTop = "2px";
 	skillTableHeadRowName.style.paddingRight = "1rem";
 	skillTableHeadRowName.style.cursor = "pointer";
 	skillTableHeadRowName.onclick = (event) => {
@@ -1127,9 +1447,12 @@ function createSkillTitleRow(skill) {
 	skill.tags.forEach((tag) => {
 		const skillTableHeadRowtag = document.createElement("li");
 		skillTableHeadRowtag.textContent = tag;
-		skillTableHeadRowtag.style.border = "solid 1px #fff";
-		skillTableHeadRowtag.style.backgroundColor = "white";
-		skillTableHeadRowtag.style.color = "black";
+		skillTableHeadRowtag.style.border = "solid 2px rgba(255, 255, 255, 0.9)";
+		skillTableHeadRowtag.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+		skillTableHeadRowtag.style.color = "#3a2a1a";
+		skillTableHeadRowtag.style.borderRadius = "3px";
+		skillTableHeadRowtag.style.padding = "2px 6px";
+		skillTableHeadRowtag.style.fontWeight = "500";
 		skillTableHeadRowtag.style.padding = "0 2px";
 		skillTableHeadRowtag.style.fontSize = "90%";
 		skillTableHeadRowtag.style.verticalAlign = "middle";
@@ -1209,7 +1532,7 @@ function createSkillTitleRow(skill) {
 }
 function createPropertyRow(skill) {
 	const propertyRow = document.createElement("tr");
-	propertyRow.style.color = "#444";
+	propertyRow.style.color = "#4a3a2a";
 	propertyRow.style.fontSize = "smaller";
 
 	const SRData = document.createElement("td");
@@ -1238,7 +1561,7 @@ function createPropertyRow(skill) {
 }
 function createSkillFunctionRow(skill) {
 	const functionRow = document.createElement("tr");
-	functionRow.style.color = "#444";
+	functionRow.style.color = "#4a3a2a";
 	functionRow.style.fontSize = "smaller";
 
 	const functionData = document.createElement("td");
@@ -1250,7 +1573,7 @@ function createSkillFunctionRow(skill) {
 }
 function createSkillExplainRow(skill) {
 	const explainRow = document.createElement("tr");
-	explainRow.style.color = "#444";
+	explainRow.style.color = "#4a3a2a";
 	explainRow.style.fontSize = "smaller";
 
 	const explainData = document.createElement("td");
@@ -1280,8 +1603,9 @@ function createEquipmentCell(character) {
 	const equipmentTableHead = document.createElement("thead");
 	equipmentTable.appendChild(equipmentTableHead);
 	const equipmentTableHeadRow = document.createElement("tr");
-	equipmentTableHeadRow.style.background = "#767676";
-	equipmentTableHeadRow.style.color = "whitesmoke";
+	equipmentTableHeadRow.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	equipmentTableHeadRow.style.color = "#f5f5f0";
+	equipmentTableHeadRow.style.fontWeight = "600";
 	equipmentTableHead.appendChild(equipmentTableHeadRow);
 
 	const equipmentTableHeadRowData = document.createElement("th");
@@ -1295,7 +1619,7 @@ function createEquipmentCell(character) {
 
 	const createEquipmentRow = () => {
 		const row = document.createElement("tr");
-		row.style.color = "#444";
+		row.style.color = "#4a3a2a";
 		row.style.fontSize = "smaller";
 		return row;
 	};
@@ -1379,23 +1703,27 @@ function createEquipmentTitleDataList(item) {
 
 		const itemTypeItem = document.createElement("li");
 		itemTypeItem.textContent = item.type;
-		itemTypeItem.style.color = "white";
-		itemTypeItem.style.backgroundColor = "#664933";
-		itemTypeItem.style.border = "solid 1px #664933";
-		itemTypeItem.style.padding = "0 2px";
+		itemTypeItem.style.color = "#f5f5f0";
+		itemTypeItem.style.backgroundColor = "#7a5a3a";
+		itemTypeItem.style.border = "solid 2px #7a5a3a";
+		itemTypeItem.style.borderRadius = "3px";
+		itemTypeItem.style.padding = "2px 6px";
 		itemTypeItem.style.fontSize = "90%";
 		itemTypeItem.style.verticalAlign = "middle";
+		itemTypeItem.style.fontWeight = "600";
 		itemNameList.appendChild(itemTypeItem);
 
 		item.tags.forEach((tag) => {
 			const itemTagItem = document.createElement("li");
 			itemTagItem.textContent = tag;
-			itemTagItem.style.border = "solid 1px #aaa";
-			itemTagItem.style.backgroundColor = "white";
-			itemTagItem.style.color = "black";
-			itemTagItem.style.padding = "0 2px";
+			itemTagItem.style.border = "solid 2px #b0a090";
+			itemTagItem.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+			itemTagItem.style.color = "#3a2a1a";
+			itemTagItem.style.borderRadius = "3px";
+			itemTagItem.style.padding = "2px 6px";
 			itemTagItem.style.fontSize = "90%";
 			itemTagItem.style.verticalAlign = "middle";
+			itemTagItem.style.fontWeight = "500";
 			itemNameList.appendChild(itemTagItem);
 		});
 
@@ -1417,7 +1745,7 @@ function createEquipmentPrefixData(item) {
 	} else {
 		rowData.textContent = "　";
 	}
-	rowData.style.borderBottom = "1px solid #888";
+	rowData.style.borderBottom = "1px solid #c4b4a4";
 	rowData.style.padding = "0.2em";
 	return rowData;
 }
@@ -1430,8 +1758,9 @@ function createBelongingsCell(character) {
 	const tableHead = document.createElement("thead");
 	table.appendChild(tableHead);
 	const tableHeadRow = document.createElement("tr");
-	tableHeadRow.style.background = "#767676";
-	tableHeadRow.style.color = "whitesmoke";
+	tableHeadRow.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	tableHeadRow.style.color = "#f5f5f0";
+	tableHeadRow.style.fontWeight = "600";
 	tableHead.appendChild(tableHeadRow);
 
 	const tableHeadRowData = document.createElement("th");
@@ -1445,17 +1774,17 @@ function createBelongingsCell(character) {
 
 	const createRow = () => {
 		const row = document.createElement("tr");
-		row.style.color = "#444";
+		row.style.color = "#4a3a2a";
 		row.style.fontSize = "smaller";
 		return row;
 	};
 	const createRowData = (name) => {
 		const rowData = document.createElement("th");
 		rowData.textContent = name;
-		rowData.style.color = "white";
-		rowData.style.backgroundColor = "#664933";
-		rowData.style.borderTop = "1px solid #664933";
-		rowData.style.borderBottom = "1px solid #ddd";
+		rowData.style.color = "#f5f5f0";
+		rowData.style.backgroundColor = "#7a5a3a";
+		rowData.style.borderTop = "1px solid #6a4a2a";
+		rowData.style.borderBottom = "1px solid #e8e8e0";
 		rowData.style.width = "54px";
 		rowData.style.padding = "0.2em";
 		return rowData;
@@ -1547,23 +1876,27 @@ function createBelongingsTitleDataList(item) {
 
 		const itemTypeItem = document.createElement("li");
 		itemTypeItem.textContent = item.type;
-		itemTypeItem.style.color = "white";
-		itemTypeItem.style.backgroundColor = "#664933";
-		itemTypeItem.style.border = "solid 1px #664933";
-		itemTypeItem.style.padding = "0 2px";
+		itemTypeItem.style.color = "#f5f5f0";
+		itemTypeItem.style.backgroundColor = "#7a5a3a";
+		itemTypeItem.style.border = "solid 2px #7a5a3a";
+		itemTypeItem.style.borderRadius = "3px";
+		itemTypeItem.style.padding = "2px 6px";
 		itemTypeItem.style.fontSize = "90%";
 		itemTypeItem.style.verticalAlign = "middle";
+		itemTypeItem.style.fontWeight = "600";
 		itemNameList.appendChild(itemTypeItem);
 
 		item.tags.forEach((tag) => {
 			const itemTagItem = document.createElement("li");
 			itemTagItem.textContent = tag;
-			itemTagItem.style.border = "solid 1px #aaa";
-			itemTagItem.style.backgroundColor = "white";
-			itemTagItem.style.color = "black";
-			itemTagItem.style.padding = "0 2px";
+			itemTagItem.style.border = "solid 2px #b0a090";
+			itemTagItem.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+			itemTagItem.style.color = "#3a2a1a";
+			itemTagItem.style.borderRadius = "3px";
+			itemTagItem.style.padding = "2px 6px";
 			itemTagItem.style.fontSize = "90%";
 			itemTagItem.style.verticalAlign = "middle";
+			itemTagItem.style.fontWeight = "500";
 			itemNameList.appendChild(itemTagItem);
 		});
 
@@ -1588,7 +1921,7 @@ function createBelongingsFunctionData(belongings) {
 	} else {
 		rowData.textContent = "　";
 	}
-	rowData.style.borderBottom = "1px solid #888";
+	rowData.style.borderBottom = "1px solid #c4b4a4";
 	rowData.style.padding = "0.2em";
 	return rowData;
 }
@@ -1615,7 +1948,9 @@ function createRemarksCell(character) {
 	const tableHead = document.createElement("thead");
 	table.appendChild(tableHead);
 	const tableHeadRow = document.createElement("tr");
-	tableHeadRow.style.color = "whitesmoke";
+	tableHeadRow.style.color = "#f5f5f0";
+	tableHeadRow.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	tableHeadRow.style.fontWeight = "600";
 	tableHead.appendChild(tableHeadRow);
 	const tableHeadRowData = document.createElement("th");
 	tableHeadRowData.textContent = "概要";
@@ -1625,7 +1960,7 @@ function createRemarksCell(character) {
 	const tableBody = document.createElement("tbody");
 	table.appendChild(tableBody);
 	const detailRow = document.createElement("tr");
-	detailRow.style.color = "#444";
+	detailRow.style.color = "#4a3a2a";
 	tableBody.appendChild(detailRow);
 	const detailRowData = document.createElement("td");
 	detailRowData.innerHTML = character.remarks ? character.remarks.replaceAll("\n", "<br>") : "";
@@ -1655,7 +1990,9 @@ function createGuidingCreedCell(character) {
 }
 function createGuidingCreedTitleRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "whitesmoke";
+	row.style.color = "#f5f5f0";
+	row.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	row.style.fontWeight = "600";
 
 	const rowData = document.createElement("th");
 	rowData.textContent = "ガイディングクリード";
@@ -1667,7 +2004,7 @@ function createGuidingCreedTitleRow(character) {
 }
 function createGuidingCreedPropertyRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "#444";
+	row.style.color = "#4a3a2a";
 
 	const nameData = document.createElement("td");
 	nameData.textContent = `クリード名：${character.creed_name}`;
@@ -1683,7 +2020,7 @@ function createGuidingCreedPropertyRow(character) {
 }
 function createGuidingCreedDetailRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "#444";
+	row.style.color = "#4a3a2a";
 
 	const nameData = document.createElement("td");
 	nameData.textContent = `説明：${character.creed_detail}`;
@@ -1717,7 +2054,9 @@ function createConnectionAndUnionCell(character) {
 }
 function createConnectionAndUnionTitleRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "whitesmoke";
+	row.style.color = "#f5f5f0";
+	row.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	row.style.fontWeight = "600";
 
 	const rowData = document.createElement("th");
 	rowData.textContent = "コネクション・ユニオン";
@@ -1729,7 +2068,7 @@ function createConnectionAndUnionTitleRow(character) {
 }
 function createConnectionRow(connection) {
 	const row = document.createElement("tr");
-	row.style.color = "#444";
+	row.style.color = "#4a3a2a";
 	row.style.fontSize = "smaller";
 
 	const nameData = document.createElement("td");
@@ -1747,7 +2086,7 @@ function createConnectionRow(connection) {
 }
 function createUnionRow(union) {
 	const row = document.createElement("tr");
-	row.style.color = "#444";
+	row.style.color = "#4a3a2a";
 	row.style.fontSize = "smaller";
 
 	const nameData = document.createElement("td");
@@ -1791,7 +2130,7 @@ function createCcfoliaButton(character) {
 	button.setAttribute("onclick", `ExportCcforia(${character.id});`);
 	button.innerHTML = `CCFOLIA`;
 	button.style.float = "right";
-	button.style.color = "whitesmoke";
+	button.style.color = "#f5f5f0";
 	button.style.fontWeight = "bold";
 	button.style.margin = "8.5em 0.25em 0 0";
 	return button;
@@ -1804,7 +2143,7 @@ function createLHRPGButton(character) {
 	button.target = "_blank";
 	button.innerHTML = `冒険者窓口`;
 	button.style.float = "right";
-	button.style.color = "whitesmoke";
+	button.style.color = "#f5f5f0";
 	button.style.fontWeight = "bold";
 	button.style.margin = "8.5em 0.25em 0 0";
 	return button;
@@ -1833,9 +2172,11 @@ async function showAlert(content, color = "green") {
 	const alertArea = document.getElementById("alert");
 	const card = document.createElement("div");
 	card.className = "card alert";
-	card.style.backgroundColor = "whitesmoke";
+	card.style.backgroundColor = "#f5f5f0";
 	card.style.margin = "5px";
-	card.style.borderRadius = "5px";
+	card.style.borderRadius = "8px";
+	card.style.border = "2px solid #d4c4b4";
+	card.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
 	card.style.opacity = 0;
 	card.style.transform = `translate(300px, 0)`;
 	card.style.width = "300px";
@@ -2211,7 +2552,9 @@ async function refreshHistoryTable() {
 }
 function createHistoryTitleRow() {
 	const row = document.createElement("tr");
-	row.style.color = "whitesmoke";
+	row.style.color = "#f5f5f0";
+	row.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	row.style.fontWeight = "600";
 
 	const characterNameRowData = document.createElement("th");
 	characterNameRowData.textContent = "PC名";
@@ -2237,7 +2580,7 @@ function createHistoryTitleRow() {
 }
 function createHistoryRow(historyData) {
 	const row = document.createElement("tr");
-	row.style.color = "#444";
+	row.style.color = "#4a3a2a";
 
 	const characterNameRowData = document.createElement("td");
 	characterNameRowData.style.padding = "0.2em";

@@ -15,7 +15,7 @@
   <div class="grid-container">
     <div class="grid-x grid-padding-x">
       <div class="large-10 medium-10 small-10 cell">
-        <a href="/"><img src="../img//head_logo.png"></a>
+        <a href="/"><img src="../img//head_logo.png" style="background-color: #664933;border-radius: 6px;"></a>
       </div>
       <div class="large-2 medium-2 small-2 cell">
         <a class="secondary button" href="javascript:void(0);" style="float: right;background-color: #999;color: whitesmoke;font-weight: bold;margin: 1em 0;"
@@ -260,19 +260,13 @@
       </div>
     </div>
     <div class="grid-x grid-padding-x">
-      <div class="large-9 medium-9 small-9 cell">
-        <input id="link" type="text" placeholder="キャラクターURL" onfocus="this.select();" autocomplete="off" />
-      </div>
-      <div class="large-3 medium-3 small-3 cell">
-        <button id="load" href="javascript:void(0);" onclick="loadCharactor();" class="button">読み込み</button>
-        <button href="javascript:void(0);" class="secondary button" data-toggle="history"
-          style="background-color: #999;">履歴</button>
-      </div>
-      <div class="large reveal" id="history" data-reveal>
-        <button class="close-button" data-close aria-label="Close reveal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h5 style="color: black;">履歴</h5>
+      <div class="large-12 medium-12 small-12 cell">
+        <div class="input-group">
+          <input id="link" class="input-group-field" type="text" placeholder="キャラクターURL" onfocus="this.select();" autocomplete="off" />
+          <div class="input-group-button">
+            <button id="load" href="javascript:void(0);" onclick="loadCharactor();" class="button">読み込み</button>
+          </div>
+        </div>
       </div>
     </div>
     <ul id="character-tabs" class="tabs" data-tabs>
@@ -347,7 +341,6 @@
   <script src="../js/vendor/what-input.js"></script>
   <script src="../js/vendor/foundation.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-  <script src="https://coco-factory.jp/ugokuweb/wp-content/themes/ugokuweb/data/6-1-6/js/6-1-6.js"></script>
   <script src="app.js"></script>
 </body>
 
