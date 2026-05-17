@@ -648,10 +648,10 @@ function createHistoryItem(historyItem, linkInput) {
 	if (!historyItem.isDeleted) {
 		item.addEventListener("mousedown", (event) => {
 			event.preventDefault(); // blur イベントの前に処理
-			linkInput.value = historyItem.url;
-			loadCharactor();
+			loadCharactorFrom(historyItem.url);
 			hideHistoryPopup();
 			document.activeElement.blur();
+			linkInput.value = ""; // クリックでURLをクリア
 		});
 	} else {
 		item.style.cursor = "not-allowed";
