@@ -380,43 +380,42 @@ function init() {
 	});
 
 	// タブの並び順設定
-	const tabSortMainJobRadio = document.getElementById("tab-sort-main-job");
-	const tabSortNameRadio = document.getElementById("tab-sort-name");
-	const tabSortLoadDateRadio = document.getElementById("tab-sort-load-date");
-
 	// 初期値を設定
 	if (!_config.tabSort) _config.tabSort = "mainJob";
-	if (_config.tabSort === "mainJob") {
-		tabSortMainJobRadio.checked = true;
-	} else if (_config.tabSort === "name") {
-		tabSortNameRadio.checked = true;
-	} else if (_config.tabSort === "loadDate") {
-		tabSortLoadDateRadio.checked = true;
-	}
 
-	// イベントハンドラを追加
-	tabSortMainJobRadio.addEventListener("change", (event) => {
-		if (event.target.checked) {
-			_config.tabSort = "mainJob";
-			_localStorage.Write("config", _config);
-			sortCharacterTabs();
+	// タブソートアイコンを更新する関数
+	const updateTabSortIcon = () => {
+		const icon = document.getElementById("tab-sort-icon");
+		const button = document.getElementById("tab-sort-toggle");
+		if (_config.tabSort === "mainJob") {
+			icon.textContent = "⚡"; // メイン職順
+			button.title = "タブの並び順: メイン職順";
+		} else if (_config.tabSort === "name") {
+			icon.textContent = "🔤"; // 名前順
+			button.title = "タブの並び順: 名前順";
+		} else if (_config.tabSort === "loadDate") {
+			icon.textContent = "🕒"; // 読み込み日時順
+			button.title = "タブの並び順: 読み込み日時順";
 		}
-	});
+	};
 
-	tabSortNameRadio.addEventListener("change", (event) => {
-		if (event.target.checked) {
+	// 初期アイコンを設定
+	updateTabSortIcon();
+
+	// タブソートトグルボタンのイベントハンドラ
+	const tabSortToggleButton = document.getElementById("tab-sort-toggle");
+	tabSortToggleButton.addEventListener("click", () => {
+		// 順番に切り替え: mainJob → name → loadDate → mainJob
+		if (_config.tabSort === "mainJob") {
 			_config.tabSort = "name";
-			_localStorage.Write("config", _config);
-			sortCharacterTabs();
-		}
-	});
-
-	tabSortLoadDateRadio.addEventListener("change", (event) => {
-		if (event.target.checked) {
+		} else if (_config.tabSort === "name") {
 			_config.tabSort = "loadDate";
-			_localStorage.Write("config", _config);
-			sortCharacterTabs();
+		} else {
+			_config.tabSort = "mainJob";
 		}
+		_localStorage.Write("config", _config);
+		updateTabSortIcon();
+		sortCharacterTabs();
 	});
 
 	getJson("../json/master.json").then(async (master) => {

@@ -217,51 +217,6 @@
 
       <div class="grid-x grid-padding-x" style="color: black;margin-top: 2em;">
         <div class="auto cell">
-          <h5>タブの並び順</h5>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="tab-sort-main-job" type="radio" name="tab-sort-group">
-            <label class="switch-paddle" for="tab-sort-main-job">
-              <span class="show-for-sr">メイン職順</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>メイン職順（規定）</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="tab-sort-name" type="radio" name="tab-sort-group">
-            <label class="switch-paddle" for="tab-sort-name">
-              <span class="show-for-sr">名前順</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>名前順</div>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 0.5rem;">
-        <div class="large-4 medium-4 small-4 cell">
-          <div class="switch tiny" style="margin: 0;">
-            <input class="switch-input" id="tab-sort-load-date" type="radio" name="tab-sort-group">
-            <label class="switch-paddle" for="tab-sort-load-date">
-              <span class="show-for-sr">読み込み日時順</span>
-            </label>
-          </div>
-        </div>
-        <div class="large-8 medium-8 small-8 cell" style="align-content: space-evenly;">
-          <div>読み込み日時順</div>
-        </div>
-      </div>
-
-      <div class="grid-x grid-padding-x" style="color: black;margin-top: 2em;">
-        <div class="auto cell">
           <h5>その他</h5>
         </div>
       </div>
@@ -314,10 +269,15 @@
         </div>
       </div>
     </div>
-    <ul id="character-tabs" class="tabs" data-tabs>
-      <li class="tabs-title is-active"><a class="primary" href="#howto" aria-selected="true"
-          style="display: none;">使い方</a></li>
-    </ul>
+    <div style="display: flex; align-items: center; position: relative;">
+      <ul id="character-tabs" class="tabs" data-tabs style="flex: 1; margin-bottom: 0;">
+        <li class="tabs-title is-active"><a class="primary" href="#howto" aria-selected="true"
+            style="display: none;">使い方</a></li>
+      </ul>
+      <button id="tab-sort-toggle" class="button secondary" style="margin: 0 0 0 0.5rem; padding: 0.5rem 0.75rem; background-color: #8a7a6a; color: whitesmoke; border: none; cursor: pointer; font-size: 1rem;" title="タブの並び順を切り替え">
+        <span id="tab-sort-icon">⚡</span>
+      </button>
+    </div>
     <div id="character-contents" class="tabs-content" data-tabs-content="character-tabs">
       <div class="callout tabs-panel is-active" id="howto">
         <ul class="accordion" data-accordion>
