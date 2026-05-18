@@ -383,20 +383,31 @@ function init() {
 	// 初期値を設定
 	if (!_config.tabSort) _config.tabSort = "mainJob";
 
-	// タブソートアイコンを更新する関数
+	// タブソートアイコンとラベルを更新する関数
 	const updateTabSortIcon = () => {
 		const icon = document.getElementById("tab-sort-icon");
+		const label = document.getElementById("tab-sort-label");
 		const button = document.getElementById("tab-sort-toggle");
+
+		let currentLabel = "";
+		let nextLabel = "";
+
 		if (_config.tabSort === "mainJob") {
-			icon.textContent = "⚡"; // メイン職順
-			button.title = "タブの並び順: メイン職順";
+			icon.textContent = "⚡";
+			currentLabel = "メイン職順";
+			nextLabel = "名前順";
 		} else if (_config.tabSort === "name") {
-			icon.textContent = "🔤"; // 名前順
-			button.title = "タブの並び順: 名前順";
+			icon.textContent = "🔤";
+			currentLabel = "名前順";
+			nextLabel = "日時順";
 		} else if (_config.tabSort === "loadDate") {
-			icon.textContent = "🕒"; // 読み込み日時順
-			button.title = "タブの並び順: 読み込み日時順";
+			icon.textContent = "🕒";
+			currentLabel = "日時順";
+			nextLabel = "メイン職順";
 		}
+
+		label.textContent = currentLabel;
+		button.title = `現在: ${currentLabel}\nクリックで ${nextLabel} に切り替え`;
 	};
 
 	// 初期アイコンを設定
