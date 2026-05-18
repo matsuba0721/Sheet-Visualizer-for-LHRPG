@@ -51,6 +51,8 @@ class Config {
 		this.ccforiaOutput.skillSort.isCommonToButtom = false;
 		this.ccforiaOutput.isAliasOnly = false;
 		this.isAdvanced = false;
+		// タブのソート設定
+		this.tabSort = "mainJob"; // mainJob, name, loadDate
 	}
 }
 class Chatpalette {
@@ -374,6 +376,46 @@ function init() {
 		for (let index = 0; index < elements.length; index++) {
 			const element = elements[index];
 			if (element.getAttribute("data-is-advanced") == "true") element.style.display = display;
+		}
+	});
+
+	// タブの並び順設定
+	const tabSortMainJobRadio = document.getElementById("tab-sort-main-job");
+	const tabSortNameRadio = document.getElementById("tab-sort-name");
+	const tabSortLoadDateRadio = document.getElementById("tab-sort-load-date");
+
+	// 初期値を設定
+	if (!_config.tabSort) _config.tabSort = "mainJob";
+	if (_config.tabSort === "mainJob") {
+		tabSortMainJobRadio.checked = true;
+	} else if (_config.tabSort === "name") {
+		tabSortNameRadio.checked = true;
+	} else if (_config.tabSort === "loadDate") {
+		tabSortLoadDateRadio.checked = true;
+	}
+
+	// イベントハンドラを追加
+	tabSortMainJobRadio.addEventListener("change", (event) => {
+		if (event.target.checked) {
+			_config.tabSort = "mainJob";
+			_localStorage.Write("config", _config);
+			sortCharacterTabs();
+		}
+	});
+
+	tabSortNameRadio.addEventListener("change", (event) => {
+		if (event.target.checked) {
+			_config.tabSort = "name";
+			_localStorage.Write("config", _config);
+			sortCharacterTabs();
+		}
+	});
+
+	tabSortLoadDateRadio.addEventListener("change", (event) => {
+		if (event.target.checked) {
+			_config.tabSort = "loadDate";
+			_localStorage.Write("config", _config);
+			sortCharacterTabs();
 		}
 	});
 
@@ -749,6 +791,7 @@ function loadCharactorFrom(url, initialPanel = "skill") {
 			// 初期パネルを設定（loadCharactorFromから渡される）
 			character.initialPanel = initialPanel;
 			character.activePanel = initialPanel; // 初期状態のアクティブパネルも設定
+			character.loadDate = Date.now(); // 読み込み日時を記録
 
 			const equipments = [character.hand1, character.hand2, character.armor, character.support_item1, character.support_item2, character.support_item3, character.bag];
 			equipments
@@ -795,6 +838,10 @@ function loadCharactorFrom(url, initialPanel = "skill") {
 			displayCharacter(tabPanel, character);
 
 			Foundation.reInit("tabs");
+
+			// タブをソート
+			sortCharacterTabs();
+
 			characterTablink.click();
 
 			// 初期パネルを設定
@@ -890,6 +937,60 @@ function releaseCharacter(id) {
 		tabCollection[0].click();
 	}
 }
+
+// タブを並び替える関数
+function sortCharacterTabs() {
+	const characterTabs = document.getElementById("character-tabs");
+	const tabs = Array.from(characterTabs.children).filter((tab) => {
+		// "使い方"タブを除外
+		const link = tab.querySelector("a");
+		return link && link.getAttribute("data-characte-id");
+	});
+
+	// 現在のソート設定を取得
+	const sortType = _config.tabSort || "mainJob";
+
+	// ソート
+	tabs.sort((a, b) => {
+		const aLink = a.querySelector("a");
+		const bLink = b.querySelector("a");
+		const aId = parseInt(aLink.getAttribute("data-characte-id"));
+		const bId = parseInt(bLink.getAttribute("data-characte-id"));
+		const aChar = _characters[aId];
+		const bChar = _characters[bId];
+
+		if (sortType === "name") {
+			// 名前順
+			return aChar.name.localeCompare(bChar.name, "ja");
+		} else if (sortType === "loadDate") {
+			// 読み込み日時順（新しい順）
+			const aDate = aChar.loadDate || 0;
+			const bDate = bChar.loadDate || 0;
+			return bDate - aDate;
+		} else {
+			// メイン職順（規定）
+			const jobOrder = ["守護戦士", "武士", "武闘家", "施療神官", "森呪遣い", "神祇官", "暗殺者", "盗剣士", "吟遊詩人", "妖術師", "召喚術師", "付与術師"];
+			const aJobIndex = jobOrder.indexOf(aChar.main_job);
+			const bJobIndex = jobOrder.indexOf(bChar.main_job);
+
+			// 職業が見つからない場合は最後に配置
+			const aIndex = aJobIndex >= 0 ? aJobIndex : 9999;
+			const bIndex = bJobIndex >= 0 ? bJobIndex : 9999;
+
+			if (aIndex !== bIndex) {
+				return aIndex - bIndex;
+			}
+			// 同じ職業の場合は名前順
+			return aChar.name.localeCompare(bChar.name, "ja");
+		}
+	});
+
+	// タブを並び替え
+	tabs.forEach((tab) => {
+		characterTabs.appendChild(tab);
+	});
+}
+
 function getCurrentCharacter() {
 	const keys = Object.keys(_characters);
 	for (let index = 0; index < keys.length; index++) {
