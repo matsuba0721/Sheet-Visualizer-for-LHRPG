@@ -473,7 +473,7 @@ function init() {
 				const activePanel = typeof characterInfo === "object" ? characterInfo.activePanel : "skill";
 
 				if (url) {
-					await loadCharactorFrom(url, activePanel);
+					await loadCharactorFrom(url, activePanel, true); // 自動読み込みフラグ
 					if (isActive) {
 						activeCharacterId = getCharactorId(url);
 					}
@@ -542,6 +542,10 @@ function showHistoryPopup(page = 1) {
 		}
 	}
 
+	// 現在読み込まれているキャラクターを除外
+	const currentCharacterIds = Object.keys(_characters).map((id) => parseInt(id));
+	historys = historys.filter((history) => !currentCharacterIds.includes(history.id));
+
 	// フィルタ後に結果がない場合は非表示
 	if (historys.length === 0) {
 		hideHistoryPopup();
@@ -556,7 +560,7 @@ function showHistoryPopup(page = 1) {
 	});
 
 	// ページング設定
-	const itemsPerPage = 5;
+	const itemsPerPage = 10;
 	const totalPages = Math.ceil(historys.length / itemsPerPage);
 	__historyCurrentPage = Math.max(1, Math.min(page, totalPages));
 	const startIndex = (page - 1) * itemsPerPage;
@@ -761,7 +765,7 @@ function hideHistoryPopup() {
 function loadCharactor() {
 	loadCharactorFrom(document.getElementById("link").value);
 }
-function loadCharactorFrom(url, initialPanel = "skill") {
+function loadCharactorFrom(url, initialPanel = "skill", isAutoLoad = false) {
 	const id = getCharactorId(url);
 	if (id < 0 || id in _characters) return;
 
@@ -895,6 +899,12 @@ function loadCharactorFrom(url, initialPanel = "skill") {
 
 			// 履歴にも追加（過去のロード履歴として蓄積）
 			const loadHistory = _localStorage.Read("character-loadHistory", {});
+
+			// 自動読み込みの場合は既存の日付を保持
+			if (isAutoLoad && loadHistory[id] && loadHistory[id].date) {
+				characterInfo.date = loadHistory[id].date;
+			}
+
 			loadHistory[id] = characterInfo;
 
 			_localStorage.Write("character-loadHistory", loadHistory);
