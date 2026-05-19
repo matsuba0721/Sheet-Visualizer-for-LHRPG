@@ -177,7 +177,7 @@ function showLoadingPanel() {
 	loadingPanel.style.alignItems = "center";
 
 	const messageBox = document.createElement("div");
-	messageBox.style.backgroundColor = "#f5f5f0";
+	messageBox.classList.add("bg-surface");
 	messageBox.style.padding = "2rem";
 	messageBox.style.borderRadius = "8px";
 	messageBox.style.textAlign = "center";
@@ -198,7 +198,7 @@ function showLoadingPanel() {
 	message.style.margin = "0";
 	message.style.fontSize = "1.1rem";
 	message.style.fontWeight = "bold";
-	message.style.color = "#2c2416";
+	message.classList.add("text-primary");
 
 	messageBox.appendChild(spinner);
 	messageBox.appendChild(message);
@@ -325,7 +325,7 @@ function init() {
 		li.textContent = timing;
 		li.style.cursor = "pointer";
 		li.style.fontSize = "small";
-		li.style.backgroundColor = "#f5f5f0";
+		li.classList.add("bg-surface");
 		li.style.margin = "2px";
 		li.style.border = "1px solid #d4c4b4";
 		li.style.borderRadius = "4px";
@@ -1241,7 +1241,7 @@ function createProfileCell(character) {
 function createStatusGrid(character) {
 	const appendRow = function (array) {
 		const row = document.createElement("tr");
-		row.style.color = "#3a2a1a";
+		row.classList.add("text-secondary");
 		array.forEach((element) => {
 			const data = document.createElement("td");
 			data.textContent = element;
@@ -1265,8 +1265,7 @@ function createStatusGrid(character) {
 	const foundationTableHeadRowData = document.createElement("th");
 	foundationTableHeadRowData.colSpan = 6;
 	foundationTableHeadRowData.textContent = "FOUNDATION";
-	foundationTableHeadRow.style.background = "linear-gradient(180deg, #d4a574 0%, #c49564 100%)";
-	foundationTableHeadRow.style.color = "whitesmoke";
+	foundationTableHeadRow.classList.add("bg-accent-gradient", "text-on-accent");
 	foundationTableHeadRow.style.fontWeight = "600";
 	foundationTable.appendChild(foundationTableHead);
 	foundationTableHead.appendChild(foundationTableHeadRow);
@@ -1295,8 +1294,7 @@ function createStatusGrid(character) {
 	const battleTableHeadRowData = document.createElement("th");
 	battleTableHeadRowData.colSpan = 6;
 	battleTableHeadRowData.textContent = "BATTLE";
-	battleTableHeadRow.style.background = "linear-gradient(180deg, #d4a574 0%, #c49564 100%)";
-	battleTableHeadRow.style.color = "whitesmoke";
+	battleTableHeadRow.classList.add("bg-accent-gradient", "text-on-accent");
 	battleTableHeadRow.style.fontWeight = "600";
 	battleTable.appendChild(battleTableHead);
 	battleTableHead.appendChild(battleTableHeadRow);
@@ -1322,7 +1320,7 @@ function createSkillPanelGrid(character) {
 	const filterCell = createCellElement(12);
 	filterCell.style.position = "relative";
 	filterCell.style.marginBottom = "0.5em";
-	filterCell.style.backgroundColor = "#f5f5f0";
+	filterCell.classList.add("bg-surface");
 	filterCell.style.border = "2px solid #d4c4b4";
 	filterCell.setAttribute("data-is-multi-select", true);
 	grid.appendChild(filterCell);
@@ -1331,8 +1329,7 @@ function createSkillPanelGrid(character) {
 	filterResetButton.className = "small secondary button";
 	filterResetButton.type = "button";
 	filterResetButton.innerHTML = "リセット";
-	filterResetButton.style.backgroundColor = "#8a7a6a";
-	filterResetButton.style.color = "#f5f5f0";
+	filterResetButton.classList.add("bg-muted", "text-on-accent");
 	filterResetButton.style.position = "absolute";
 	filterResetButton.style.padding = "0.2rem";
 	filterResetButton.style.top = "3.4rem";
@@ -1509,8 +1506,7 @@ function createSkillCell(skill) {
 }
 function createSkillTitleRow(skill) {
 	const skillTableHeadRow = document.createElement("tr");
-	skillTableHeadRow.style.color = "#f5f5f0";
-	skillTableHeadRow.style.background = "linear-gradient(180deg, #5a4a3a 0%, #4a3a2a 100%)";
+	skillTableHeadRow.classList.add("text-on-accent", "bg-header");
 	skillTableHeadRow.style.fontWeight = "600";
 
 	const skillTableHeadRowData = document.createElement("th");
@@ -1518,15 +1514,13 @@ function createSkillTitleRow(skill) {
 	skillTableHeadRowData.style.padding = "0.2em";
 	skillTableHeadRow.appendChild(skillTableHeadRowData);
 	if (skill.isCommon) {
-		skillTableHeadRowData.style.color = "#3a2a1a";
-		skillTableHeadRowData.style.background = "linear-gradient(180deg, #c4b4a4 0%, #b4a494 100%)";
+		skillTableHeadRowData.classList.add("text-secondary", "bg-surface-alt");
 	}
 	if (skill.isExtra) {
-		skillTableHeadRowData.style.background = "linear-gradient(180deg, #7a4a6a 0%, #663355 100%)";
+		skillTableHeadRowData.classList.add("bg-special");
 	}
 	if (skill.isStyleSkill) {
-		skillTableHeadRowData.style.background = "linear-gradient(180deg, #d4a574 0%, #c49564 100%)";
-		skillTableHeadRowData.style.color = "#2a1a0a";
+		skillTableHeadRowData.classList.add("bg-accent-gradient", "text-primary");
 		skillTableHeadRowData.style.fontWeight = "700";
 		skillTableHeadRowData.style.textShadow = "0 1px 2px rgba(255, 255, 255, 0.5)";
 	}
@@ -1569,8 +1563,7 @@ function createSkillTitleRow(skill) {
 		const skillTableHeadRowtag = document.createElement("li");
 		skillTableHeadRowtag.textContent = tag;
 		skillTableHeadRowtag.style.border = "solid 2px rgba(255, 255, 255, 0.9)";
-		skillTableHeadRowtag.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
-		skillTableHeadRowtag.style.color = "#3a2a1a";
+		skillTableHeadRowtag.classList.add("bg-surface", "text-secondary");
 		skillTableHeadRowtag.style.borderRadius = "3px";
 		skillTableHeadRowtag.style.padding = "2px 6px";
 		skillTableHeadRowtag.style.fontWeight = "500";
@@ -1636,7 +1629,8 @@ function createSkillTitleRow(skill) {
 	const skillTableHeadRowQACommand = document.createElement("li");
 	skillTableHeadRowQACommand.textContent = "QA";
 	skillTableHeadRowQACommand.setAttribute("data-skill-id", skill.id);
-	skillTableHeadRowQACommand.classList.add(skill.isCommon ? "commonItem" : skill.isStyleSkill ? "tertiaryItem" : "secondaryItem");
+	const qaClass = skill.isCommon ? "commonItem" : skill.isStyleSkill ? "tertiaryItem" : "secondaryItem";
+	skillTableHeadRowQACommand.classList.add(qaClass + isDisable);
 	skillTableHeadRowQACommand.style.cursor = hasQA ? "pointer" : "default";
 	if (hasQA) {
 		skillTableHeadRowQACommand.onclick = (event) => {
@@ -1653,7 +1647,7 @@ function createSkillTitleRow(skill) {
 }
 function createPropertyRow(skill) {
 	const propertyRow = document.createElement("tr");
-	propertyRow.style.color = "#4a3a2a";
+	propertyRow.classList.add("text-tertiary");
 	propertyRow.style.fontSize = "smaller";
 
 	const SRData = document.createElement("td");
@@ -1682,7 +1676,7 @@ function createPropertyRow(skill) {
 }
 function createSkillFunctionRow(skill) {
 	const functionRow = document.createElement("tr");
-	functionRow.style.color = "#4a3a2a";
+	functionRow.classList.add("text-tertiary");
 	functionRow.style.fontSize = "smaller";
 
 	const functionData = document.createElement("td");
@@ -1694,7 +1688,7 @@ function createSkillFunctionRow(skill) {
 }
 function createSkillExplainRow(skill) {
 	const explainRow = document.createElement("tr");
-	explainRow.style.color = "#4a3a2a";
+	explainRow.classList.add("text-tertiary");
 	explainRow.style.fontSize = "smaller";
 
 	const explainData = document.createElement("td");
@@ -1724,8 +1718,7 @@ function createEquipmentCell(character) {
 	const equipmentTableHead = document.createElement("thead");
 	equipmentTable.appendChild(equipmentTableHead);
 	const equipmentTableHeadRow = document.createElement("tr");
-	equipmentTableHeadRow.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
-	equipmentTableHeadRow.style.color = "#f5f5f0";
+	equipmentTableHeadRow.classList.add("bg-header-alt", "text-on-accent");
 	equipmentTableHeadRow.style.fontWeight = "600";
 	equipmentTableHead.appendChild(equipmentTableHeadRow);
 
@@ -1740,15 +1733,14 @@ function createEquipmentCell(character) {
 
 	const createEquipmentRow = () => {
 		const row = document.createElement("tr");
-		row.style.color = "#4a3a2a";
+		row.classList.add("text-tertiary");
 		row.style.fontSize = "smaller";
 		return row;
 	};
 	const createEquipmentRowData = (name) => {
 		const rowData = document.createElement("th");
 		rowData.textContent = name;
-		rowData.style.color = "white";
-		rowData.style.backgroundColor = "#664933";
+		rowData.classList.add("text-on-accent", "bg-secondary");
 		rowData.style.borderTop = "1px solid #664933";
 		rowData.style.borderBottom = "1px solid #ddd";
 		rowData.style.width = "54px";
@@ -1824,8 +1816,7 @@ function createEquipmentTitleDataList(item) {
 
 		const itemTypeItem = document.createElement("li");
 		itemTypeItem.textContent = item.type;
-		itemTypeItem.style.color = "#f5f5f0";
-		itemTypeItem.style.backgroundColor = "#7a5a3a";
+		itemTypeItem.classList.add("text-on-accent", "bg-accent");
 		itemTypeItem.style.border = "solid 2px #7a5a3a";
 		itemTypeItem.style.borderRadius = "3px";
 		itemTypeItem.style.padding = "2px 6px";
@@ -1838,8 +1829,7 @@ function createEquipmentTitleDataList(item) {
 			const itemTagItem = document.createElement("li");
 			itemTagItem.textContent = tag;
 			itemTagItem.style.border = "solid 2px #b0a090";
-			itemTagItem.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
-			itemTagItem.style.color = "#3a2a1a";
+			itemTagItem.classList.add("bg-surface", "text-secondary");
 			itemTagItem.style.borderRadius = "3px";
 			itemTagItem.style.padding = "2px 6px";
 			itemTagItem.style.fontSize = "90%";
@@ -1879,8 +1869,7 @@ function createBelongingsCell(character) {
 	const tableHead = document.createElement("thead");
 	table.appendChild(tableHead);
 	const tableHeadRow = document.createElement("tr");
-	tableHeadRow.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
-	tableHeadRow.style.color = "#f5f5f0";
+	tableHeadRow.classList.add("bg-header-alt", "text-on-accent");
 	tableHeadRow.style.fontWeight = "600";
 	tableHead.appendChild(tableHeadRow);
 
@@ -1895,15 +1884,14 @@ function createBelongingsCell(character) {
 
 	const createRow = () => {
 		const row = document.createElement("tr");
-		row.style.color = "#4a3a2a";
+		row.classList.add("text-tertiary");
 		row.style.fontSize = "smaller";
 		return row;
 	};
 	const createRowData = (name) => {
 		const rowData = document.createElement("th");
 		rowData.textContent = name;
-		rowData.style.color = "#f5f5f0";
-		rowData.style.backgroundColor = "#7a5a3a";
+		rowData.classList.add("text-on-accent", "bg-secondary");
 		rowData.style.borderTop = "1px solid #6a4a2a";
 		rowData.style.borderBottom = "1px solid #e8e8e0";
 		rowData.style.width = "54px";
@@ -1997,8 +1985,7 @@ function createBelongingsTitleDataList(item) {
 
 		const itemTypeItem = document.createElement("li");
 		itemTypeItem.textContent = item.type;
-		itemTypeItem.style.color = "#f5f5f0";
-		itemTypeItem.style.backgroundColor = "#7a5a3a";
+		itemTypeItem.classList.add("text-on-accent", "bg-accent");
 		itemTypeItem.style.border = "solid 2px #7a5a3a";
 		itemTypeItem.style.borderRadius = "3px";
 		itemTypeItem.style.padding = "2px 6px";
@@ -2011,8 +1998,7 @@ function createBelongingsTitleDataList(item) {
 			const itemTagItem = document.createElement("li");
 			itemTagItem.textContent = tag;
 			itemTagItem.style.border = "solid 2px #b0a090";
-			itemTagItem.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
-			itemTagItem.style.color = "#3a2a1a";
+			itemTagItem.classList.add("bg-surface", "text-secondary");
 			itemTagItem.style.borderRadius = "3px";
 			itemTagItem.style.padding = "2px 6px";
 			itemTagItem.style.fontSize = "90%";
@@ -2069,8 +2055,7 @@ function createRemarksCell(character) {
 	const tableHead = document.createElement("thead");
 	table.appendChild(tableHead);
 	const tableHeadRow = document.createElement("tr");
-	tableHeadRow.style.color = "#f5f5f0";
-	tableHeadRow.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	tableHeadRow.classList.add("text-on-accent", "bg-header-alt");
 	tableHeadRow.style.fontWeight = "600";
 	tableHead.appendChild(tableHeadRow);
 	const tableHeadRowData = document.createElement("th");
@@ -2081,7 +2066,7 @@ function createRemarksCell(character) {
 	const tableBody = document.createElement("tbody");
 	table.appendChild(tableBody);
 	const detailRow = document.createElement("tr");
-	detailRow.style.color = "#4a3a2a";
+	detailRow.classList.add("text-tertiary");
 	tableBody.appendChild(detailRow);
 	const detailRowData = document.createElement("td");
 	detailRowData.innerHTML = character.remarks ? character.remarks.replaceAll("\n", "<br>") : "";
@@ -2111,8 +2096,7 @@ function createGuidingCreedCell(character) {
 }
 function createGuidingCreedTitleRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "#f5f5f0";
-	row.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	row.classList.add("text-on-accent", "bg-header-alt");
 	row.style.fontWeight = "600";
 
 	const rowData = document.createElement("th");
@@ -2125,7 +2109,7 @@ function createGuidingCreedTitleRow(character) {
 }
 function createGuidingCreedPropertyRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "#4a3a2a";
+	row.classList.add("text-tertiary");
 
 	const nameData = document.createElement("td");
 	nameData.textContent = `クリード名：${character.creed_name}`;
@@ -2141,7 +2125,7 @@ function createGuidingCreedPropertyRow(character) {
 }
 function createGuidingCreedDetailRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "#4a3a2a";
+	row.classList.add("text-tertiary");
 
 	const nameData = document.createElement("td");
 	nameData.textContent = `説明：${character.creed_detail}`;
@@ -2175,8 +2159,7 @@ function createConnectionAndUnionCell(character) {
 }
 function createConnectionAndUnionTitleRow(character) {
 	const row = document.createElement("tr");
-	row.style.color = "#f5f5f0";
-	row.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	row.classList.add("text-on-accent", "bg-header-alt");
 	row.style.fontWeight = "600";
 
 	const rowData = document.createElement("th");
@@ -2189,7 +2172,7 @@ function createConnectionAndUnionTitleRow(character) {
 }
 function createConnectionRow(connection) {
 	const row = document.createElement("tr");
-	row.style.color = "#4a3a2a";
+	row.classList.add("text-tertiary");
 	row.style.fontSize = "smaller";
 
 	const nameData = document.createElement("td");
@@ -2207,7 +2190,7 @@ function createConnectionRow(connection) {
 }
 function createUnionRow(union) {
 	const row = document.createElement("tr");
-	row.style.color = "#4a3a2a";
+	row.classList.add("text-tertiary");
 	row.style.fontSize = "smaller";
 
 	const nameData = document.createElement("td");
@@ -2251,7 +2234,7 @@ function createCcfoliaButton(character) {
 	button.setAttribute("onclick", `ExportCcforia(${character.id});`);
 	button.innerHTML = `CCFOLIA`;
 	button.style.float = "right";
-	button.style.color = "#f5f5f0";
+	button.classList.add("text-on-accent");
 	button.style.fontWeight = "bold";
 	button.style.margin = "8.5em 0.25em 0 0";
 	return button;
@@ -2264,7 +2247,7 @@ function createLHRPGButton(character) {
 	button.target = "_blank";
 	button.innerHTML = `冒険者窓口`;
 	button.style.float = "right";
-	button.style.color = "#f5f5f0";
+	button.classList.add("text-on-accent");
 	button.style.fontWeight = "bold";
 	button.style.margin = "8.5em 0.25em 0 0";
 	return button;
@@ -2293,7 +2276,7 @@ async function showAlert(content, color = "green") {
 	const alertArea = document.getElementById("alert");
 	const card = document.createElement("div");
 	card.className = "card alert";
-	card.style.backgroundColor = "#f5f5f0";
+	card.classList.add("bg-cream");
 	card.style.margin = "5px";
 	card.style.borderRadius = "8px";
 	card.style.border = "2px solid #d4c4b4";
@@ -2673,8 +2656,7 @@ async function refreshHistoryTable() {
 }
 function createHistoryTitleRow() {
 	const row = document.createElement("tr");
-	row.style.color = "#f5f5f0";
-	row.style.background = "linear-gradient(180deg, #8a7a6a 0%, #7a6a5a 100%)";
+	row.classList.add("text-cream", "bg-gradient-medium-brown");
 	row.style.fontWeight = "600";
 
 	const characterNameRowData = document.createElement("th");
@@ -2701,7 +2683,7 @@ function createHistoryTitleRow() {
 }
 function createHistoryRow(historyData) {
 	const row = document.createElement("tr");
-	row.style.color = "#4a3a2a";
+	row.classList.add("text-brown-medium");
 
 	const characterNameRowData = document.createElement("td");
 	characterNameRowData.style.padding = "0.2em";

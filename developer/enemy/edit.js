@@ -159,19 +159,15 @@ async function showConfirm(message) {
 		overlay.style.left = "0";
 		overlay.style.width = "100%";
 		overlay.style.height = "100%";
-		overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+		overlay.classList.add("bg-overlay");
 		overlay.style.display = "flex";
 		overlay.style.justifyContent = "center";
 		overlay.style.alignItems = "center";
 		overlay.style.zIndex = "10000";
 
 		const dialog = document.createElement("div");
-		dialog.style.backgroundColor = "#1e1e1e";
+		dialog.classList.add("bg-elevated", "text-primary");
 		dialog.style.padding = "24px";
-		dialog.style.borderRadius = "8px";
-		dialog.style.boxShadow = "0 4px 20px rgba(0,0,0,0.5)";
-		dialog.style.maxWidth = "400px";
-		dialog.style.color = "#e0e0e0";
 
 		const messageEl = document.createElement("p");
 		messageEl.textContent = message;
@@ -188,8 +184,7 @@ async function showConfirm(message) {
 		cancelButton.textContent = "キャンセル";
 		cancelButton.style.padding = "8px 16px";
 		cancelButton.style.border = "1px solid #505050";
-		cancelButton.style.backgroundColor = "#2a2a2a";
-		cancelButton.style.color = "#e0e0e0";
+		cancelButton.classList.add("bg-muted", "text-primary");
 		cancelButton.style.borderRadius = "4px";
 		cancelButton.style.cursor = "pointer";
 		cancelButton.style.fontSize = "13px";
@@ -202,8 +197,7 @@ async function showConfirm(message) {
 		confirmButton.textContent = "OK";
 		confirmButton.style.padding = "8px 16px";
 		confirmButton.style.border = "none";
-		confirmButton.style.backgroundColor = "#1e88e5";
-		confirmButton.style.color = "#ffffff";
+		confirmButton.classList.add("bg-info", "text-on-accent");
 		confirmButton.style.borderRadius = "4px";
 		confirmButton.style.cursor = "pointer";
 		confirmButton.style.fontSize = "13px";
@@ -225,7 +219,7 @@ async function showAlert(content, color = "green") {
 	const alertArea = document.getElementById("alert");
 	const card = document.createElement("div");
 	card.className = "card alert";
-	card.style.backgroundColor = "whitesmoke";
+	card.classList.add("bg-surface");
 	card.style.margin = "5px";
 	card.style.borderRadius = "5px";
 	card.style.opacity = 0;
@@ -238,7 +232,7 @@ async function showAlert(content, color = "green") {
 	const contentParagraph = document.createElement("p");
 	contentParagraph.style.fontSize = "small";
 	contentParagraph.style.margin = "0";
-	contentParagraph.style.color = "#333";
+	contentParagraph.classList.add("text-primary");
 	contentParagraph.innerHTML = content;
 	const bar = document.createElement("div");
 	bar.style.backgroundColor = color;

@@ -43,7 +43,7 @@ ui.image.addEventListener(
 			draw();
 		}
 	},
-	false
+	false,
 );
 Array.from(document.getElementById("transparent-rates").children).forEach((button) => {
 	button.addEventListener("click", (event) => {
@@ -451,7 +451,7 @@ async function showAlert(content, color = "green") {
 	const alertArea = document.getElementById("alert");
 	const card = document.createElement("div");
 	card.className = "card alert";
-	card.style.backgroundColor = "whitesmoke";
+	card.classList.add("bg-surface");
 	card.style.margin = "5px";
 	card.style.borderRadius = "5px";
 	card.style.opacity = 0;
