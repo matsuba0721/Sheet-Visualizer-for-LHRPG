@@ -1067,9 +1067,6 @@ function initCharacter(character) {
 		skill.isExtra = skill.id >= 11000;
 		skill.characterId = character.id;
 	}
-	character.getSkillById = (id) => {
-		return _skillIndexes[id];
-	};
 
 	return character;
 }
@@ -1097,9 +1094,6 @@ function saveCharacterStates() {
 function getSkillChatpalettes(skill) {
 	const name = `character-${skill.characterId}`;
 	return _master.skillChatpalettes[skill.id];
-}
-function getSkillById(character, id) {
-	return character.skills[character._skillIndexes[id]];
 }
 function displayCharacter(panel, character) {
 	const menuCell = createMenuCell(character);
@@ -1537,8 +1531,6 @@ function createSkillTitleRow(skill) {
 	skillTableHeadRowName.style.paddingRight = "1rem";
 	skillTableHeadRowName.style.cursor = "pointer";
 	skillTableHeadRowName.onclick = (event) => {
-		const character = getCurrentCharacter();
-		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
 		if (navigator.clipboard) {
 			try {
 				navigator.clipboard.writeText(skill.name);
@@ -1585,8 +1577,6 @@ function createSkillTitleRow(skill) {
 	skillTableHeadRowDeclareCommand.classList.add(skill.isCommon ? "commonItem" : skill.isStyleSkill ? "tertiaryItem" : "secondaryItem");
 	skillTableHeadRowDeclareCommand.style.cursor = "pointer";
 	skillTableHeadRowDeclareCommand.onclick = (event) => {
-		const character = getCurrentCharacter();
-		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
 		if (navigator.clipboard) {
 			try {
 				navigator.clipboard.writeText(`${skill.timing}:${skill.name}`);
@@ -1605,8 +1595,6 @@ function createSkillTitleRow(skill) {
 	skillTableHeadRowDetailCommand.classList.add(skill.isCommon ? "commonItem" : skill.isStyleSkill ? "tertiaryItem" : "secondaryItem");
 	skillTableHeadRowDetailCommand.style.cursor = "pointer";
 	skillTableHeadRowDetailCommand.onclick = (event) => {
-		const character = getCurrentCharacter();
-		const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
 		let tags = "";
 		skill.tags.forEach((tag) => {
 			tags += `[${tag}]`;
@@ -1634,8 +1622,6 @@ function createSkillTitleRow(skill) {
 	skillTableHeadRowQACommand.style.cursor = hasQA ? "pointer" : "default";
 	if (hasQA) {
 		skillTableHeadRowQACommand.onclick = (event) => {
-			const character = getCurrentCharacter();
-			const skill = getSkillById(character, event.target.getAttribute("data-skill-id"));
 			saveScrollTop();
 			$("#elissa-qa").foundation("open");
 			document.getElementById("elissa-qa-keyword").value = skill.name;
