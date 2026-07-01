@@ -696,9 +696,10 @@ var EnemyRank = /** @class */ (function () {
 	 * @param {number} fate 取得因果力
 	 * @param {number} attackCorrect 攻撃力加算固定値
 	 * @param {number} defenseCorrect 防御力加算固定値
+	 * @param {number} aggressionCoef 攻撃性係数
 	 * @memberof EnemyRank
 	 */
-	function EnemyRank(label, tag, hpCoef, stubbornCoef, goldCoef, fate, attackCorrect, defenseCorrect) {
+	function EnemyRank(label, tag, hpCoef, stubbornCoef, goldCoef, fate, attackCorrect, defenseCorrect, aggressionCoef) {
 		this.label = label;
 		this.tag = tag;
 		this.hpCoef = hpCoef;
@@ -707,6 +708,7 @@ var EnemyRank = /** @class */ (function () {
 		this.fate = fate;
 		this.attackCorrect = attackCorrect;
 		this.defenseCorrect = defenseCorrect;
+		this.aggressionCoef = aggressionCoef == null ? 1 : aggressionCoef;
 		EnemyRank._values.push(this);
 	}
 	/**
@@ -865,14 +867,14 @@ var EnemyRank = /** @class */ (function () {
 		return messages;
 	};
 	EnemyRank._values = new Array();
-	EnemyRank.MOB = new EnemyRank("モブ", "モブ", 0.5, 4, 0.5, 0, 0, 0);
-	EnemyRank.NORMAL = new EnemyRank("ノーマル", null, 1, 8, 1, 0, 0, 0);
-	EnemyRank.BOSS1 = new EnemyRank("ボス（ソロ）", "ボス", 4, 40, 4, 4, 0, 0);
-	EnemyRank.BOSS2 = new EnemyRank("ボス（群れ）", "ボス", 2, 20, 4, 4, 0, 0);
-	EnemyRank.RAID1 = new EnemyRank("レイド（ソロ）", "レイド", 10, 80, 4, 4, 2, 2);
-	EnemyRank.RAID2 = new EnemyRank("レイド（双子）", "レイド", 5, 40, 4, 4, 2, 2);
-	EnemyRank.RAID3 = new EnemyRank("レイド（王と2騎士）", "レイド", 8, 60, 4, 4, 2, 2);
-	EnemyRank.RAID4 = new EnemyRank("レイド（統率者と軍勢）", "レイド", 7, 56, 4, 4, 2, 2);
+	EnemyRank.MOB = new EnemyRank("モブ", "モブ", 0.5, 4, 0.5, 0, 0, 0, 1);
+	EnemyRank.NORMAL = new EnemyRank("ノーマル", null, 1, 8, 1, 0, 0, 0, 1);
+	EnemyRank.BOSS1 = new EnemyRank("ボス（ソロ）", "ボス", 4, 40, 4, 4, 0, 0, 1);
+	EnemyRank.BOSS2 = new EnemyRank("ボス（群れ）", "ボス", 2, 20, 4, 4, 0, 0, 1);
+	EnemyRank.RAID1 = new EnemyRank("レイド（ソロ）", "レイド", 10, 80, 4, 4, 2, 2, 1);
+	EnemyRank.RAID2 = new EnemyRank("レイド（双子）", "レイド", 5, 40, 4, 4, 2, 2, 1);
+	EnemyRank.RAID3 = new EnemyRank("レイド（王と2騎士）", "レイド", 8, 60, 4, 4, 2, 2, 1);
+	EnemyRank.RAID4 = new EnemyRank("レイド（統率者と軍勢）", "レイド", 7, 56, 4, 4, 2, 2, 1);
 	return EnemyRank;
 })();
 /**

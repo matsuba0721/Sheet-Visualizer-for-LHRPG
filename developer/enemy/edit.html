@@ -175,7 +175,17 @@
 				<div class="section">
 					<div class="section-header">
 						<span>能力値</span>
-						<button class="btn btn-warning btn-small" onclick="calculateStatus()">自動計算</button>
+						<div style="display: flex; align-items: center; gap: 10px">
+							<label style="display: flex; align-items: center; gap: 4px; font-size: 12px; cursor: pointer">
+								<input type="checkbox" id="enable-aggression" checked />
+								<span>攻撃性</span>
+							</label>
+							<label style="display: flex; align-items: center; gap: 4px; font-size: 12px; cursor: pointer">
+								<input type="checkbox" id="enable-stubborn" checked />
+								<span>しぶとさ</span>
+							</label>
+							<button class="btn btn-warning btn-small" onclick="calculateStatus()">自動計算</button>
+						</div>
 					</div>
 					<div class="section-body">
 						<table class="data-table">

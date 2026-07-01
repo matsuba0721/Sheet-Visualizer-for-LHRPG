@@ -107,7 +107,7 @@ function createOfficialEnemyFromForm() {
 	return enemy;
 }
 
-function toOfficialSkillFields(officialSkill, command = "") {
+function toOfficialSkillFields(officialSkill, command = "", effectOverride = null) {
 	const target = officialSkill.getTarget ? officialSkill.getTarget() : null;
 	const range = officialSkill.getRange != null && officialSkill.getRange() != null ? officialSkill.getRangeLabel() : "";
 	return {
@@ -119,7 +119,7 @@ function toOfficialSkillFields(officialSkill, command = "") {
 		cost: "",
 		limit: officialSkill.getLimit ? officialSkill.getLimit() || "" : "",
 		tags: officialSkill.getTags ? officialSkill.getTags().slice() : [],
-		effect: officialSkill.getFunction ? officialSkill.getFunction() || "" : "",
+		effect: effectOverride != null ? effectOverride : officialSkill.getFunction ? officialSkill.getFunction() || "" : "",
 		command: command,
 	};
 }
@@ -150,11 +150,26 @@ function buildOfficialSkillCommand(enemy, officialSkill) {
 	const model = getOfficialEnemyModel();
 	const attackType = enemy.getType().getTemplate().getBasicAttackType();
 	const hitLabel = enemy.getBasicAttackRole();
-	const damageLabel = enemy.getBasicAttackDamage();
+	const damageLabel = buildOfficialBasicAttackDamageLabel(enemy);
 	const targetRole = attackType.role;
 	const damageType = attackType === getOfficialEnemyModel().AttackType.MAGICAL ? "魔法" : "物理";
 	const hateLabel = enemy.getRank() === model.EnemyRank.MOB ? "0" : String(enemy.getHate()).replace(/^×/, "");
 	return `${hitLabel} 基本攻撃手段 命中/${targetRole}\n${damageLabel} 基本攻撃手段 ダメージ/${damageType} ヘイト倍率x${hateLabel}`;
+}
+
+function buildOfficialBasicAttackDamageLabel(enemy) {
+	if (!isAggressionEnabled()) {
+		return enemy.getBasicAttackDamage();
+	}
+	const damageDice = enemy.getType().getTemplate().getDamageDice();
+	return `${enemy.getDamageFix() + enemy.getAggression()}+${damageDice}D`;
+}
+
+function buildOfficialBasicSkillEffect(enemy) {
+	const attackType = enemy.getType().getTemplate().getBasicAttackType();
+	const damageLabel = buildOfficialBasicAttackDamageLabel(enemy);
+	const damageType = attackType === getOfficialEnemyModel().AttackType.MAGICAL ? "魔法" : "物理";
+	return `対象に［${damageLabel}］の${damageType}ダメージを与える。 `;
 }
 
 function getOfficialGeneratedSkills(enemy) {
@@ -164,7 +179,7 @@ function getOfficialGeneratedSkills(enemy) {
 	const typeSkills = enemy.getTypeSkills() || [];
 
 	const basicSkill = enemy.createBasicSkill();
-	skills.push(toOfficialSkillFields(basicSkill, buildOfficialSkillCommand(enemy, basicSkill)));
+	skills.push(toOfficialSkillFields(basicSkill, buildOfficialSkillCommand(enemy, basicSkill), buildOfficialBasicSkillEffect(enemy)));
 	Array.prototype.push.apply(
 		skills,
 		raceSkills.map((skill) => toOfficialSkillFields(skill)),
@@ -189,13 +204,22 @@ function applyOfficialStatusToForm(enemy) {
 	document.getElementById("enemy-resist").value = enemy.getResist();
 	document.getElementById("enemy-physical-defense").value = enemy.getPhysicalDefense();
 	document.getElementById("enemy-magical-defense").value = enemy.getMagicDefense();
-	document.getElementById("enemy-hitpoint").value = enemy.getHitPoint();
+	const stubbornBonus = isStubbornEnabled() ? enemy.getStubborn() : 0;
+	document.getElementById("enemy-hitpoint").value = enemy.getHitPoint() + stubbornBonus;
 	const hateText = enemy.getHate();
 	document.getElementById("enemy-hate").value = hateText === "なし" ? 0 : hateText.replace(/^×/, "");
 	document.getElementById("enemy-initiative").value = enemy.getAction();
 	document.getElementById("enemy-move").value = enemy.getMove();
 	document.getElementById("enemy-fate").value = enemy.getFate();
 	return enemy.getStubborn();
+}
+
+function isAggressionEnabled() {
+	return document.getElementById("enable-aggression")?.checked !== false;
+}
+
+function isStubbornEnabled() {
+	return document.getElementById("enable-stubborn")?.checked !== false;
 }
 
 // ========================================
@@ -764,10 +788,17 @@ function calculateStatus() {
 		});
 	}
 
+	const guideElement = document.getElementById("enemy-guide");
+
 	// フォームに反映
 	if (document.getElementById("enemy-hate")) {
 		const hateText = officialEnemy.getHate();
 		document.getElementById("enemy-hate").value = hateText === "なし" ? 0 : hateText.replace(/^×/, "");
+	}
+	if (isAggressionEnabled()) {
+		guideElement.dataset.aggression = String(officialEnemy.getAggression());
+	} else {
+		delete guideElement.dataset.aggression;
 	}
 
 	// ドロップ品期待値を設定
@@ -777,7 +808,11 @@ function calculateStatus() {
 	}
 
 	// しぶとさは公式定義から算出し、内部データに反映する
-	document.getElementById("enemy-guide").dataset.stubborn = String(stubborn);
+	if (isStubbornEnabled()) {
+		guideElement.dataset.stubborn = String(stubborn);
+	} else {
+		delete guideElement.dataset.stubborn;
+	}
 
 	// roll-listを更新
 	updateRollList();
@@ -834,6 +869,10 @@ function loadData() {
 
 // フォームデータ収集
 function collectFormData() {
+	const officialEnemy = createOfficialEnemyFromForm();
+	const aggressionEnabled = isAggressionEnabled();
+	const stubbornEnabled = isStubbornEnabled();
+	const guideElement = document.getElementById("enemy-guide");
 	const data = {
 		name: document.getElementById("enemy-name").value,
 		ruby: document.getElementById("enemy-ruby").value,
@@ -858,7 +897,10 @@ function collectFormData() {
 		initiative: document.getElementById("enemy-initiative").value,
 		move: document.getElementById("enemy-move").value,
 		fate: document.getElementById("enemy-fate").value,
-		stubborn: createOfficialEnemyFromForm().getStubborn(),
+		calcAggressionEnabled: aggressionEnabled,
+		calcStubbornEnabled: stubbornEnabled,
+		aggression: aggressionEnabled ? guideElement.dataset.aggression || officialEnemy.getAggression() : "",
+		stubborn: stubbornEnabled ? guideElement.dataset.stubborn || officialEnemy.getStubborn() : "",
 		skills: [],
 		drop: document.getElementById("enemy-drop").value,
 		explain: document.getElementById("enemy-explain").value,
@@ -927,8 +969,13 @@ function populateFormData(data) {
 	document.getElementById("enemy-initiative").value = data.initiative || 10;
 	document.getElementById("enemy-move").value = data.move || 5;
 	document.getElementById("enemy-fate").value = data.fate || 1;
+	document.getElementById("enable-aggression").checked = data.calcAggressionEnabled !== false;
+	document.getElementById("enable-stubborn").checked = data.calcStubbornEnabled !== false;
 	if (data.stubborn != null) {
 		document.getElementById("enemy-guide").dataset.stubborn = data.stubborn;
+	}
+	if (data.aggression != null) {
+		document.getElementById("enemy-guide").dataset.aggression = data.aggression;
 	}
 	document.getElementById("enemy-drop").value = data.drop || "";
 	document.getElementById("enemy-explain").value = data.explain || "";
@@ -1055,7 +1102,14 @@ function exportCcfolia() {
 			.join("");
 	}
 
-	ccforia.setMemo(`${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags}\n識別難易度:${data.identification} 【行動力】${data.initiative} 【しぶとさ】${data.stubborn}`);
+	let memo = `${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags}\n識別難易度:${data.identification} 【行動力】${data.initiative}`;
+	if (data.stubborn !== "" && data.stubborn != null) {
+		memo += ` 【しぶとさ】${data.stubborn}`;
+	}
+	if (data.aggression !== "" && data.aggression != null) {
+		memo += ` 【攻撃性】${data.aggression}`;
+	}
+	ccforia.setMemo(memo);
 	ccforia.setInitiative(parseInt(data.initiative) || 0);
 
 	ccforia.appendStatus("HP", parseInt(data.hitpoint) || 0, parseInt(data.hitpoint) || 0);
@@ -1066,7 +1120,14 @@ function exportCcfolia() {
 	const magDef = parseInt(data.magicalDefense) || 0;
 	const defense = physDef > magDef ? "物理＞魔法" : physDef < magDef ? "物理＜魔法" : "物理＝魔法";
 
-	let identifyData = `${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags} 防御:${defense} ヘイト倍率:×${data.hate} 識別難易度:${data.identification} \n【行動力】${data.initiative}【移動力】${data.move}【しぶとさ】${data.stubborn}\n`;
+	let identifyData = `${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags} 防御:${defense} ヘイト倍率:×${data.hate} 識別難易度:${data.identification} \n【行動力】${data.initiative}【移動力】${data.move}`;
+	if (data.stubborn !== "" && data.stubborn != null) {
+		identifyData += `【しぶとさ】${data.stubborn}`;
+	}
+	if (data.aggression !== "" && data.aggression != null) {
+		identifyData += `【攻撃性】${data.aggression}`;
+	}
+	identifyData += `\n`;
 	identifyData += `[特技]\n${data.skills
 		.filter((skill) => skill.name && skill.name.length > 0)
 		.map((skill) => toSkillPlainText(skill))
