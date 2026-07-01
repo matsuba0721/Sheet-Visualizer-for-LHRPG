@@ -35,6 +35,169 @@ function hiraganaToKatakana(str) {
 	});
 }
 
+function getOfficialEnemyModel() {
+	return window.OfficialEnemyModel;
+}
+
+function getOfficialType(typeKey) {
+	const model = getOfficialEnemyModel();
+	const types = {
+		armorer: model.EnemyType.ARMOROR,
+		fencer: model.EnemyType.FENCER,
+		grappler: model.EnemyType.GRAPPLER,
+		supporter: model.EnemyType.SUPPORTER,
+		healer: model.EnemyType.HEALER,
+		spear: model.EnemyType.SPEAR,
+		archer: model.EnemyType.ARCHER,
+		shooter: model.EnemyType.SHOOTER,
+		bomber: model.EnemyType.BOMMER,
+	};
+	return types[typeKey] || model.EnemyType.ARMOROR;
+}
+
+function getOfficialRace(raceKey) {
+	const model = getOfficialEnemyModel();
+	const races = {
+		humanoid: model.EnemyRace.DEMI_HUMAN,
+		nature: model.EnemyRace.NATURE,
+		elemental: model.EnemyRace.SPILIT,
+		beast: model.EnemyRace.CRYPTID,
+		undead: model.EnemyRace.UNDEAD,
+		construct: model.EnemyRace.ARTIFICIAL,
+		human: model.EnemyRace.HUMAN,
+		gimmick: model.EnemyRace.GIMIC,
+	};
+	return races[raceKey] || model.EnemyRace.DEMI_HUMAN;
+}
+
+function getOfficialRank(throneKey) {
+	const model = getOfficialEnemyModel();
+	const ranks = {
+		mob: model.EnemyRank.MOB,
+		normal: model.EnemyRank.NORMAL,
+		"single-boss": model.EnemyRank.BOSS1,
+		"multi-boss": model.EnemyRank.BOSS2,
+		"single-raid-boss": model.EnemyRank.RAID1,
+		"multi-raid-boss": model.EnemyRank.RAID4,
+	};
+	return ranks[throneKey] || model.EnemyRank.NORMAL;
+}
+
+function getOfficialPopularity(popularityValue) {
+	const model = getOfficialEnemyModel();
+	const values = model.Popularity.values ? model.Popularity.values() : [];
+	const matched = values.find((popularity) => String(popularity.value) === String(popularityValue));
+	return matched || model.Popularity.R3;
+}
+
+function createOfficialEnemyFromForm() {
+	const model = getOfficialEnemyModel();
+	const enemy = new model.Enemy();
+	const rankValue = parseInt(document.getElementById("enemy-rank").value) || 1;
+	const typeKey = document.getElementById("enemy-type").value;
+	const throneKey = document.getElementById("enemy-throne").value;
+	const raceKey = document.getElementById("enemy-race").value;
+	const popularityValue = parseInt(document.getElementById("enemy-popularity").value) || 0;
+
+	enemy.setCharacterRank(rankValue);
+	enemy.setType(getOfficialType(typeKey));
+	enemy.setRank(getOfficialRank(throneKey));
+	enemy.setRace(getOfficialRace(raceKey));
+	enemy.setPopularity(getOfficialPopularity(popularityValue));
+	return enemy;
+}
+
+function toOfficialSkillFields(officialSkill, command = "") {
+	const target = officialSkill.getTarget ? officialSkill.getTarget() : null;
+	const range = officialSkill.getRange != null && officialSkill.getRange() != null ? officialSkill.getRangeLabel() : "";
+	return {
+		name: officialSkill.getName ? officialSkill.getName() : "",
+		timing: officialSkill.getTiming ? officialSkill.getTiming() || "" : "",
+		roll: officialSkill.getRole ? officialSkill.getRole() || "" : "",
+		target: target ? target.label : "",
+		range: range,
+		cost: "",
+		limit: officialSkill.getLimit ? officialSkill.getLimit() || "" : "",
+		tags: officialSkill.getTags ? officialSkill.getTags().slice() : [],
+		effect: officialSkill.getFunction ? officialSkill.getFunction() || "" : "",
+		command: command,
+	};
+}
+
+function setSkillSlotFromOfficial(index, skillData) {
+	if (!document.getElementById(`skill-name-${index}`)) {
+		return;
+	}
+	document.getElementById(`skill-name-${index}`).value = skillData.name || "";
+	document.getElementById(`skill-timing-${index}`).value = skillData.timing || "";
+	document.getElementById(`skill-roll-${index}`).value = skillData.roll || "";
+	document.getElementById(`skill-target-${index}`).value = skillData.target || "";
+	document.getElementById(`skill-range-${index}`).value = skillData.range || "";
+	document.getElementById(`skill-cost-${index}`).value = skillData.cost || "";
+	document.getElementById(`skill-limit-${index}`).value = skillData.limit || "";
+	for (let tagIndex = 0; tagIndex < 6; tagIndex++) {
+		document.getElementById(`skill-tag-${index}-${tagIndex}`).value = skillData.tags[tagIndex] || "";
+	}
+	document.getElementById(`skill-effect-${index}`).value = skillData.effect || "";
+	document.getElementById(`skill-command-${index}`).value = skillData.command || "";
+	updateSkillDisplay(index);
+}
+
+function buildOfficialSkillCommand(enemy, officialSkill) {
+	if (!officialSkill || officialSkill.getName() !== "基本攻撃手段") {
+		return "";
+	}
+	const model = getOfficialEnemyModel();
+	const attackType = enemy.getType().getTemplate().getBasicAttackType();
+	const hitLabel = enemy.getBasicAttackRole();
+	const damageLabel = enemy.getBasicAttackDamage();
+	const targetRole = attackType.role;
+	const damageType = attackType === getOfficialEnemyModel().AttackType.MAGICAL ? "魔法" : "物理";
+	const hateLabel = enemy.getRank() === model.EnemyRank.MOB ? "0" : String(enemy.getHate()).replace(/^×/, "");
+	return `${hitLabel} 基本攻撃手段 命中/${targetRole}\n${damageLabel} 基本攻撃手段 ダメージ/${damageType} ヘイト倍率x${hateLabel}`;
+}
+
+function getOfficialGeneratedSkills(enemy) {
+	const skills = [];
+	const raceSkills = enemy.getRace().getSkills(enemy) || [];
+	const rankSkills = enemy.getRankSkills() || [];
+	const typeSkills = enemy.getTypeSkills() || [];
+
+	const basicSkill = enemy.createBasicSkill();
+	skills.push(toOfficialSkillFields(basicSkill, buildOfficialSkillCommand(enemy, basicSkill)));
+	Array.prototype.push.apply(
+		skills,
+		raceSkills.map((skill) => toOfficialSkillFields(skill)),
+	);
+	Array.prototype.push.apply(
+		skills,
+		rankSkills.map((skill) => toOfficialSkillFields(skill)),
+	);
+	Array.prototype.push.apply(
+		skills,
+		typeSkills.map((skill) => toOfficialSkillFields(skill)),
+	);
+	return skills;
+}
+
+function applyOfficialStatusToForm(enemy) {
+	document.getElementById("enemy-str").value = enemy.getStr();
+	document.getElementById("enemy-dex").value = enemy.getDex();
+	document.getElementById("enemy-pow").value = enemy.getPow();
+	document.getElementById("enemy-int").value = enemy.getInt();
+	document.getElementById("enemy-avoid").value = enemy.getAvoid();
+	document.getElementById("enemy-resist").value = enemy.getResist();
+	document.getElementById("enemy-physical-defense").value = enemy.getPhysicalDefense();
+	document.getElementById("enemy-magical-defense").value = enemy.getMagicDefense();
+	document.getElementById("enemy-hitpoint").value = enemy.getHitPoint();
+	const hateText = enemy.getHate();
+	document.getElementById("enemy-hate").value = hateText === "なし" ? 0 : hateText.replace(/^×/, "");
+	document.getElementById("enemy-initiative").value = enemy.getAction();
+	document.getElementById("enemy-move").value = enemy.getMove();
+	document.getElementById("enemy-fate").value = enemy.getFate();
+	return enemy.getStubborn();
+}
+
 // ========================================
 // Ccfoliaクラス
 // ========================================
@@ -590,194 +753,22 @@ function calculateStatus() {
 		return;
 	}
 
-	let str, dex, pow, int, avoid, resist, physicalDefense, magicalDefense, hitpoint, hate, initiative, move, fate;
-	let strBase, dexBase, powBase, intBase;
-
-	// エネミータイプごとの基本能力値計算
-	if (type === "armorer") {
-		strBase = 7 + rank + Math.floor(rank / 10);
-		dexBase = 3 + rank + Math.floor(rank / 10);
-		powBase = 4 + rank + Math.floor(rank / 10);
-		intBase = 2 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((4 + rank + Math.floor(rank / 5)) / 3) + "+2D";
-		resist = Math.floor((2 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 8 + rank + Math.floor(rank * 1.2);
-		magicalDefense = 2 + rank + Math.floor(rank * 0.7);
-		hitpoint = 48 + Math.floor(rank * 8.5);
-		hate = 2 + Math.floor(rank / 6);
-		initiative = Math.floor((strBase + intBase) / 3) - 2;
-	} else if (type === "fencer") {
-		strBase = 7 + rank + Math.floor(rank / 10);
-		dexBase = 4 + rank + Math.floor(rank / 10);
-		powBase = 2 + rank + Math.floor(rank / 10);
-		intBase = 3 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((4 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		resist = Math.floor((2 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 5 + rank + Math.floor(rank * 0.7);
-		magicalDefense = 1 + rank + Math.floor(rank * 0.7);
-		hitpoint = 45 + Math.floor(rank * 8.4);
-		hate = 1 + Math.floor(rank / 6);
-		initiative = Math.floor((strBase + powBase) / 3) - 2;
-	} else if (type === "grappler") {
-		strBase = 6 + rank + Math.floor(rank / 10);
-		dexBase = 4 + rank + Math.floor(rank / 10);
-		powBase = 2 + rank + Math.floor(rank / 10);
-		intBase = 3 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((2 + rank + Math.floor(rank / 10)) / 3) + "+3D";
-		resist = Math.floor((4 + rank + Math.floor(rank / 10)) / 3) + "+3D";
-		physicalDefense = 2 + rank + Math.floor(rank * -0.096);
-		magicalDefense = 3 + rank + Math.floor(rank * 0.3);
-		hitpoint = 45 + Math.floor(rank * 7.5);
-		hate = 1 + Math.floor(rank / 6);
-		initiative = Math.floor((strBase + intBase) / 3);
-	} else if (type === "supporter") {
-		strBase = 4 + rank + Math.floor(rank / 10);
-		dexBase = 2 + rank + Math.floor(rank / 10);
-		powBase = 7 + rank + Math.floor(rank / 10);
-		intBase = 3 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((2 + rank + Math.floor(rank / 5)) / 3) + "+2D";
-		resist = Math.floor((7 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 3 + rank + Math.floor(rank * 0.5);
-		magicalDefense = 5 + rank + Math.floor(rank * 0.8);
-		hitpoint = 35 + Math.floor(rank * 5);
-		hate = 1 + Math.floor(rank / 6);
-		initiative = Math.floor((dexBase + powBase) / 3) + 2;
-	} else if (type === "healer") {
-		strBase = 3 + rank + Math.floor(rank / 10);
-		dexBase = 2 + rank + Math.floor(rank / 10);
-		powBase = 7 + rank + Math.floor(rank / 10);
-		intBase = 4 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((2 + rank + Math.floor(rank / 5)) / 3) + "+2D";
-		resist = Math.floor((7 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 8 + rank + Math.floor(rank * 0.8);
-		magicalDefense = 1 + rank + Math.floor(rank * 0.7);
-		hitpoint = 30 + Math.floor(rank * 6);
-		hate = 1 + Math.floor(rank / 6);
-		initiative = Math.floor((dexBase + powBase) / 3) - 2;
-	} else if (type === "spear") {
-		strBase = 4 + rank + Math.floor(rank / 10);
-		dexBase = 7 + rank + Math.floor(rank / 10);
-		powBase = 2 + rank + Math.floor(rank / 10);
-		intBase = 3 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((7 + rank + Math.floor(rank / 5)) / 3) + "+2D";
-		resist = Math.floor((2 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 5 + rank + Math.floor(rank * 0.7);
-		magicalDefense = 3 + rank + Math.floor(rank * 0.5);
-		hitpoint = 30 + Math.floor(rank * 6);
-		hate = 2 + Math.floor(rank / 6);
-		initiative = Math.floor((dexBase + powBase) / 3);
-	} else if (type === "archer") {
-		strBase = 3 + rank + Math.floor(rank / 10);
-		dexBase = 4 + rank + Math.floor(rank / 10);
-		powBase = 2 + rank + Math.floor(rank / 10);
-		intBase = 7 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((4 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		resist = Math.floor((2 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 6 + rank + Math.floor(rank * 0.6);
-		magicalDefense = 5 + rank + Math.floor(rank * 0.9);
-		hitpoint = 26 + Math.floor(rank * 5);
-		hate = 2 + Math.floor((rank + 2) / 6);
-		initiative = Math.floor((powBase + intBase) / 3);
-	} else if (type === "shooter") {
-		strBase = 3 + rank + Math.floor(rank / 10);
-		dexBase = 2 + rank + Math.floor(rank / 10);
-		powBase = 5 + rank + Math.floor(rank / 10);
-		intBase = 7 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((2 + rank + Math.floor(rank / 5)) / 3) + "+2D";
-		resist = Math.floor((5 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 3 + rank + Math.floor(rank * 0.3);
-		magicalDefense = 5 + rank + Math.floor(rank * 0.9);
-		hitpoint = 26 + Math.floor(rank * 4);
-		hate = 2 + Math.floor((rank + 2) / 6);
-		initiative = Math.floor((powBase + intBase) / 3);
-	} else if (type === "bomber") {
-		strBase = 3 + rank + Math.floor(rank / 10);
-		dexBase = 2 + rank + Math.floor(rank / 10);
-		powBase = 5 + rank + Math.floor(rank / 10);
-		intBase = 7 + rank + Math.floor(rank / 10);
-		str = Math.floor(strBase / 3);
-		dex = Math.floor(dexBase / 3);
-		pow = Math.floor(powBase / 3);
-		int = Math.floor(intBase / 3);
-		avoid = Math.floor((2 + rank + Math.floor(rank / 5)) / 3) + "+2D";
-		resist = Math.floor((5 + rank + Math.floor(rank / 10)) / 3) + "+2D";
-		physicalDefense = 3 + rank + Math.floor(rank * 0.3);
-		magicalDefense = 5 + rank + Math.floor(rank * 0.9);
-		hitpoint = 26 + Math.floor(rank * 4);
-		hate = 2 + Math.floor((rank + 2) / 6);
-		initiative = Math.floor((dexBase + intBase) / 3) - 2;
-	} else {
-		showAlert("未対応のエネミータイプです", "red");
-		return;
-	}
-
-	// エネミーランク(throne)による補正
-	fate = 0;
-	move = 2;
-	if (throne === "mob") {
-		hitpoint = Math.floor(hitpoint / 2);
-		avoid = eval(avoid.replace("D", "*3"));
-		resist = eval(resist.replace("D", "*3"));
-	} else if (throne === "single-boss") {
-		hitpoint = hitpoint * 4;
-		fate = 4;
-	} else if (throne === "multi-boss") {
-		hitpoint = hitpoint * 2;
-		fate = 4;
-	} else if (throne === "single-raid-boss") {
-		hitpoint = hitpoint * 10;
-		fate = 4;
-	} else if (throne === "multi-raid-boss") {
-		hitpoint = hitpoint * 5;
-		fate = 4;
+	const officialEnemy = createOfficialEnemyFromForm();
+	const stubborn = applyOfficialStatusToForm(officialEnemy);
+	const officialSkills = getOfficialGeneratedSkills(officialEnemy);
+	const firstSkillName = document.getElementById("skill-name-0")?.value || "";
+	if (firstSkillName.length === 0 || firstSkillName === "基本攻撃手段") {
+		initializeSkills(Math.max(officialSkills.length, 1));
+		officialSkills.forEach((skillData, index) => {
+			setSkillSlotFromOfficial(index, skillData);
+		});
 	}
 
 	// フォームに反映
-	document.getElementById("enemy-str").value = str;
-	document.getElementById("enemy-dex").value = dex;
-	document.getElementById("enemy-pow").value = pow;
-	document.getElementById("enemy-int").value = int;
-	document.getElementById("enemy-avoid").value = avoid;
-	document.getElementById("enemy-resist").value = resist;
-	document.getElementById("enemy-physical-defense").value = physicalDefense;
-	document.getElementById("enemy-magical-defense").value = magicalDefense;
-	document.getElementById("enemy-hitpoint").value = hitpoint;
-	document.getElementById("enemy-hate").value = hate;
-	document.getElementById("enemy-initiative").value = initiative;
-	document.getElementById("enemy-move").value = move;
-	document.getElementById("enemy-fate").value = fate;
+	if (document.getElementById("enemy-hate")) {
+		const hateText = officialEnemy.getHate();
+		document.getElementById("enemy-hate").value = hateText === "なし" ? 0 : hateText.replace(/^×/, "");
+	}
 
 	// ドロップ品期待値を設定
 	const dropExpected = getDropExpected(rank);
@@ -785,8 +776,8 @@ function calculateStatus() {
 		document.getElementById("drop-expected-value").innerText = `${dropExpected}`;
 	}
 
-	// 基本攻撃手段を生成（最初の特技スロットに設定）
-	generateBasicSkill(type, rank, throne, str, dex, pow, int, hate);
+	// しぶとさは公式定義から算出し、内部データに反映する
+	document.getElementById("enemy-guide").dataset.stubborn = String(stubborn);
 
 	// roll-listを更新
 	updateRollList();
@@ -796,105 +787,13 @@ function calculateStatus() {
 
 // 基本攻撃手段を生成
 function generateBasicSkill(type, rank, throne, str, dex, pow, int, hate) {
-	let hit, damage, tag, roll, target, range, effect, command, diceCount, rollcommand;
-	const isMob = throne === "mob";
-
-	if (type === "armorer" || type === "fencer" || type === "grappler") {
-		hit = Math.max(str, dex, pow, int) + 2;
-		diceCount = 2;
-		damage = 9 + Math.floor(rank * 3.5);
-		tag = "白兵攻撃";
-		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
-		target = "単体";
-		range = type === "grappler" ? "至近" : "至近";
-		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
-		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
-	} else if (type === "supporter") {
-		hit = Math.max(str, dex, pow, int) + 2;
-		diceCount = 2;
-		damage = 1 + Math.floor(rank * 3.5);
-		tag = "魔法攻撃";
-		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 抵抗)` : `対決 (${hit}+${diceCount}D / 抵抗)`;
-		target = "単体";
-		range = "4Sq";
-		effect = `対象に[${damage}+2D]の魔法ダメージを与える。`;
-		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
-		command = `${rollcommand} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
-	} else if (type === "healer") {
-		hit = Math.max(str, dex, pow, int) + 2;
-		diceCount = 2;
-		damage = 9 + Math.floor(rank * 3.5);
-		tag = "白兵攻撃";
-		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
-		target = "単体";
-		range = "2Sq";
-		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
-		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
-	} else if (type === "spear") {
-		hit = Math.max(str, dex, pow, int) + 1;
-		diceCount = 3;
-		damage = 19 + Math.floor(rank * 6);
-		tag = "白兵攻撃";
-		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
-		target = "単体";
-		range = "至近";
-		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
-		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
-	} else if (type === "archer") {
-		hit = Math.max(str, dex, pow, int);
-		diceCount = 3;
-		damage = 19 + Math.floor(rank * 6);
-		tag = "射撃攻撃";
-		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 回避)` : `対決 (${hit}+${diceCount}D / 回避)`;
-		target = "単体";
-		range = "3Sq";
-		effect = `対象に[${damage}+2D]の物理ダメージを与える。`;
-		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
-		command = `${rollcommand} 基本攻撃手段 命中/回避\n2D+${damage} 基本攻撃手段 ダメージ/物理 ヘイト倍率x${hate}`;
-	} else if (type === "shooter") {
-		hit = Math.max(str, dex, pow, int);
-		diceCount = 3;
-		damage = 11 + Math.floor(rank * 6);
-		tag = "魔法攻撃";
-		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 抵抗)` : `対決 (${hit}+${diceCount}D / 抵抗)`;
-		target = "単体";
-		range = "4Sq";
-		effect = `対象に[${damage}+2D]の魔法ダメージを与える。`;
-		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
-		command = `${rollcommand} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
-	} else if (type === "bomber") {
-		hit = Math.max(str, dex, pow, int);
-		diceCount = 3;
-		damage = 11 + Math.floor(rank * 6);
-		tag = "魔法攻撃";
-		roll = isMob ? `対決 (${hit + diceCount * 3}[固定] / 抵抗)` : `対決 (${hit}+${diceCount}D / 抵抗)`;
-		target = "範囲(選択)";
-		range = "4Sq";
-		effect = `対象に[${damage}+2D]の魔法ダメージを与える。`;
-		rollcommand = isMob ? `c${hit + diceCount * 3} [固定]` : `${diceCount}LH+${hit}`;
-		command = `${rollcommand} 基本攻撃手段 命中/抵抗\n2D+${damage} 基本攻撃手段 ダメージ/魔法 ヘイト倍率x${hate}`;
-	}
+	const officialEnemy = createOfficialEnemyFromForm();
+	const basicSkill = officialEnemy.createBasicSkill();
+	const basicSkillData = toOfficialSkillFields(basicSkill, buildOfficialSkillCommand(officialEnemy, basicSkill));
 
 	// 最初の特技スロットに基本攻撃手段を設定
 	if (document.getElementById("skill-name-0")) {
-		document.getElementById("skill-name-0").value = "基本攻撃手段";
-		document.getElementById("skill-timing-0").value = "メジャー";
-		document.getElementById("skill-roll-0").value = roll;
-		document.getElementById("skill-target-0").value = target;
-		document.getElementById("skill-range-0").value = range;
-		document.getElementById("skill-cost-0").value = "なし";
-		document.getElementById("skill-limit-0").value = "なし";
-		// タグを最初のフィールドに設定
-		document.getElementById("skill-tag-0-0").value = tag;
-		for (let i = 1; i < 6; i++) {
-			document.getElementById(`skill-tag-0-${i}`).value = "";
-		}
-		document.getElementById("skill-effect-0").value = effect;
-		document.getElementById("skill-command-0").value = command;
-		updateSkillDisplay(0);
+		setSkillSlotFromOfficial(0, basicSkillData);
 	}
 }
 
@@ -959,6 +858,7 @@ function collectFormData() {
 		initiative: document.getElementById("enemy-initiative").value,
 		move: document.getElementById("enemy-move").value,
 		fate: document.getElementById("enemy-fate").value,
+		stubborn: createOfficialEnemyFromForm().getStubborn(),
 		skills: [],
 		drop: document.getElementById("enemy-drop").value,
 		explain: document.getElementById("enemy-explain").value,
@@ -1027,6 +927,9 @@ function populateFormData(data) {
 	document.getElementById("enemy-initiative").value = data.initiative || 10;
 	document.getElementById("enemy-move").value = data.move || 5;
 	document.getElementById("enemy-fate").value = data.fate || 1;
+	if (data.stubborn != null) {
+		document.getElementById("enemy-guide").dataset.stubborn = data.stubborn;
+	}
 	document.getElementById("enemy-drop").value = data.drop || "";
 	document.getElementById("enemy-explain").value = data.explain || "";
 	document.getElementById("enemy-guide").value = data.guide || "";
@@ -1152,17 +1055,18 @@ function exportCcfolia() {
 			.join("");
 	}
 
-	ccforia.setMemo(`${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags}\n識別難易度:${data.identification} 【行動力】${data.initiative}`);
+	ccforia.setMemo(`${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags}\n識別難易度:${data.identification} 【行動力】${data.initiative} 【しぶとさ】${data.stubborn}`);
 	ccforia.setInitiative(parseInt(data.initiative) || 0);
 
 	ccforia.appendStatus("HP", parseInt(data.hitpoint) || 0, parseInt(data.hitpoint) || 0);
 	ccforia.appendStatus("因果力", parseInt(data.fate) || 0, parseInt(data.fate) || 0);
+	ccforia.appendStatus("しぶとさ", parseInt(data.stubborn) || 0, parseInt(data.stubborn) || 0);
 
 	const physDef = parseInt(data.physicalDefense) || 0;
 	const magDef = parseInt(data.magicalDefense) || 0;
 	const defense = physDef > magDef ? "物理＞魔法" : physDef < magDef ? "物理＜魔法" : "物理＝魔法";
 
-	let identifyData = `${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags} 防御:${defense} ヘイト倍率:×${data.hate} 識別難易度:${data.identification} \n【行動力】${data.initiative}【移動力】${data.move}\n`;
+	let identifyData = `${data.name}${data.ruby ? "〈" + data.ruby + "〉" : ""} ランク:${data.rank}\nタグ:${tags} 防御:${defense} ヘイト倍率:×${data.hate} 識別難易度:${data.identification} \n【行動力】${data.initiative}【移動力】${data.move}【しぶとさ】${data.stubborn}\n`;
 	identifyData += `[特技]\n${data.skills
 		.filter((skill) => skill.name && skill.name.length > 0)
 		.map((skill) => toSkillPlainText(skill))
@@ -1217,7 +1121,7 @@ function exportCcfolia() {
 	command += `\n\n▼ステータス`;
 	command += `\n【STR】${data.str} 【DEX】${data.dex} 【POW】${data.pow} 【INT】${data.int}`;
 	command += `\n【回避】${data.avoid} 【抵抗】${data.resist} 【物理防御力】${data.physicalDefense} 【魔法防御力】${data.magicalDefense}`;
-	command += `\n【最大HP】${data.hitpoint} 【ヘイト倍率】×${data.hate} 【行動力】${data.initiative} 【移動力】${data.move} 【因果力】${data.fate}`;
+	command += `\n【最大HP】${data.hitpoint} 【ヘイト倍率】×${data.hate} 【行動力】${data.initiative} 【移動力】${data.move} 【因果力】${data.fate} 【しぶとさ】${data.stubborn}`;
 
 	command += `\n\n▼その他\n{識別後データ}\n{解説}`;
 
