@@ -1105,10 +1105,13 @@ function generateAndCopyShareUrl() {
 			const button = document.getElementById("share-characters-btn");
 			const originalText = button.innerHTML;
 			button.style.backgroundColor = "#6a9a7a";
-			button.textContent = "✓ コピーしました";
+			button.innerHTML = "✓ コピー&ブックマーク";
 			button.style.display = "flex";
 			button.style.alignItems = "center";
 			button.style.gap = "0.3rem";
+
+			// 新しいウィンドウで共有URLを開く（ユーザーがブックマークできるように）
+			window.open(shareUrl, "_blank");
 
 			setTimeout(() => {
 				button.innerHTML = originalText;
