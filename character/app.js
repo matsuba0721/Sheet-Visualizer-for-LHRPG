@@ -53,6 +53,8 @@ class Config {
 		this.isAdvanced = false;
 		// タブのソート設定
 		this.tabSort = "mainJob"; // mainJob, name, loadDate
+		// 履歴の表示件数
+		this.historyItemsPerPage = 10;
 	}
 }
 class Chatpalette {
@@ -429,6 +431,28 @@ function init() {
 		sortCharacterTabs();
 	});
 
+	// 履歴の表示件数設定
+	const historyItemsPerPageSlider = document.getElementById("history-items-per-page");
+	if (historyItemsPerPageSlider) {
+		// 現在の値を設定
+		if (!_config.historyItemsPerPage) _config.historyItemsPerPage = 10;
+		historyItemsPerPageSlider.value = _config.historyItemsPerPage;
+
+		// 値表示を更新
+		const updateHistoryItemsDisplay = () => {
+			const value = parseInt(historyItemsPerPageSlider.value);
+			document.getElementById("history-items-value").textContent = value;
+			_config.historyItemsPerPage = value;
+			_localStorage.Write("config", _config);
+		};
+
+		// スライダーの変更イベント
+		historyItemsPerPageSlider.addEventListener("input", updateHistoryItemsDisplay);
+
+		// 初期表示を更新
+		updateHistoryItemsDisplay();
+	}
+
 	getJson("../json/master.json").then(async (master) => {
 		Object.keys(master).forEach((key) => (_master[key] = master[key]));
 		loadButton.disabled = false;
@@ -560,7 +584,7 @@ function showHistoryPopup(page = 1) {
 	});
 
 	// ページング設定
-	const itemsPerPage = 10;
+	const itemsPerPage = _config.historyItemsPerPage || 10;
 	const totalPages = Math.ceil(historys.length / itemsPerPage);
 	__historyCurrentPage = Math.max(1, Math.min(page, totalPages));
 	const startIndex = (page - 1) * itemsPerPage;
