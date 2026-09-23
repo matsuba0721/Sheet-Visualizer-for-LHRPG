@@ -164,6 +164,24 @@ function copy(dest, source) {
 	});
 }
 
+// URLクエリパラメータを取得する関数
+function getUrlParameter(paramName) {
+	const params = new URLSearchParams(window.location.search);
+	return params.get(paramName);
+}
+
+// URLパラメータからIDリストを取得する関数
+function getCharacterIdsFromUrl() {
+	const idParam = getUrlParameter("id");
+	if (!idParam) return [];
+
+	// カンマで分割し、空白をトリムして数値に変換
+	return idParam
+		.split(",")
+		.map((id) => parseInt(id.trim()))
+		.filter((id) => !isNaN(id));
+}
+
 function showLoadingPanel() {
 	// ローディングパネルを作成して表示
 	const loadingPanel = document.createElement("div");
@@ -431,6 +449,12 @@ function init() {
 		sortCharacterTabs();
 	});
 
+	// 共有ボタンのイベントハンドラ
+	const shareButton = document.getElementById("share-characters-btn");
+	if (shareButton) {
+		shareButton.addEventListener("click", generateAndCopyShareUrl);
+	}
+
 	// 履歴の表示件数設定
 	const historyItemsPerPageSlider = document.getElementById("history-items-per-page");
 	if (historyItemsPerPageSlider) {
@@ -482,40 +506,62 @@ function init() {
 			}
 		});
 
-		// 前回表示していたキャラクター群を自動読み込み（順番に）
-		const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
-		if (Array.isArray(lastViewedCharacters) && lastViewedCharacters.length > 0) {
+		// URLパラメータからキャラクターを読み込み
+		const characterIdsFromUrl = getCharacterIdsFromUrl();
+		if (characterIdsFromUrl.length > 0) {
 			// ローディングパネルを表示
 			showLoadingPanel();
 
-			let activeCharacterId = null;
-
-			for (const characterInfo of lastViewedCharacters) {
-				// 後方互換性：文字列の場合は従来形式
-				const url = typeof characterInfo === "string" ? characterInfo : characterInfo.url;
-				const isActive = typeof characterInfo === "object" ? characterInfo.isActive : false;
-				const activePanel = typeof characterInfo === "object" ? characterInfo.activePanel : "skill";
-
-				if (url) {
-					await loadCharactorFrom(url, activePanel, true); // 自動読み込みフラグ
-					if (isActive) {
-						activeCharacterId = getCharactorId(url);
-					}
+			for (const characterId of characterIdsFromUrl) {
+				const url = `https://lhrpg.com/lhz/pc?id=${characterId}`;
+				try {
+					await loadCharactorFrom(url, "skill", true); // 自動読み込みフラグ
+				} catch (err) {
+					console.error(`Failed to load character ${characterId}:`, err);
 				}
-			}
-
-			// アクティブなキャラクターのタブをクリック
-			if (activeCharacterId !== null) {
-				setTimeout(() => {
-					const tabs = document.querySelectorAll(`[data-characte-id="${activeCharacterId}"]`);
-					if (tabs.length > 0) {
-						tabs[0].click();
-					}
-				}, 100);
 			}
 
 			// ローディングパネルを非表示
 			hideLoadingPanel();
+		}
+
+		// 前回表示していたキャラクター群を自動読み込み（順番に）
+		const lastViewedCharacters = _localStorage.Read("lastViewedCharacterUrls", []);
+		if (Array.isArray(lastViewedCharacters) && lastViewedCharacters.length > 0) {
+			// URLパラメータで読み込み済みの場合はスキップ
+			if (characterIdsFromUrl.length === 0) {
+				// ローディングパネルを表示
+				showLoadingPanel();
+
+				let activeCharacterId = null;
+
+				for (const characterInfo of lastViewedCharacters) {
+					// 後方互換性：文字列の場合は従来形式
+					const url = typeof characterInfo === "string" ? characterInfo : characterInfo.url;
+					const isActive = typeof characterInfo === "object" ? characterInfo.isActive : false;
+					const activePanel = typeof characterInfo === "object" ? characterInfo.activePanel : "skill";
+
+					if (url) {
+						await loadCharactorFrom(url, activePanel, true); // 自動読み込みフラグ
+						if (isActive) {
+							activeCharacterId = getCharactorId(url);
+						}
+					}
+				}
+
+				// アクティブなキャラクターのタブをクリック
+				if (activeCharacterId !== null) {
+					setTimeout(() => {
+						const tabs = document.querySelectorAll(`[data-characte-id="${activeCharacterId}"]`);
+						if (tabs.length > 0) {
+							tabs[0].click();
+						}
+					}, 100);
+				}
+
+				// ローディングパネルを非表示
+				hideLoadingPanel();
+			}
 		}
 	});
 
@@ -1033,6 +1079,46 @@ function sortCharacterTabs() {
 	tabs.forEach((tab) => {
 		characterTabs.appendChild(tab);
 	});
+}
+
+// 現在表示されているキャラシのIDから共有URLを生成してコピー
+function generateAndCopyShareUrl() {
+	const characterIds = Object.keys(_characters)
+		.map((id) => parseInt(id))
+		.filter((id) => !isNaN(id));
+
+	if (characterIds.length === 0) {
+		alert("表示されているキャラクターがありません。");
+		return;
+	}
+
+	// 現在のページのベースURLを取得
+	const baseUrl = window.location.origin + window.location.pathname;
+	const idParam = characterIds.join(",");
+	const shareUrl = `${baseUrl}?id=${idParam}`;
+
+	// クリップボードにコピー
+	navigator.clipboard
+		.writeText(shareUrl)
+		.then(() => {
+			// コピー完了のフィードバック
+			const button = document.getElementById("share-characters-btn");
+			const originalText = button.innerHTML;
+			button.style.backgroundColor = "#6a9a7a";
+			button.textContent = "✓ コピーしました";
+			button.style.display = "flex";
+			button.style.alignItems = "center";
+			button.style.gap = "0.3rem";
+
+			setTimeout(() => {
+				button.innerHTML = originalText;
+				button.style.backgroundColor = "#6a8a7a";
+			}, 2000);
+		})
+		.catch((err) => {
+			console.error("クリップボードへのコピーに失敗しました:", err);
+			alert("クリップボードへのコピーに失敗しました。");
+		});
 }
 
 function getCurrentCharacter() {
