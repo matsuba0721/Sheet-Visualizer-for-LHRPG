@@ -1299,27 +1299,63 @@ function createProfileCell(character) {
 	profileImage.style.float = "left";
 	profileCell.appendChild(profileImage);
 
+	const profileHeader = document.createElement("div");
+	profileHeader.style.display = "flex";
+	profileHeader.style.alignItems = "center";
+	profileHeader.style.flexWrap = "wrap";
+	profileHeader.style.gap = "0.5rem";
 	const profileName = document.createElement("div");
+	const profileId = document.createElement("div");
 	const profileCrLv = document.createElement("div");
 	const profileAttr = document.createElement("div");
 	const profileTags = document.createElement("div");
 	const profileTotalMagicGrade = document.createElement("div");
 	const profileTotalPrice = document.createElement("div");
-	const profileId = document.createElement("div");
 	profileName.className = "header-1";
 	profileName.innerText = character.name;
-	profileName.style.cursor = "pointer";
-	profileName.addEventListener("click", () => {
-		if (navigator.clipboard) {
-			try {
-				navigator.clipboard.writeText(character.name);
-				showAlert(`キャラクター名をクリップボードにコピーしました。`, "green");
-			} catch (err) {
+	const copyToClipboard = (text, successMessage) => {
+		if (!navigator.clipboard) {
+			showAlert("クリップボードのコピーに失敗しました。", "red");
+			return;
+		}
+		navigator.clipboard.writeText(text).then(
+			() => showAlert(successMessage, "green"),
+			(err) => {
 				console.log(err);
 				showAlert("クリップボードのコピーに失敗しました。", "red");
-			}
-		}
+			},
+		);
+	};
+	profileName.style.cursor = "pointer";
+	profileName.title = "クリックして名前をコピー";
+	profileName.addEventListener("click", () => {
+		copyToClipboard(character.name, "キャラクター名をクリップボードにコピーしました。");
 	});
+	const createCopyButton = (text, label, successMessage) => {
+		const button = document.createElement("button");
+		button.type = "button";
+		button.className = "profile-copy-button";
+		button.setAttribute("aria-label", label);
+		button.style.alignSelf = "flex-end";
+		button.title = label;
+		button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V5.8A1.8 1.8 0 0 1 9.8 4h8.4A1.8 1.8 0 0 1 20 5.8v10.4a1.8 1.8 0 0 1-1.8 1.8H17"/><rect x="4" y="8" width="13" height="12" rx="1.8"/></svg>';
+		button.addEventListener("click", () => {
+			copyToClipboard(text, successMessage);
+		});
+		return button;
+	};
+	profileHeader.appendChild(profileName);
+	// profileHeader.appendChild(createCopyButton(character.name, "名前をコピー", "キャラクター名をクリップボードにコピーしました。"));
+	profileId.className = "text-1";
+	profileId.innerText = `ID:${character.id}`;
+	profileId.style.alignSelf = "flex-end";
+	profileId.style.cursor = "pointer";
+	profileId.title = "クリックしてIDをコピー";
+	profileId.addEventListener("click", () => {
+		copyToClipboard(String(character.id), "IDをクリップボードにコピーしました。");
+	});
+	profileHeader.appendChild(profileId);
+	// profileHeader.appendChild(createCopyButton(String(character.id), "IDをコピー", "IDをクリップボードにコピーしました。"));
 	profileCrLv.className = "text-1";
 	profileCrLv.innerText = `CR.${character.character_rank} Lv.${character.level}`;
 	profileAttr.className = "text-2";
@@ -1333,27 +1369,12 @@ function createProfileCell(character) {
 	profileTotalMagicGrade.style.marginTop = "5px";
 	profileTotalPrice.className = "text-3";
 	profileTotalPrice.innerText = `所持品の価格合計:${character.totalPrice}G`;
-	profileId.className = "text-3";
-	profileId.innerText = `ID:${character.id}`;
-	profileId.style.cursor = "pointer";
-	profileId.addEventListener("click", () => {
-		if (navigator.clipboard) {
-			try {
-				navigator.clipboard.writeText(character.id);
-				showAlert("IDをクリップボードにコピーしました。", "green");
-			} catch (err) {
-				console.log(err);
-				showAlert("クリップボードのコピーに失敗しました。", "red");
-			}
-		}
-	});
-	profileCell.appendChild(profileName);
+	profileCell.appendChild(profileHeader);
 	profileCell.appendChild(profileCrLv);
 	profileCell.appendChild(profileAttr);
 	profileCell.appendChild(profileTags);
 	profileCell.appendChild(profileTotalMagicGrade);
 	profileCell.appendChild(profileTotalPrice);
-	profileCell.appendChild(profileId);
 
 	return profileCell;
 }
