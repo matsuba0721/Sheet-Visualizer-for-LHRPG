@@ -1312,7 +1312,7 @@ function createProfileCell(character) {
 	profileName.addEventListener("click", () => {
 		if (navigator.clipboard) {
 			try {
-				navigator.clipboard.writeText(character.id);
+				navigator.clipboard.writeText(character.name);
 				showAlert(`キャラクター名をクリップボードにコピーしました。`, "green");
 			} catch (err) {
 				console.log(err);
