@@ -1308,6 +1308,18 @@ function createProfileCell(character) {
 	const profileId = document.createElement("div");
 	profileName.className = "header-1";
 	profileName.innerText = character.name;
+	profileName.style.cursor = "pointer";
+	profileName.addEventListener("click", () => {
+		if (navigator.clipboard) {
+			try {
+				navigator.clipboard.writeText(character.id);
+				showAlert(`キャラクター名をクリップボードにコピーしました。`, "green");
+			} catch (err) {
+				console.log(err);
+				showAlert("クリップボードのコピーに失敗しました。", "red");
+			}
+		}
+	});
 	profileCrLv.className = "text-1";
 	profileCrLv.innerText = `CR.${character.character_rank} Lv.${character.level}`;
 	profileAttr.className = "text-2";
